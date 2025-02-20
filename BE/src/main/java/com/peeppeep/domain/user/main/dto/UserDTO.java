@@ -14,5 +14,4 @@ public class UserDTO {
     private String comment;
     private int main_challenge_id;
     private int main_character_id;
-
 }

@@ -43,6 +43,8 @@ public enum ErrorCode {
      */
 
     // User
+    FAIL_TO_LOGIN_EMPTY(400, "입력된 정보가 없습니다."),
+    FAIL_TO_LOGIN(400, "아이디 또는 비밀번호를 확인해주시기 바랍니다."),
     FAIL_TO_OAUTH_LOGIN(400, "소셜 로그인에 실패했습니다."),
     USER_ID_NOT_EXIST(400, "회원 ID가 존재하지 않습니다."),
     USER_ID_ALREADY_EXIST(400, "회원 ID가 이미 존재합니다."),
