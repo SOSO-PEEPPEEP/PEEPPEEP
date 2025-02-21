@@ -48,6 +48,7 @@ public enum ErrorCode {
     FAIL_TO_OAUTH_LOGIN(400, "소셜 로그인에 실패했습니다."),
     USER_ID_NOT_EXIST(400, "회원 ID가 존재하지 않습니다."),
     USER_ID_ALREADY_EXIST(400, "회원 ID가 이미 존재합니다."),
+    USER_INFO_CHECK(400, "입력하신 회원 정보를 확인해주시기 바랍니다."),
 
     USER_NICKNAME_NOT_EXIST(400, "회원 닉네임이 존재하지 않습니다."),
     NICKNAME_ALREADY_EXIST(400, "닉네임이 이미 존재합니다.");

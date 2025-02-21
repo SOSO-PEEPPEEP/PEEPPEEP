@@ -1,10 +1,13 @@
 package com.peeppeep.domain.user.main.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     @Id
     @Column(name = "id")
@@ -12,6 +15,9 @@ public class User {
 
     @Column(name = "pw")
     private String userPw;
+
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "nickname")
     private String nickname;
@@ -30,4 +36,5 @@ public class User {
 
     @Column(name = "main_character_id")
     private int mainCharacterId;
+
 }
