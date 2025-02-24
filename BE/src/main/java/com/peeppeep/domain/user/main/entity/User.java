@@ -1,5 +1,7 @@
 package com.peeppeep.domain.user.main.entity;
 
+import com.peeppeep.global.entity.BaseBy;
+import com.peeppeep.global.entity.BaseTime;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,7 +10,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class User extends BaseBy {
     @Id
     @Column(name = "id")
     private String userId;

@@ -1,11 +1,14 @@
 package com.peeppeep.domain.user.main.service;
 
+import com.peeppeep.domain.user.friend.entity.UserFriend;
 import com.peeppeep.domain.user.main.entity.User;
 import com.peeppeep.domain.user.main.repository.UserRepository;
 import com.peeppeep.global.response.error.ErrorCode;
 import com.peeppeep.global.response.success.SuccessCode;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -78,11 +81,12 @@ public class UserService {
             response.put("userId", findId.get());
             response.put("success", true);
             response.put("message", SuccessCode.MEMBER_GET_SUCCESS);
+            return response;
         }else {
             response.put("success", false);
             response.put("message", ErrorCode.USER_ID_NOT_EXIST);
+            return response;
         }
-        return response;
     }
 
     public Map<String, Object> findPw(String userId, String name, String email) {
@@ -97,27 +101,97 @@ public class UserService {
 
 
 
+
+
             response.put("success", true);
             response.put("message", SuccessCode.VERIFICATION_CODE);
+            return response;
         } else {
             response.put("success", false);
             response.put("message", ErrorCode.USER_INFO_CHECK);
+            return response;
         }
-        return response;
     }
 
     public Map<String, Object> setNewPassword(String userId, String userPw) {
         Map<String, Object> response = new HashMap<>();
         String encodePw = passwordEncoder.encode(userPw);
-        int user = userRepository.setNewPassword(userId, encodePw);
 
-        if(user > 0){
+        Optional<User> idCheck = userRepository.findUserId(userId);
+
+        User user = User.builder()
+                .userPw(encodePw)
+                .build();
+
+        if(idCheck.isPresent()) {
+            userRepository.saveUser(user);
             response.put("success", true);
             response.put("message", SuccessCode.MEMBER_UPDATE_SUCCESS);
+            return response;
         } else {
             response.put("success", false);
             response.put("message", ErrorCode.UPDATE_ERROR);
+            return response;
         }
-        return response;
     }
+
+    public Map<String, Object> updateUserInfo(Map<String, Object> userInfo) {
+        Map<String , Object> response = new HashMap<>();
+        String userId = userInfo.get("userId").toString();
+        String nickname = userInfo.get("nickname").toString();
+        String comment = userInfo.get("comment").toString();
+        String profilePicture = userInfo.get("profilePicture").toString();
+
+
+        Optional<User> idCheck = userRepository.findUserId(userId);
+
+        User user = User.builder()
+                .nickname(nickname)
+                .comment(comment)
+                .profilePicture(profilePicture)
+                .build();
+
+        if(idCheck.isPresent()) {
+            userRepository.saveUser(user);
+            response.put("success", true);
+            response.put("message", SuccessCode.MEMBER_UPDATE_SUCCESS);
+            return response;
+        } else {
+            response.put("success", false);
+            response.put("message", ErrorCode.UPDATE_ERROR);
+            return response;
+        }
+    }
+
+    public Map<String, Object> findUserFriend(String userId, String status) {
+        Map<String, Object> response = new HashMap<>();
+        Optional<User> friendList = userRepository.findUserFriend(userId, status);
+        if (friendList.isPresent()) {
+            response.put("userInfo", friendList.get());
+            response.put("success", true);
+            response.put("message", SuccessCode.MEMBER_GET_SUCCESS);
+            return response;
+        } else {
+            response.put("success", false);
+            response.put("message", ErrorCode.USER_ID_NOT_EXIST);
+            return response;
+        }
+    }
+
+    public Map<String, Object> setFriendsStatus(String userId, String status) {
+        Map<String, Object> response = new HashMap<>();
+        Optional<UserFriend> requestFriendship = userRepository.requestFriendship(userId, status);
+
+        if (requestFriendship.isPresent() && requestFriendship.get().getSenderId().equals(userId)) {
+            response.put("requestFriendship", requestFriendship);
+            response.put("success", true);
+            response.put("message", SuccessCode.MEMBER_UPDATE_SUCCESS);
+            return response;
+        } else {
+            response.put("success", false);
+            response.put("message", ErrorCode.UPDATE_ERROR);
+            return response;
+        }
+    }
+
 }
