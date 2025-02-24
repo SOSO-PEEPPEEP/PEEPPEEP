@@ -12,16 +12,12 @@ import org.hibernate.annotations.SQLDelete;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE challenge_user SET deleted_at = NOW() where challenge_user_id = ?")
+@SQLDelete(sql = "UPDATE challenge_user SET deleted_at = NOW() where user_challenge_id = ?")
 public class ChallengeUser extends BaseBy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "challenge_user_id")
-    private Integer challengeUserId;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role")
-    private RoleType role;
+    @Column(name = "user_challenge_id")
+    private Integer userChallengeId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -32,17 +28,15 @@ public class ChallengeUser extends BaseBy {
     private Challenge challenge;
 
     @Builder
-    private ChallengeUser(User user, Challenge challenge, RoleType role) {
+    private ChallengeUser(User user, Challenge challenge) {
         this.user = user;
         this.challenge = challenge;
-        this.role = role;
     }
 
-    public static ChallengeUser of(User user, Challenge challenge, RoleType role) {
+    public ChallengeUser of(User user, Challenge challenge) {
         return builder()
                 .challenge(challenge)
                 .user(user)
-                .role(role)
                 .build();
     }
 }

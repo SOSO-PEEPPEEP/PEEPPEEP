@@ -1,6 +1,8 @@
 package com.peeppeep.domain.challenge.main.entity;
 
+import com.peeppeep.domain.challenge.main.dto.ChallengeDTO;
 import com.peeppeep.domain.challenge.main.dto.request.ChallengeRequestDTO;
+import com.peeppeep.domain.user.main.entity.User;
 import com.peeppeep.global.entity.BaseBy;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -10,7 +12,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Getter
 @Entity
@@ -39,7 +40,7 @@ public class Challenge extends BaseBy {
 
     @Column(name = "is_public")
     @Enumerated(EnumType.STRING)
-    private IsPublicType isPublic;
+    private IsPublic isPublic;
 
     @Column(name = "allow_join")
     private Boolean allowJoin;
@@ -47,27 +48,10 @@ public class Challenge extends BaseBy {
     @Column(name = "streak_count")
     private Integer streakCount;
 
-    @Column(name = "result_score")
-    private Integer resultScore;
-
-    @Column(name = "is_completed")
-    private Boolean isCompleted;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
-
-    @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ChallengeUser> challengeUsers;
-
-    @OneToOne(mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Calendar calendar;
-
     @Builder
     private Challenge(String title, String content, Integer period,
                       LocalDate startAt, LocalDate endAt,
-                      IsPublicType isPublic, Boolean allowJoin,
-                      Category category) {
+                      IsPublic isPublic, Boolean allowJoin, Integer streakCount) {
         this.title = title;
         this.content = content;
         this.period = period;
@@ -75,15 +59,11 @@ public class Challenge extends BaseBy {
         this.endAt = endAt;
         this.isPublic = isPublic;
         this.allowJoin = allowJoin;
-        this.streakCount = 0;
-        this.resultScore = 0;
-        this.isCompleted = false;
-        this.category = category;
-        this.calendar = Calendar.of(this);
+        this.streakCount = streakCount;
     }
 
     // 챌린지 생성
-    public static Challenge of(ChallengeRequestDTO challengeRequestDTO, Category category) {
+    public static Challenge of(ChallengeRequestDTO challengeRequestDTO) {
         return builder()
                 .title(challengeRequestDTO.getTitle())
                 .content(challengeRequestDTO.getContent())
@@ -92,37 +72,7 @@ public class Challenge extends BaseBy {
                 .endAt(challengeRequestDTO.getEndAt())
                 .isPublic(challengeRequestDTO.getIsPublic())
                 .allowJoin(challengeRequestDTO.getAllowJoin())
-                .category(category)
+                .streakCount(0)
                 .build();
-    }
-
-    public void updateChallenge(ChallengeRequestDTO challengeRequestDTO, Category category) {
-        if (challengeRequestDTO.getTitle() != null) this.title = challengeRequestDTO.getTitle();
-        if (challengeRequestDTO.getContent() != null) this.content = challengeRequestDTO.getContent();
-        if (challengeRequestDTO.getIsPublic() != null) this.isPublic = challengeRequestDTO.getIsPublic();
-        if (challengeRequestDTO.getAllowJoin() != null) this.allowJoin = challengeRequestDTO.getAllowJoin();
-        if (category != null) this.category = category;
-    }
-
-    public void updateStreakCountAndResultScorePlus() {
-        // 연속일
-        streakCount++;
-        // 점수
-        int basePoints = 10;
-        int bonusPoints = (streakCount - 1) * (streakCount - 1);
-        resultScore += basePoints + bonusPoints;
-    }
-
-    public void updateStreakCountAndResultScoreMinus() {
-        // 점수
-        int basePoints = 10;
-        int bonusPoints = (streakCount - 1) * (streakCount - 1);
-        resultScore -= basePoints + bonusPoints;
-        // 연속일
-        streakCount--;
-    }
-
-    public void updateIsCompleted() {
-        isCompleted = true;
     }
 }
