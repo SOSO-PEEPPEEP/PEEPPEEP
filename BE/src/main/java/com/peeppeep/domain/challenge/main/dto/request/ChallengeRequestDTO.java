@@ -1,12 +1,12 @@
 package com.peeppeep.domain.challenge.main.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.peeppeep.domain.challenge.main.entity.IsPublic;
+import com.peeppeep.domain.challenge.main.entity.IsPublicType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,7 +22,9 @@ public class ChallengeRequestDTO {
 
     private LocalDate endAt;
 
-    private IsPublic isPublic;
+    private IsPublicType isPublic;
 
     private Boolean allowJoin;
+
+    private List<Integer> participants; // 생성자 제외 참여자 user_id 리스트
 }

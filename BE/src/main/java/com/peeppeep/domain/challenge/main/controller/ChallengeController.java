@@ -1,6 +1,5 @@
 package com.peeppeep.domain.challenge.main.controller;
 
-import com.peeppeep.domain.challenge.main.dto.ChallengeDTO;
 import com.peeppeep.domain.challenge.main.dto.request.ChallengeRequestDTO;
 import com.peeppeep.domain.challenge.main.service.ChallengeService;
 import com.peeppeep.global.response.success.ApiResponse;
