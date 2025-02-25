@@ -19,6 +19,10 @@ public class ChallengeUser extends BaseBy {
     @Column(name = "user_challenge_id")
     private Integer userChallengeId;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private RoleType role;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -28,15 +32,17 @@ public class ChallengeUser extends BaseBy {
     private Challenge challenge;
 
     @Builder
-    private ChallengeUser(User user, Challenge challenge) {
+    private ChallengeUser(User user, Challenge challenge, RoleType role) {
         this.user = user;
         this.challenge = challenge;
+        this.role = role;
     }
 
-    public ChallengeUser of(User user, Challenge challenge) {
+    public static ChallengeUser of(User user, Challenge challenge, RoleType role) {
         return builder()
                 .challenge(challenge)
                 .user(user)
+                .role(role)
                 .build();
     }
 }

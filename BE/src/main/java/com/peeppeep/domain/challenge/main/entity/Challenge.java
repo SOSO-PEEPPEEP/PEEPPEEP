@@ -1,6 +1,5 @@
 package com.peeppeep.domain.challenge.main.entity;
 
-import com.peeppeep.domain.challenge.main.dto.ChallengeDTO;
 import com.peeppeep.domain.challenge.main.dto.request.ChallengeRequestDTO;
 import com.peeppeep.domain.user.main.entity.User;
 import com.peeppeep.global.entity.BaseBy;
@@ -12,6 +11,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -40,7 +41,7 @@ public class Challenge extends BaseBy {
 
     @Column(name = "is_public")
     @Enumerated(EnumType.STRING)
-    private IsPublic isPublic;
+    private IsPublicType isPublic;
 
     @Column(name = "allow_join")
     private Boolean allowJoin;
@@ -48,10 +49,17 @@ public class Challenge extends BaseBy {
     @Column(name = "streak_count")
     private Integer streakCount;
 
+    @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChallengeUser> challengeUsers;
+
+    @OneToOne(mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Calendar calendar;
+
     @Builder
     private Challenge(String title, String content, Integer period,
                       LocalDate startAt, LocalDate endAt,
-                      IsPublic isPublic, Boolean allowJoin, Integer streakCount) {
+                      IsPublicType isPublic, Boolean allowJoin, Integer streakCount,
+                      List<ChallengeUser> challengeUsers) {
         this.title = title;
         this.content = content;
         this.period = period;
@@ -60,11 +68,12 @@ public class Challenge extends BaseBy {
         this.isPublic = isPublic;
         this.allowJoin = allowJoin;
         this.streakCount = streakCount;
+        this.challengeUsers = challengeUsers;
     }
 
     // 챌린지 생성
-    public static Challenge of(ChallengeRequestDTO challengeRequestDTO) {
-        return builder()
+    public static Challenge of(User organizer, ChallengeRequestDTO challengeRequestDTO, List<User> participants) {
+        Challenge challenge = builder()
                 .title(challengeRequestDTO.getTitle())
                 .content(challengeRequestDTO.getContent())
                 .period(challengeRequestDTO.getPeriod())
@@ -73,6 +82,31 @@ public class Challenge extends BaseBy {
                 .isPublic(challengeRequestDTO.getIsPublic())
                 .allowJoin(challengeRequestDTO.getAllowJoin())
                 .streakCount(0)
+                .challengeUsers(new ArrayList<>())
                 .build();
+
+        // 챌린지장 추가
+        challenge.addChallengeUser(ChallengeUser.of(organizer, challenge, RoleType.ORGANIZER));
+
+        // 챌린지 참여자 추가
+        if(participants != null) {
+            for (User participant : participants) {
+                challenge.addChallengeUser(ChallengeUser.of(participant, challenge, RoleType.PARTICIPANT));
+            }
+        }
+
+        // 캘린더 생성
+        challenge.setCalendar(Calendar.of(challenge));
+
+        return challenge;
+    }
+
+    private void setCalendar(Calendar calendar) {
+        this.calendar = calendar;
+    }
+
+    // 챌린지-참여자 중간테이블에 참여자 추가
+    private void addChallengeUser(ChallengeUser challengeUser) {
+        this.challengeUsers.add(challengeUser);
     }
 }
