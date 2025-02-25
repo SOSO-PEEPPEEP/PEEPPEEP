@@ -35,10 +35,15 @@ public enum SuccessCode {
     MEMBER_ID_EXIST(200, "회원 id가 이미 존재합니다."),
     MEMBER_ID_NOT_EXIST(200, "회원 id가 존재하지 않습니다."),
     MEMBER_GET_SUCCESS(200, "회원정보 조회에 성공하였습니다."),
-    MEMBER_UPDATE_SUCCESS(200, "회원정보 수정에 성공하였습니다."),
-    MEMBER_DELETE_SUCCESS(200, "회원 탈퇴에 성공하였습니다."),
+    MEMBER_UPDATE_SUCCESS(204, "회원정보 수정에 성공하였습니다."),
+    MEMBER_DELETE_SUCCESS(204, "회원 탈퇴에 성공하였습니다."),
 
-    VERIFICATION_CODE(200, "회원 정보에 입력된 이메일 주소로 인증번호를 전송하였습니다.")
+    VERIFICATION_CODE(200, "회원 정보에 입력된 이메일 주소로 인증번호를 전송하였습니다."),
+
+    //Friends
+    FRIENDS_LIST_GET_SUCCESS(200, "친구 목록 조회에 성공하였습니다."),
+    FRIENDS_STATUS_UPDATE_SUCCESS(204, "친구 관계 변경에 성공하였습니다."),
+    FRIENDS_DEACTIVATE_FRIENDSHIP_SUCCESS(204, "친구 삭제에 성공하였습니다.")
     ;
 
     /**
