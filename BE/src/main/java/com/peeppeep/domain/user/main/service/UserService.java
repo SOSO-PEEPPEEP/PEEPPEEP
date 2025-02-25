@@ -1,14 +1,13 @@
 package com.peeppeep.domain.user.main.service;
 
-import com.peeppeep.domain.user.friend.entity.UserFriend;
 import com.peeppeep.domain.user.main.entity.User;
 import com.peeppeep.domain.user.main.repository.UserRepository;
 import com.peeppeep.global.response.error.ErrorCode;
 import com.peeppeep.global.response.success.SuccessCode;
+import com.peeppeep.global.util.sendEmail;
+import com.peeppeep.global.util.util;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,10 +19,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final com.peeppeep.global.util.sendEmail sendEmail;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, sendEmail sendEmail) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.sendEmail = sendEmail;
     }
 
     public Optional<User> findUserId(String userId, String userPw) {
@@ -50,11 +51,9 @@ public class UserService {
         if (idCheck.isPresent()) {
             response.put("success", false);
             response.put("message", ErrorCode.USER_ID_ALREADY_EXIST);
-            return response;
         }else if (nicknameCheck.isPresent()) {
             response.put("success", false);
             response.put("message", ErrorCode.NICKNAME_ALREADY_EXIST);
-            return response;
         }
 
         User user = User.builder()
@@ -81,12 +80,11 @@ public class UserService {
             response.put("userId", findId.get());
             response.put("success", true);
             response.put("message", SuccessCode.MEMBER_GET_SUCCESS);
-            return response;
         }else {
             response.put("success", false);
             response.put("message", ErrorCode.USER_ID_NOT_EXIST);
-            return response;
         }
+        return response;
     }
 
     public Map<String, Object> findPw(String userId, String name, String email) {
@@ -94,23 +92,21 @@ public class UserService {
         Optional<String> user = userRepository.findPw(userId, name, email);
 
         if (user.isPresent()) {
-            Random code = new Random();
-            int randomCode = code.nextInt(1000000);
-            String emailCode = String.format("%06d", randomCode);
-            // 메일 전송 + Redis
+            String verificationCode  = util.getRandomStr();
 
+            /* 이메일 제목 */
+            String subject = "PEEP 계정 및 비밀번호 찾기";
+            /* 이메일 내용 */
+            String text = "인증번호는" + verificationCode + "입니다.";
 
-
-
-
+            sendEmail.sendEmail(email,subject, text);
             response.put("success", true);
             response.put("message", SuccessCode.VERIFICATION_CODE);
-            return response;
         } else {
             response.put("success", false);
             response.put("message", ErrorCode.USER_INFO_CHECK);
-            return response;
         }
+        return response;
     }
 
     public Map<String, Object> setNewPassword(String userId, String userPw) {
@@ -127,12 +123,11 @@ public class UserService {
             userRepository.saveUser(user);
             response.put("success", true);
             response.put("message", SuccessCode.MEMBER_UPDATE_SUCCESS);
-            return response;
         } else {
             response.put("success", false);
             response.put("message", ErrorCode.UPDATE_ERROR);
-            return response;
         }
+        return response;
     }
 
     public Map<String, Object> updateUserInfo(Map<String, Object> userInfo) {
@@ -155,43 +150,11 @@ public class UserService {
             userRepository.saveUser(user);
             response.put("success", true);
             response.put("message", SuccessCode.MEMBER_UPDATE_SUCCESS);
-            return response;
         } else {
             response.put("success", false);
             response.put("message", ErrorCode.UPDATE_ERROR);
-            return response;
         }
-    }
-
-    public Map<String, Object> findUserFriend(String userId, String status) {
-        Map<String, Object> response = new HashMap<>();
-        Optional<User> friendList = userRepository.findUserFriend(userId, status);
-        if (friendList.isPresent()) {
-            response.put("userInfo", friendList.get());
-            response.put("success", true);
-            response.put("message", SuccessCode.MEMBER_GET_SUCCESS);
-            return response;
-        } else {
-            response.put("success", false);
-            response.put("message", ErrorCode.USER_ID_NOT_EXIST);
-            return response;
-        }
-    }
-
-    public Map<String, Object> setFriendsStatus(String userId, String status) {
-        Map<String, Object> response = new HashMap<>();
-        Optional<UserFriend> requestFriendship = userRepository.requestFriendship(userId, status);
-
-        if (requestFriendship.isPresent() && requestFriendship.get().getSenderId().equals(userId)) {
-            response.put("requestFriendship", requestFriendship);
-            response.put("success", true);
-            response.put("message", SuccessCode.MEMBER_UPDATE_SUCCESS);
-            return response;
-        } else {
-            response.put("success", false);
-            response.put("message", ErrorCode.UPDATE_ERROR);
-            return response;
-        }
+        return response;
     }
 
 }

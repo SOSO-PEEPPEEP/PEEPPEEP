@@ -64,14 +64,4 @@ public class UserController {
         return userService.updateUserInfo(userInfo);
     }
 
-    @RequestMapping(value = "/getFriendsList", method = RequestMethod.GET)
-    public Map<String, Object> getFriendsList(String userId, String status) {
-        return userService.findUserFriend(userId, status) ;
-    }
-
-    @RequestMapping(value = "/setFriendsStatus", method = RequestMethod.PUT)
-    public Map<String, Object> setFriendsStatus(String userId, String status) {
-        return userService.setFriendsStatus(userId, status);
-    }
-
 }

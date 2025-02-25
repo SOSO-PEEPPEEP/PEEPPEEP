@@ -2,6 +2,7 @@ package com.peeppeep.domain.user.friend.entity;
 
 import com.peeppeep.domain.user.main.entity.User;
 import com.peeppeep.global.entity.BaseBy;
+import com.peeppeep.global.entity.BaseTime;
 import jakarta.persistence.*;
 import lombok.*;
 
