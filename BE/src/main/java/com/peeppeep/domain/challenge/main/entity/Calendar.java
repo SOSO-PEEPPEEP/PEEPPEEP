@@ -1,8 +1,5 @@
 package com.peeppeep.domain.challenge.main.entity;
 
-import com.peeppeep.global.entity.BaseBy;
-import com.peeppeep.global.response.error.ErrorCode;
-import com.peeppeep.global.response.error.exception.BusinessException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -10,84 +7,77 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 
-import java.lang.reflect.Field;
-
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE calendar SET deleted_at = NOW() where calendar_id = ?")
-public class Calendar extends BaseBy {
+public class Calendar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "calendar_id")
     private Integer calendarId;
 
     // Day01~30
-    /**
-     * 1이상 Int : dailyId
-     * 0 : 실패
-     * null : 아직 수행하지 않음
-     * */
     @Column(name = "day01")
-    private Integer day01;
+    private DailyStatusType day01 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day02")
-    private Integer day02;
+    private DailyStatusType day02 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day03")
-    private Integer day03;
+    private DailyStatusType day03 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day04")
-    private Integer day04;
+    private DailyStatusType day04 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day05")
-    private Integer day05;
+    private DailyStatusType day05 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day06")
-    private Integer day06;
+    private DailyStatusType day06 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day07")
-    private Integer day07;
+    private DailyStatusType day07 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day08")
-    private Integer day08;
+    private DailyStatusType day08 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day09")
-    private Integer day09;
+    private DailyStatusType day09 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day10")
-    private Integer day10;
+    private DailyStatusType day10 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day11")
-    private Integer day11;
+    private DailyStatusType day11 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day12")
-    private Integer day12;
+    private DailyStatusType day12 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day13")
-    private Integer day13;
+    private DailyStatusType day13 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day14")
-    private Integer day14;
+    private DailyStatusType day14 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day15")
-    private Integer day15;
+    private DailyStatusType day15 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day16")
-    private Integer day16;
+    private DailyStatusType day16 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day17")
-    private Integer day17;
+    private DailyStatusType day17 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day18")
-    private Integer day18;
+    private DailyStatusType day18 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day19")
-    private Integer day19;
+    private DailyStatusType day19 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day20")
-    private Integer day20;
+    private DailyStatusType day20 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day21")
-    private Integer day21;
+    private DailyStatusType day21 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day22")
-    private Integer day22;
+    private DailyStatusType day22 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day23")
-    private Integer day23;
+    private DailyStatusType day23 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day24")
-    private Integer day24;
+    private DailyStatusType day24 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day25")
-    private Integer day25;
+    private DailyStatusType day25 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day26")
-    private Integer day26;
+    private DailyStatusType day26 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day27")
-    private Integer day27;
+    private DailyStatusType day27 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day28")
-    private Integer day28;
+    private DailyStatusType day28 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day29")
-    private Integer day29;
+    private DailyStatusType day29 = DailyStatusType.NOT_ATTEMPTED;
     @Column(name = "day30")
-    private Integer day30;
+    private DailyStatusType day30 = DailyStatusType.NOT_ATTEMPTED;
 
     @OneToOne
     @JoinColumn(name = "challenge_id")
@@ -102,17 +92,5 @@ public class Calendar extends BaseBy {
         return builder()
                 .challenge(challenge)
                 .build();
-    }
-
-    public void updateDayStatus(int day, Integer dailyId) {
-        try {
-            String fieldName = String.format("day%02d", day);
-            Field field = this.getClass().getDeclaredField(fieldName);
-            field.setAccessible(true);
-
-            field.set(this, dailyId);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new BusinessException(ErrorCode.DAY_FIELD_NOT_EXIST, ErrorCode.DAY_FIELD_NOT_EXIST.getMessage()+" : "+day);
-        }
     }
 }
