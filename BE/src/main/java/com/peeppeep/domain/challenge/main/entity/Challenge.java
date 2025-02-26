@@ -49,6 +49,10 @@ public class Challenge extends BaseBy {
     @Column(name = "streak_count")
     private Integer streakCount;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChallengeUser> challengeUsers;
 
@@ -59,7 +63,7 @@ public class Challenge extends BaseBy {
     private Challenge(String title, String content, Integer period,
                       LocalDate startAt, LocalDate endAt,
                       IsPublicType isPublic, Boolean allowJoin, Integer streakCount,
-                      List<ChallengeUser> challengeUsers) {
+                      Category category, List<ChallengeUser> challengeUsers) {
         this.title = title;
         this.content = content;
         this.period = period;
@@ -68,11 +72,12 @@ public class Challenge extends BaseBy {
         this.isPublic = isPublic;
         this.allowJoin = allowJoin;
         this.streakCount = streakCount;
+        this.category = category;
         this.challengeUsers = challengeUsers;
     }
 
     // 챌린지 생성
-    public static Challenge of(User organizer, ChallengeRequestDTO challengeRequestDTO, List<User> participants) {
+    public static Challenge of(User organizer, ChallengeRequestDTO challengeRequestDTO, Category category, List<User> participants) {
         Challenge challenge = builder()
                 .title(challengeRequestDTO.getTitle())
                 .content(challengeRequestDTO.getContent())
@@ -82,6 +87,7 @@ public class Challenge extends BaseBy {
                 .isPublic(challengeRequestDTO.getIsPublic())
                 .allowJoin(challengeRequestDTO.getAllowJoin())
                 .streakCount(0)
+                .category(category)
                 .challengeUsers(new ArrayList<>())
                 .build();
 
