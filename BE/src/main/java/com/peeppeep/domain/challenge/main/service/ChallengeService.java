@@ -1,11 +1,9 @@
 package com.peeppeep.domain.challenge.main.service;
 
-import com.peeppeep.domain.challenge.main.dto.ChallengeDTO;
 import com.peeppeep.domain.challenge.main.dto.request.ChallengeRequestDTO;
 import com.peeppeep.domain.challenge.main.dto.response.ChallengeListResponseDTO;
 import com.peeppeep.domain.challenge.main.entity.Category;
 import com.peeppeep.domain.challenge.main.entity.Challenge;
-import com.peeppeep.domain.challenge.main.entity.ChallengeUser;
 import com.peeppeep.domain.challenge.main.repository.CategoryRepository;
 import com.peeppeep.domain.challenge.main.repository.ChallengeRepository;
 import com.peeppeep.domain.challenge.main.repository.ChallengeUserRepository;
