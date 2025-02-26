@@ -39,7 +39,8 @@ public enum SuccessCode {
     MEMBER_DELETE_SUCCESS(200, "회원 탈퇴에 성공하였습니다."),
 
     // Challenge
-    CHALLENGE_CREATE_SUCCESS(201, "챌린지 생성에 성공하였습니다.")
+    CHALLENGE_CREATE_SUCCESS(201, "챌린지 생성에 성공하였습니다."),
+    CHALLENGE_LIST_GET_SUCCESS(200, "챌린지 목록 조회에 성공하였습니다")
     ;
 
     /**

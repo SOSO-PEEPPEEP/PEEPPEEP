@@ -26,5 +26,7 @@ public class ChallengeRequestDTO {
 
     private Boolean allowJoin;
 
+    private Integer category; // 카테고리 id
+
     private List<Integer> participants; // 생성자 제외 참여자 user_id 리스트
 }

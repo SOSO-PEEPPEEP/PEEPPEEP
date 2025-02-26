@@ -1,12 +1,16 @@
 package com.peeppeep.domain.challenge.main.controller;
 
+import com.peeppeep.domain.challenge.main.dto.ChallengeDTO;
 import com.peeppeep.domain.challenge.main.dto.request.ChallengeRequestDTO;
+import com.peeppeep.domain.challenge.main.dto.response.ChallengeListResponseDTO;
 import com.peeppeep.domain.challenge.main.service.ChallengeService;
 import com.peeppeep.global.response.success.ApiResponse;
 import com.peeppeep.global.response.success.SuccessCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -19,5 +23,10 @@ public class ChallengeController {
     @PostMapping("/{user_id}")
     public ApiResponse<Integer> createChallenge(@PathVariable(value = "user_id") Integer userId, @RequestBody ChallengeRequestDTO challengeRequestDTO) {
         return ApiResponse.of(SuccessCode.CHALLENGE_CREATE_SUCCESS, challengeService.createChallenge(userId, challengeRequestDTO));
+    }
+
+    @GetMapping("/{user_id}")
+    public ApiResponse<List<ChallengeListResponseDTO>> getChallenges(@PathVariable(value = "user_id") Integer userId) {
+        return ApiResponse.of(SuccessCode.CHALLENGE_LIST_GET_SUCCESS, challengeService.getChallenges(userId));
     }
 }
