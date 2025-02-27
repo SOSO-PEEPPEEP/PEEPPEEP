@@ -15,4 +15,6 @@ public interface ChallengeUserRepository extends JpaRepository<ChallengeUser, In
 
     @Query("SELECT cu.challenge FROM ChallengeUser cu WHERE cu.user = :user AND cu.deletedAt IS NULL")
     List<Challenge> findChallengesByUserAndDeletedAtIsNull(@Param("user") User user);
+
+    boolean existsByChallengeAndUserAndDeletedAtIsNull(Challenge challenge, User user);
 }

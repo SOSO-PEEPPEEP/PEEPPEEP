@@ -1,5 +1,6 @@
 package com.peeppeep.domain.challenge.main.controller;
 
+import com.peeppeep.domain.challenge.main.dto.ChallengeDTO;
 import com.peeppeep.domain.challenge.main.dto.request.ChallengeRequestDTO;
 import com.peeppeep.domain.challenge.main.dto.response.ChallengeListResponseDTO;
 import com.peeppeep.domain.challenge.main.service.ChallengeService;
@@ -19,13 +20,18 @@ public class ChallengeController {
 
     private final ChallengeService challengeService;
 
-    @PostMapping("/{user_id}")
-    public ApiResponse<Integer> createChallenge(@PathVariable(value = "user_id") Integer userId, @RequestBody ChallengeRequestDTO challengeRequestDTO) {
-        return ApiResponse.of(SuccessCode.CHALLENGE_CREATE_SUCCESS, challengeService.createChallenge(userId, challengeRequestDTO));
+    @PostMapping("")
+    public ApiResponse<Integer> createChallenge(@RequestBody ChallengeRequestDTO challengeRequestDTO) {
+        return ApiResponse.of(SuccessCode.CHALLENGE_CREATE_SUCCESS, challengeService.createChallenge(challengeRequestDTO));
     }
 
-    @GetMapping("/{user_id}")
-    public ApiResponse<List<ChallengeListResponseDTO>> getChallenges(@PathVariable(value = "user_id") Integer userId) {
-        return ApiResponse.of(SuccessCode.CHALLENGE_LIST_GET_SUCCESS, challengeService.getChallenges(userId));
+    @GetMapping("")
+    public ApiResponse<List<ChallengeListResponseDTO>> getChallenges() {
+        return ApiResponse.of(SuccessCode.CHALLENGE_LIST_GET_SUCCESS, challengeService.getChallenges());
+    }
+
+    @GetMapping("/{challenge-id}")
+    public ApiResponse<ChallengeDTO> getChallenge(@PathVariable(value = "challenge-id") Integer challengeId) {
+        return ApiResponse.of(SuccessCode.CHALLENGE_GET_SUCCESS, challengeService.getChallenge(challengeId));
     }
 }

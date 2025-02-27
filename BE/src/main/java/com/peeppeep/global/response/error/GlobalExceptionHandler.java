@@ -134,8 +134,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex) {
         log.error("BusinessException", ex);
+        // 챌린지 조회 권한이 없을 경우 403
+        HttpStatus status = ex.getErrorCode() == ErrorCode.CHALLENGE_ACCESS_DENIED ? HttpStatus.FORBIDDEN : HttpStatus.BAD_REQUEST;
         final ErrorResponse response = ErrorResponse.of(ex.getErrorCode(), ex.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(response, status);
     }
 
     /**

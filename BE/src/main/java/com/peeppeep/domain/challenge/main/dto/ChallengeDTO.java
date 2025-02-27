@@ -1,7 +1,7 @@
 package com.peeppeep.domain.challenge.main.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.peeppeep.domain.challenge.main.entity.IsPublicType;
+import com.peeppeep.domain.challenge.main.entity.Challenge;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,20 +26,32 @@ public class ChallengeDTO {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate endAt;
 
-    private IsPublicType isPublic;
+    private String category;
 
-    private Boolean allowJoin;
+    private CalendarDTO calendar;
 
     @Builder
     private ChallengeDTO(String title, String content, Integer period,
                          LocalDate startAt, LocalDate endAt,
-                         IsPublicType isPublic, Boolean allowJoin) {
+                         String category, CalendarDTO calendar) {
         this.title = title;
         this.content = content;
         this.period = period;
         this.startAt = startAt;
         this.endAt = endAt;
-        this.isPublic = isPublic;
-        this.allowJoin = allowJoin;
+        this.category = category;
+        this.calendar = calendar;
+    }
+
+    public static ChallengeDTO of(Challenge challenge) {
+        return builder()
+                .title(challenge.getTitle())
+                .content(challenge.getContent())
+                .period(challenge.getPeriod())
+                .startAt(challenge.getStartAt())
+                .endAt(challenge.getEndAt())
+                .category(challenge.getCategory().getName())
+                .calendar(CalendarDTO.of(challenge.getCalendar()))
+                .build();
     }
 }
