@@ -12,7 +12,7 @@ import org.hibernate.annotations.SQLDelete;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE challenge_user SET deleted_at = NOW() where user_challenge_id = ?")
+@SQLDelete(sql = "UPDATE challenge_user SET deleted_at = NOW() where challenge_user_id = ?")
 public class ChallengeUser extends BaseBy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
