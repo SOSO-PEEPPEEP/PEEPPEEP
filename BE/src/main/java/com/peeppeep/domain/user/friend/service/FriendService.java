@@ -15,7 +15,7 @@ public class FriendService {
 
     private final FriendRepository friendRepository;
 
-    public FriendService(FriendRepository friendRepository, UserRepository userRepository) {
+    public FriendService(FriendRepository friendRepository) {
         this.friendRepository = friendRepository;
     }
 
@@ -23,7 +23,7 @@ public class FriendService {
         Map<String, Object> response = new LinkedHashMap<>();
         List<User> friendList = friendRepository.findUserFriendInfo(userId, status);
 
-        if (friendList.size() > 0) {
+        if (friendList.isEmpty()) {
             if(status.equals("ACCEPTED")) {
                 for(int i = 0; i < friendList.size(); i++ ){
                     if(friendList.get(i).getUserId() != userId) {
