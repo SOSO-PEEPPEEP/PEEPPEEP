@@ -38,6 +38,7 @@ public enum ErrorCode {
     UPDATE_ERROR(400, "수정 실패"),
     DELETE_ERROR(404, "삭제 실패"),
     READ_ERROR(404, "조회 실패"),
+    VERIFY_ERROR(404, "인증 실패"),
     /**
      * ******************************* Custom Error CodeList ***************************************
      */
@@ -52,7 +53,6 @@ public enum ErrorCode {
 
     USER_NICKNAME_NOT_EXIST(404, "회원 닉네임이 존재하지 않습니다."),
     NICKNAME_ALREADY_EXIST(400, "닉네임이 이미 존재합니다.");
-
 
     /**
      * ******************************* Error Code Field ***************************************
