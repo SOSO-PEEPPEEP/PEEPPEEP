@@ -1,10 +1,10 @@
 package com.peeppeep.domain.user.main.entity;
 
 import com.peeppeep.global.entity.BaseBy;
-import com.peeppeep.global.entity.BaseTime;
 import jakarta.persistence.*;
 import lombok.*;
 
+@Setter
 @Getter
 @Entity
 @Builder
@@ -12,8 +12,12 @@ import lombok.*;
 @AllArgsConstructor
 public class User extends BaseBy {
     @Id
-    @Column(name = "id")
-    private String userId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
+    private Integer userId;
+
+    @Column(name = "login_id")
+    private String loginId;
 
     @Column(name = "pw")
     private String userPw;
@@ -34,9 +38,24 @@ public class User extends BaseBy {
     private String comment;
 
     @Column(name = "main_challenge_id")
-    private int mainChallengeId;
+    private Integer mainChallengeId;
 
     @Column(name = "main_character_id")
-    private int mainCharacterId;
+    private Integer mainCharacterId;
 
+    @Override
+    public String toString() {
+        return "[" +
+                "userId='" + userId + '\'' +
+                ", loginId='" + loginId + '\'' +
+                ", userPw='" + userPw + '\'' +
+                ", name='" + name + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", email='" + email + '\'' +
+                ", profilePicture='" + profilePicture + '\'' +
+                ", comment='" + comment + '\'' +
+                ", mainChallengeId=" + mainChallengeId +
+                ", mainCharacterId=" + mainCharacterId +
+                ']';
+    }
 }

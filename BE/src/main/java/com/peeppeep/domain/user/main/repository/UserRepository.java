@@ -4,23 +4,22 @@ import com.peeppeep.domain.user.main.entity.User;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
 
-    @Query("SELECT u FROM User u WHERE u.userId = :userId")
-    Optional<User> findUserId(@Param("userId") String userId);
+    /*ID중복검사*/
+    @Query("SELECT u FROM User u WHERE u.loginId = :loginId AND u.deletedAt IS NULL")
+    Optional<User> findUser(@Param("loginId") String loginId);
 
-    @Query("SELECT u FROM User u WHERE u.nickname = :nickname")
-    Optional<User> findUserNickname(@Param("nickname") String nickname);
-
-    @Query("SELECT u.userId FROM User u WHERE u.name = :name and u.email = :email")
+    /*ID찾기*/
+    @Query("SELECT u.loginId FROM User u WHERE u.name = :name and u.email = :email AND u.deletedAt IS NULL")
     Optional<String> findId(@Param("name") String name, @Param("email") String email);
 
-    @Query("SELECT u.userId FROM User u WHERE u.userId = :userId and u.name = :name and u.email = :email")
-    Optional<String> findPw(@Param("userId") String userId, @Param("name") String name, @Param("email") String email);
-
-    void saveUser(User user);
+    /*PASSWORD 찾기*/
+    @Query("SELECT u.loginId FROM User u WHERE u.loginId = :loginId and u.name = :name and u.email = :email AND u.deletedAt IS NULL")
+    Optional<String> findPw(@Param("loginId") String loginId, @Param("name") String name, @Param("email") String email);
 }

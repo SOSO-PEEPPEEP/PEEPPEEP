@@ -4,40 +4,47 @@ import com.peeppeep.domain.user.main.entity.User;
 import com.peeppeep.domain.user.main.repository.UserRepository;
 import com.peeppeep.global.response.error.ErrorCode;
 import com.peeppeep.global.response.success.SuccessCode;
-import com.peeppeep.global.util.sendEmail;
-import com.peeppeep.global.util.util;
+import com.peeppeep.global.util.SendEmail;
+import com.peeppeep.global.util.Util;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final com.peeppeep.global.util.sendEmail sendEmail;
+    private final SendEmail sendEmail;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, sendEmail sendEmail) {
+    @Autowired
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, SendEmail sendEmail) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.sendEmail = sendEmail;
     }
 
-    public Optional<User> findUserId(String userId, String userPw) {
-        return userRepository.findUserId(userId)
-                .filter(user -> passwordEncoder.matches(userPw, user.getUserPw()));
+    public Map<String, Object> findUser(String loginId) {
+        Map<String, Object> response = new HashMap<>();
+        Optional<User> idCheck = userRepository.findUser(loginId);
+        if (idCheck.isPresent()) {
+            Optional<User> userInfo = userRepository.findUser(loginId);
+            response.put("userInfo", userInfo.get());
+        }
+        return response;
     }
 
     public Map<String, Object> signUp(Map<String, Object> userInfo) {
         Map<String, Object> response = new HashMap<>();
 
-        String userId = (userInfo.get("userId") != null) ? userInfo.get("userId").toString() : "";
+        String loginId = (userInfo.get("loginId") != null) ? userInfo.get("loginId").toString() : "";
         String userPw = (userInfo.get("userPw") != null) ? userInfo.get("userPw").toString() : "";
         String encodePw = passwordEncoder.encode(userPw);
+        String name = (userInfo.get("name") != null) ? userInfo.get("name").toString() : "";
         String nickname = (userInfo.get("nickname") != null) ? userInfo.get("nickname").toString() : "";
         String email = (userInfo.get("email") != null) ? userInfo.get("email").toString() : "";
         String profilePicture = (userInfo.get("profilePicture") != null) ? userInfo.get("profilePicture").toString() : "";
@@ -45,20 +52,18 @@ public class UserService {
         int mainChallengeId = Integer.parseInt(userInfo.get("mainChallengeId").toString());
         int mainCharacterId = Integer.parseInt(userInfo.get("mainCharacterId").toString());
 
-        Optional<User> idCheck = userRepository.findUserId(userId);
-        Optional<User> nicknameCheck = userRepository.findUserNickname(nickname);
+        Optional<User> idCheck = userRepository.findUser(loginId);
 
         if (idCheck.isPresent()) {
             response.put("success", false);
             response.put("message", ErrorCode.USER_ID_ALREADY_EXIST);
-        }else if (nicknameCheck.isPresent()) {
-            response.put("success", false);
-            response.put("message", ErrorCode.NICKNAME_ALREADY_EXIST);
+            return response;
         }
 
         User user = User.builder()
-                .userId(userId)
+                .loginId(loginId)
                 .userPw(encodePw)
+                .name(name)
                 .nickname(nickname)
                 .email(email)
                 .profilePicture(profilePicture)
@@ -66,18 +71,24 @@ public class UserService {
                 .mainChallengeId(mainChallengeId)
                 .mainCharacterId(mainCharacterId)
                 .build();
-        userRepository.save(user);
+        try{
+            userRepository.save(user);
+            response.put("success", true);
+            response.put("message", SuccessCode.REGISTER_SUCCESS);
+            response.put("userInfo", user);
+        }catch (Exception e){
+            response.put("success", false);
+            response.put("message", ErrorCode.UPDATE_ERROR);
+        }
 
-        response.put("success", true);
-        response.put("message", SuccessCode.REGISTER_SUCCESS);
         return response;
     }
 
-    public Map<String, Object> findId(String userId, String email){
+    public Map<String, Object> findId(String name, String email){
         Map<String, Object> response = new HashMap<>();
-        Optional<String> findId = userRepository.findId(userId, email);
+        Optional<String> findId = userRepository.findId(name, email);
         if (findId.isPresent()) {
-            response.put("userId", findId.get());
+            response.put("loginId", findId.get());
             response.put("success", true);
             response.put("message", SuccessCode.MEMBER_GET_SUCCESS);
         }else {
@@ -87,21 +98,28 @@ public class UserService {
         return response;
     }
 
-    public Map<String, Object> findPw(String userId, String name, String email) {
+    public Map<String, Object> findPw(String loginId, String name, String email) {
         Map<String, Object> response = new HashMap<>();
-        Optional<String> user = userRepository.findPw(userId, name, email);
+        Optional<String> user = userRepository.findPw(loginId, name, email);
 
         if (user.isPresent()) {
-            String verificationCode  = util.getRandomStr();
+            String verificationCode  = Util.getRandomStr();
 
             /* 이메일 제목 */
             String subject = "PEEP 계정 및 비밀번호 찾기";
             /* 이메일 내용 */
             String text = "인증번호는" + verificationCode + "입니다.";
 
-            sendEmail.sendEmail(email,subject, text);
-            response.put("success", true);
-            response.put("message", SuccessCode.VERIFICATION_CODE);
+            try{
+                sendEmail.sendEmail(email, subject, text);
+
+                response.put("success", true);
+                response.put("message", SuccessCode.SEND_VERIFICATION_CODE);
+            }catch (Exception e){
+                e.printStackTrace();
+                response.put("success", false);
+                response.put("message", e.getMessage());
+            }
         } else {
             response.put("success", false);
             response.put("message", ErrorCode.USER_INFO_CHECK);
@@ -109,20 +127,20 @@ public class UserService {
         return response;
     }
 
-    public Map<String, Object> setNewPassword(String userId, String userPw) {
+    public Map<String, Object> setNewPassword(String loginId, String userPw) {
         Map<String, Object> response = new HashMap<>();
+
+        Optional<User> idCheck = userRepository.findUser(loginId);
+
         String encodePw = passwordEncoder.encode(userPw);
 
-        Optional<User> idCheck = userRepository.findUserId(userId);
-
-        User user = User.builder()
-                .userPw(encodePw)
-                .build();
-
         if(idCheck.isPresent()) {
-            userRepository.saveUser(user);
+            User user = idCheck.get();
+            user.setUserPw(encodePw);
+
+            userRepository.save(user);
             response.put("success", true);
-            response.put("message", SuccessCode.MEMBER_UPDATE_SUCCESS);
+            response.put("message", SuccessCode.MEMBER_UPDATE_PASSWORD);
         } else {
             response.put("success", false);
             response.put("message", ErrorCode.UPDATE_ERROR);
@@ -132,22 +150,20 @@ public class UserService {
 
     public Map<String, Object> updateUserInfo(Map<String, Object> userInfo) {
         Map<String , Object> response = new HashMap<>();
-        String userId = userInfo.get("userId").toString();
+        String loginId = userInfo.get("loginId").toString();
         String nickname = userInfo.get("nickname").toString();
         String comment = userInfo.get("comment").toString();
         String profilePicture = userInfo.get("profilePicture").toString();
 
-
-        Optional<User> idCheck = userRepository.findUserId(userId);
-
-        User user = User.builder()
-                .nickname(nickname)
-                .comment(comment)
-                .profilePicture(profilePicture)
-                .build();
+        Optional<User> idCheck = userRepository.findUser(loginId);
 
         if(idCheck.isPresent()) {
-            userRepository.saveUser(user);
+            User user = idCheck.get();
+            user.setNickname(nickname);
+            user.setComment(comment);
+            user.setProfilePicture(profilePicture);
+
+            userRepository.save(user);
             response.put("success", true);
             response.put("message", SuccessCode.MEMBER_UPDATE_SUCCESS);
         } else {
