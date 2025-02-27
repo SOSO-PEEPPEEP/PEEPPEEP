@@ -115,13 +115,9 @@ public class util {
         char[] tmp = new char[6];
         int random = 0;
 
-        for(int i=0; i<tmp.length;i++){
-            random = (int)(Math.random()*58)+65;
-            if((91>random || random>96)){
-                tmp[i]= (char)random;
-            }else{
-                i--;
-            }
+        for(int i = 0; i < tmp.length; i++){
+            random = (int)(Math.random()*10)+48;
+            tmp[i]= (char)random;
         }
         return new String(tmp, 0, 6);
     }
