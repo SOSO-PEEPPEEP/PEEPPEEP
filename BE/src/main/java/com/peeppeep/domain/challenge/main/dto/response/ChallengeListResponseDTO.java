@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class ChallengeListResponseDTO {
-    private Integer id;
+    private Integer challengeId;
 
     private String title;
 
@@ -19,8 +19,8 @@ public class ChallengeListResponseDTO {
     private String category;
 
     @Builder
-    private ChallengeListResponseDTO(Integer id, String title, Integer period, String category) {
-        this.id = id;
+    private ChallengeListResponseDTO(Integer challengeId, String title, Integer period, String category) {
+        this.challengeId = challengeId;
         this.title = title;
         this.period = period;
         this.category = category;
@@ -28,7 +28,7 @@ public class ChallengeListResponseDTO {
 
     public static ChallengeListResponseDTO of(Challenge challenge) {
         return builder()
-                .id(challenge.getChallengeId())
+                .challengeId(challenge.getChallengeId())
                 .title(challenge.getTitle())
                 .period(challenge.getPeriod())
                 .category(challenge.getCategory().getName())

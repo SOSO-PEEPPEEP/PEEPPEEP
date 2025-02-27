@@ -62,8 +62,8 @@ public class Challenge extends BaseBy {
     @Builder
     private Challenge(String title, String content, Integer period,
                       LocalDate startAt, LocalDate endAt,
-                      IsPublicType isPublic, Boolean allowJoin, Integer streakCount,
-                      Category category, List<ChallengeUser> challengeUsers) {
+                      IsPublicType isPublic, Boolean allowJoin,
+                      Category category) {
         this.title = title;
         this.content = content;
         this.period = period;
@@ -71,14 +71,14 @@ public class Challenge extends BaseBy {
         this.endAt = endAt;
         this.isPublic = isPublic;
         this.allowJoin = allowJoin;
-        this.streakCount = streakCount;
+        this.streakCount = 0;
         this.category = category;
-        this.challengeUsers = challengeUsers;
+        this.calendar = Calendar.of(this);
     }
 
     // 챌린지 생성
-    public static Challenge of(User organizer, ChallengeRequestDTO challengeRequestDTO, Category category, List<User> participants) {
-        Challenge challenge = builder()
+    public static Challenge of(ChallengeRequestDTO challengeRequestDTO, Category category) {
+        return builder()
                 .title(challengeRequestDTO.getTitle())
                 .content(challengeRequestDTO.getContent())
                 .period(challengeRequestDTO.getPeriod())
@@ -86,33 +86,15 @@ public class Challenge extends BaseBy {
                 .endAt(challengeRequestDTO.getEndAt())
                 .isPublic(challengeRequestDTO.getIsPublic())
                 .allowJoin(challengeRequestDTO.getAllowJoin())
-                .streakCount(0)
                 .category(category)
-                .challengeUsers(new ArrayList<>())
                 .build();
-
-        // 챌린지장 추가
-        challenge.addChallengeUser(ChallengeUser.of(organizer, challenge, RoleType.ORGANIZER));
-
-        // 챌린지 참여자 추가
-        if(participants != null) {
-            for (User participant : participants) {
-                challenge.addChallengeUser(ChallengeUser.of(participant, challenge, RoleType.PARTICIPANT));
-            }
-        }
-
-        // 캘린더 생성
-        challenge.setCalendar(Calendar.of(challenge));
-
-        return challenge;
     }
 
-    private void setCalendar(Calendar calendar) {
-        this.calendar = calendar;
-    }
-
-    // 챌린지-참여자 중간테이블에 참여자 추가
-    private void addChallengeUser(ChallengeUser challengeUser) {
-        this.challengeUsers.add(challengeUser);
+    public void updateChallenge(ChallengeRequestDTO challengeRequestDTO, Category category) {
+        if (challengeRequestDTO.getTitle() != null) this.title = challengeRequestDTO.getTitle();
+        if (challengeRequestDTO.getContent() != null) this.content = challengeRequestDTO.getContent();
+        if (challengeRequestDTO.getIsPublic() != null) this.isPublic = challengeRequestDTO.getIsPublic();
+        if (challengeRequestDTO.getAllowJoin() != null) this.allowJoin = challengeRequestDTO.getAllowJoin();
+        if (category != null) this.category = category;
     }
 }

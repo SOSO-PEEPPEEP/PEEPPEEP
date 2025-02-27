@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -28,18 +30,21 @@ public class ChallengeDTO {
 
     private String category;
 
+    private List<ParticipantDTO> participants;
+
     private CalendarDTO calendar;
 
     @Builder
     private ChallengeDTO(String title, String content, Integer period,
                          LocalDate startAt, LocalDate endAt,
-                         String category, CalendarDTO calendar) {
+                         String category, List<ParticipantDTO> participants, CalendarDTO calendar) {
         this.title = title;
         this.content = content;
         this.period = period;
         this.startAt = startAt;
         this.endAt = endAt;
         this.category = category;
+        this.participants = participants;
         this.calendar = calendar;
     }
 
@@ -51,6 +56,9 @@ public class ChallengeDTO {
                 .startAt(challenge.getStartAt())
                 .endAt(challenge.getEndAt())
                 .category(challenge.getCategory().getName())
+                .participants(challenge.getChallengeUsers().stream()
+                        .map(ParticipantDTO::of)
+                        .collect(Collectors.toList()))
                 .calendar(CalendarDTO.of(challenge.getCalendar()))
                 .build();
     }

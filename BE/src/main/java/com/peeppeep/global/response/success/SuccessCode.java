@@ -40,8 +40,8 @@ public enum SuccessCode {
 
     // Challenge
     CHALLENGE_CREATE_SUCCESS(201, "챌린지 생성에 성공하였습니다."),
-    CHALLENGE_LIST_GET_SUCCESS(200, "챌린지 목록 조회에 성공하였습니다."),
     CHALLENGE_GET_SUCCESS(200, "챌린지 조회에 성공하였습니다."),
+    CHALLENGE_UPDATE_SUCCESS(204, "챌린지 수정에 성공하였습니다."),
     ;
 
     /**

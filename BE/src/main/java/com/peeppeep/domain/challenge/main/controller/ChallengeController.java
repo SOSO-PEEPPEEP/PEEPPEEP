@@ -25,13 +25,18 @@ public class ChallengeController {
         return ApiResponse.of(SuccessCode.CHALLENGE_CREATE_SUCCESS, challengeService.createChallenge(challengeRequestDTO));
     }
 
-    @GetMapping("")
-    public ApiResponse<List<ChallengeListResponseDTO>> getChallenges() {
-        return ApiResponse.of(SuccessCode.CHALLENGE_LIST_GET_SUCCESS, challengeService.getChallenges());
+    @GetMapping("/my")
+    public ApiResponse<List<ChallengeListResponseDTO>> getMyChallenges() {
+        return ApiResponse.of(SuccessCode.CHALLENGE_GET_SUCCESS, challengeService.getMyChallenges());
     }
 
     @GetMapping("/{challenge-id}")
-    public ApiResponse<ChallengeDTO> getChallenge(@PathVariable(value = "challenge-id") Integer challengeId) {
-        return ApiResponse.of(SuccessCode.CHALLENGE_GET_SUCCESS, challengeService.getChallenge(challengeId));
+    public ApiResponse<ChallengeDTO> getChallengeDetail(@PathVariable(value = "challenge-id") Integer challengeId) {
+        return ApiResponse.of(SuccessCode.CHALLENGE_GET_SUCCESS, challengeService.getChallengeDetail(challengeId));
+    }
+
+    @PutMapping("/{challenge-id}")
+    public ApiResponse<Integer> updateChallenge(@PathVariable("challenge-id") Integer challengeId, @RequestBody ChallengeRequestDTO challengeRequestDTO) {
+        return ApiResponse.of(SuccessCode.CHALLENGE_UPDATE_SUCCESS, challengeService.updateChallenge(challengeId, challengeRequestDTO));
     }
 }
