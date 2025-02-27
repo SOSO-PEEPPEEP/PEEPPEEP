@@ -1,7 +1,6 @@
 package com.peeppeep.domain.user.friend.repository;
 
 import com.peeppeep.domain.user.friend.entity.Friend;
-import org.hibernate.annotations.SQLDelete;
 import com.peeppeep.domain.user.main.entity.User;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;

@@ -14,11 +14,9 @@ import java.util.*;
 public class FriendService {
 
     private final FriendRepository friendRepository;
-    private final UserRepository userRepository;
 
     public FriendService(FriendRepository friendRepository, UserRepository userRepository) {
         this.friendRepository = friendRepository;
-        this.userRepository = userRepository;
     }
 
     public Map<String, Object> findUserFriendInfo(int userId, String status, int req) {

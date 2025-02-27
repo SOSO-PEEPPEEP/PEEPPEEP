@@ -1,6 +1,5 @@
 package com.peeppeep.domain.user.main.controller;
 
-import com.peeppeep.domain.user.main.entity.User;
 import com.peeppeep.domain.user.main.service.UserService;
 import com.peeppeep.global.response.error.ErrorCode;
 import com.peeppeep.global.response.success.SuccessCode;
@@ -15,7 +14,6 @@ import java.util.*;
 public class UserController {
 
     private final UserService userService;
-    private ErrorCode errorCode;
 
     @Autowired
     public UserController(UserService userService) {
@@ -32,11 +30,11 @@ public class UserController {
                 response.put("message", SuccessCode.LOGIN_SUCCESS);
             } else { //실패
                 response.put("success", false);
-                response.put("message", errorCode.FAIL_TO_LOGIN);
+                response.put("message", ErrorCode.FAIL_TO_LOGIN);
             }
         }else{
             response.put("success", false);
-            response.put("message", errorCode.FAIL_TO_LOGIN_EMPTY);
+            response.put("message", ErrorCode.FAIL_TO_LOGIN_EMPTY);
         }
         return response;
     }
