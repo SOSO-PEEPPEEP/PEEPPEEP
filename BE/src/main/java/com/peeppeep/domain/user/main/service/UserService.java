@@ -32,8 +32,19 @@ public class UserService {
         Map<String, Object> response = new HashMap<>();
         Optional<User> idCheck = userRepository.findUser(loginId);
         if (idCheck.isPresent()) {
-            Optional<User> userInfo = userRepository.findUser(loginId);
-            response.put("userInfo", userInfo.get());
+            response.put("userInfo", idCheck.get());
+        }
+        return response;
+    }
+
+    public Map<String, Object> login(String loginId, String userPw) {
+        Map<String, Object> response = new HashMap<>();
+        String encodePw = passwordEncoder.encode(userPw);
+
+        Optional<User> idCheck = userRepository.login(loginId, encodePw);
+        if (idCheck.isPresent()) {
+
+            response.put("userInfo", idCheck.get());
         }
         return response;
     }

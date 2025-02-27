@@ -4,6 +4,7 @@ import com.peeppeep.domain.user.main.service.UserService;
 import com.peeppeep.global.response.error.ErrorCode;
 import com.peeppeep.global.response.success.SuccessCode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,10 +15,12 @@ import java.util.*;
 public class UserController {
 
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -25,10 +28,17 @@ public class UserController {
         Map<String, Object> user = userService.findUser(loginId);
         Map<String, Object> response = new HashMap<>();
         if(loginId != null && !loginId.isEmpty() && userPw != null && !userPw.isEmpty()){
-            if(!user.isEmpty()) { // 성공
-                response.put("success", true);
-                response.put("message", SuccessCode.LOGIN_SUCCESS);
-            } else { //실패
+            if(!user.isEmpty()) {
+                try{
+                    Map<String, Object> userInfo = userService.login(loginId, userPw);
+                    response.put("userInfo", userInfo);
+                    response.put("success", true);
+                    response.put("message", SuccessCode.LOGIN_SUCCESS);
+                }catch (Exception e){
+                    response.put("success", false);
+                    response.put("message", ErrorCode.FAIL_TO_LOGIN);
+                }
+            } else {
                 response.put("success", false);
                 response.put("message", ErrorCode.FAIL_TO_LOGIN);
             }

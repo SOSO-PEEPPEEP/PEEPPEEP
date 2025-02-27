@@ -28,6 +28,15 @@ class UserRepositoryTest {
     }
 
     @Test
+    void login(){
+        String loginId = "testid01";
+        String loginPw = "testpwd01";
+
+        Map<String, Object> response = userService.login(loginId, loginPw);
+        LOG.info("response: {}", response);
+    }
+
+    @Test
     void findId() {
         String name = "테스트이름1번";
         String email= "test01@mail.com";
