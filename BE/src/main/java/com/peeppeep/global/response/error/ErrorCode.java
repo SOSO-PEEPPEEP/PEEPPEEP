@@ -34,22 +34,25 @@ public enum ErrorCode {
      * *********************************************************************************************
      */
     // basic
-    INSERT_ERROR(200, "삽입 실패"),
-    UPDATE_ERROR(200, "수정 실패"),
-    DELETE_ERROR(200, "삭제 실패"),
-
+    INSERT_ERROR(400, "삽입 실패"),
+    UPDATE_ERROR(400, "수정 실패"),
+    DELETE_ERROR(404, "삭제 실패"),
+    READ_ERROR(404, "조회 실패"),
+    VERIFY_ERROR(404, "인증 실패"),
     /**
      * ******************************* Custom Error CodeList ***************************************
      */
 
     // User
+    FAIL_TO_LOGIN_EMPTY(400, "입력된 정보가 없습니다."),
+    FAIL_TO_LOGIN(400, "아이디 또는 비밀번호를 확인해주시기 바랍니다."),
     FAIL_TO_OAUTH_LOGIN(400, "소셜 로그인에 실패했습니다."),
     USER_ID_NOT_EXIST(400, "회원 ID가 존재하지 않습니다."),
     USER_ID_ALREADY_EXIST(400, "회원 ID가 이미 존재합니다."),
+    USER_INFO_CHECK(400, "입력하신 회원 정보를 확인해주시기 바랍니다."),
 
-    USER_NICKNAME_NOT_EXIST(400, "회원 닉네임이 존재하지 않습니다."),
+    USER_NICKNAME_NOT_EXIST(404, "회원 닉네임이 존재하지 않습니다."),
     NICKNAME_ALREADY_EXIST(400, "닉네임이 이미 존재합니다.");
-
 
     /**
      * ******************************* Error Code Field ***************************************
