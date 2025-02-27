@@ -1,6 +1,6 @@
 package com.peeppeep.global.util;
 
-public class util {
+public class Util {
 
     /**
     *    소문자 형태로 표준화

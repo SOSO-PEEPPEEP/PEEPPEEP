@@ -5,7 +5,6 @@ import com.peeppeep.domain.user.main.repository.UserRepository;
 import com.peeppeep.global.response.error.ErrorCode;
 import com.peeppeep.global.response.success.SuccessCode;
 import com.peeppeep.global.util.SendEmail;
-import com.peeppeep.global.util.util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final SendEmail sendEmail;
-    private util Util;
+    private com.peeppeep.global.util.Util Util;
 
     @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, SendEmail sendEmail) {
