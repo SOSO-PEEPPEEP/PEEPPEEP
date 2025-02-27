@@ -1,6 +1,7 @@
 package com.peeppeep.domain.challenge.main.dto;
 
 import com.peeppeep.domain.challenge.main.entity.Calendar;
+import com.peeppeep.domain.challenge.main.entity.DailyStatusType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,36 +11,36 @@ import lombok.Setter;
 @Builder
 public class CalendarDTO {
 
-    private Integer day1;
-    private Integer day2;
-    private Integer day3;
-    private Integer day4;
-    private Integer day5;
-    private Integer day6;
-    private Integer day7;
-    private Integer day8;
-    private Integer day9;
-    private Integer day10;
-    private Integer day11;
-    private Integer day12;
-    private Integer day13;
-    private Integer day14;
-    private Integer day15;
-    private Integer day16;
-    private Integer day17;
-    private Integer day18;
-    private Integer day19;
-    private Integer day20;
-    private Integer day21;
-    private Integer day22;
-    private Integer day23;
-    private Integer day24;
-    private Integer day25;
-    private Integer day26;
-    private Integer day27;
-    private Integer day28;
-    private Integer day29;
-    private Integer day30;
+    private DailyStatusType day1;
+    private DailyStatusType day2;
+    private DailyStatusType day3;
+    private DailyStatusType day4;
+    private DailyStatusType day5;
+    private DailyStatusType day6;
+    private DailyStatusType day7;
+    private DailyStatusType day8;
+    private DailyStatusType day9;
+    private DailyStatusType day10;
+    private DailyStatusType day11;
+    private DailyStatusType day12;
+    private DailyStatusType day13;
+    private DailyStatusType day14;
+    private DailyStatusType day15;
+    private DailyStatusType day16;
+    private DailyStatusType day17;
+    private DailyStatusType day18;
+    private DailyStatusType day19;
+    private DailyStatusType day20;
+    private DailyStatusType day21;
+    private DailyStatusType day22;
+    private DailyStatusType day23;
+    private DailyStatusType day24;
+    private DailyStatusType day25;
+    private DailyStatusType day26;
+    private DailyStatusType day27;
+    private DailyStatusType day28;
+    private DailyStatusType day29;
+    private DailyStatusType day30;
 
     public static CalendarDTO of(Calendar calendar) {
         return builder()

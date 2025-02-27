@@ -34,41 +34,27 @@ public enum ErrorCode {
      * *********************************************************************************************
      */
     // basic
-    INSERT_ERROR(400, "삽입 실패"),
-    UPDATE_ERROR(400, "수정 실패"),
-    DELETE_ERROR(404, "삭제 실패"),
-    READ_ERROR(404, "조회 실패"),
-    VERIFY_ERROR(404, "인증 실패"),
+    INSERT_ERROR(200, "삽입 실패"),
+    UPDATE_ERROR(200, "수정 실패"),
+    DELETE_ERROR(200, "삭제 실패"),
+
     /**
      * ******************************* Custom Error CodeList ***************************************
      */
 
     // User
-    FAIL_TO_LOGIN_EMPTY(400, "입력된 정보가 없습니다."),
-    FAIL_TO_LOGIN(400, "아이디 또는 비밀번호를 확인해주시기 바랍니다."),
     FAIL_TO_OAUTH_LOGIN(400, "소셜 로그인에 실패했습니다."),
     USER_ID_NOT_EXIST(400, "회원 ID가 존재하지 않습니다."),
     USER_ID_ALREADY_EXIST(400, "회원 ID가 이미 존재합니다."),
-    USER_INFO_CHECK(400, "입력하신 회원 정보를 확인해주시기 바랍니다."),
 
-    USER_NICKNAME_NOT_EXIST(404, "회원 닉네임이 존재하지 않습니다."),
+    USER_NICKNAME_NOT_EXIST(400, "회원 닉네임이 존재하지 않습니다."),
     NICKNAME_ALREADY_EXIST(400, "닉네임이 이미 존재합니다."),
 
     // Challenge
     CHALLENGE_NOT_EXIST(400,"챌린지가 존재하지 않습니다."),
     CATEGORY_NOT_EXIST(400,"카테고리가 존재하지 않습니다."),
-    CHALLENGE_ACCESS_DENIED(403, "해당 챌린지에 접근할 수 없습니다."),
+    CHALLENGE_ACCESS_DENIED(403, "해당 챌린지에 접근할 수 없습니다.")
 
-    // Daily
-    DAY_FIELD_NOT_EXIST(400, "day 필드명이 존재하지 않습니다."),
-    DAILY_NOT_EXIST(400, "챌린지 데일리가 존재하지 않습니다."),
-
-    // Pet
-    PET_TYPE_NOT_EXIST(400, "펫 타입이 존재하지 않습니다."),
-    PET_COLLECTION_NOT_FOUND(404,"펫 도감에 해당 펫을 찾을 수 없습니다."),
-    PET_RANK_NOT_FOUND(400,"펫 도감에 해당 랭크의 펫을 찾을 수 없습니다."),
-    PET_NOT_EXIST(400, "펫이 존재하지 않습니다"),
-    PET_ACCESS_DENIED(403, "해당 펫에 접근할 수 없습니다.")
     ;
     /**
      * ******************************* Error Code Field ***************************************
