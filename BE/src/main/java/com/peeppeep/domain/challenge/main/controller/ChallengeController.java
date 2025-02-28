@@ -41,6 +41,11 @@ public class ChallengeController {
         return ApiResponse.of(SuccessCode.CHALLENGE_UPDATE_SUCCESS, challengeService.updateChallenge(challengeId, challengeRequestDTO));
     }
 
+    @DeleteMapping("/{challenge-id}")
+    public ApiResponse<Boolean> deleteChallenge(@PathVariable("challenge-id") Integer challengeId) {
+        return ApiResponse.of(SuccessCode.CHALLENGE_DELETE_SUCCESS, challengeService.deleteChallenge(challengeId));
+    }
+
     @PostMapping("/{challenge-id}/daily")
     public ApiResponse<Integer> createDaily(@PathVariable(value = "challenge-id") Integer challengeId, @RequestBody DailyRequestDTO dailyRequestDTO) {
         return ApiResponse.of(SuccessCode.DAILY_CREATE_SUCCESS, challengeService.createDaily(challengeId,dailyRequestDTO));

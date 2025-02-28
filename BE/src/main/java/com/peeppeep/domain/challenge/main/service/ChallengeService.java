@@ -162,7 +162,34 @@ public class ChallengeService {
         return challenge.getChallengeId();
     }
 
+    @Transactional
+    public Boolean deleteChallenge(Integer challengeId) {
+        //임의로 userId 설정
+        Integer userId = 1;
+
+        // User 정보
+        User user = userRepository.findByUserIdAndDeletedAtIsNull(userId)
+                .orElseThrow(()->new BusinessException(ErrorCode.USER_ID_NOT_EXIST, ErrorCode.USER_ID_NOT_EXIST.getMessage()));
+
+        // Challenge 정보
+        Challenge challenge = challengeRepository.findByChallengeIdAndDeletedAtIsNull(challengeId)
+                .orElseThrow(()->new BusinessException(ErrorCode.CHALLENGE_NOT_EXIST, ErrorCode.CHALLENGE_NOT_EXIST.getMessage()));
+
+        // 요청자와 챌린지장이 동일한지 확인
+        RoleType roleType = challengeUserRepository.findRoleByUserAndChallengeAndDeletedAtIsNull(user, challenge)
+                .orElseThrow(() -> new BusinessException(ErrorCode.CHALLENGE_ACCESS_DENIED, ErrorCode.CHALLENGE_ACCESS_DENIED.getMessage()));
+
+        if (roleType != RoleType.ORGANIZER) {
+            throw new BusinessException(ErrorCode.CHALLENGE_ACCESS_DENIED, ErrorCode.CHALLENGE_ACCESS_DENIED.getMessage());
+        }
+
+        challengeRepository.delete(challenge);
+
+        return true;
+    }
+
     /*챌린지 데일리 생성*/
+    @Transactional
     public Integer createDaily(Integer challengeId, DailyRequestDTO dailyRequestDTO) {
         //임의로 userId 설정
         Integer userId = 1;
