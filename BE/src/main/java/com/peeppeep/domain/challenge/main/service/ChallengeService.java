@@ -212,7 +212,7 @@ public class ChallengeService {
         dailyRepository.save(daily);
 
         // Challenge 연속일 갱신
-        challenge.updateStreakCount();
+        challenge.updateStreakCountPlus();
         challengeRepository.save(challenge);
 
         // Calendar 갱신
@@ -221,5 +221,40 @@ public class ChallengeService {
         calendarRepository.save(calendar);
 
         return daily.getDailyId();
+    }
+
+    @Transactional
+    public Boolean deleteDaily(Integer dailyId) {
+        //임의로 userId 설정
+        Integer userId = 1;
+
+        // User 정보
+        User user = userRepository.findByUserIdAndDeletedAtIsNull(userId)
+                .orElseThrow(()->new BusinessException(ErrorCode.USER_ID_NOT_EXIST, ErrorCode.USER_ID_NOT_EXIST.getMessage()));
+
+        // Daily 정보
+        Daily daily = dailyRepository.findByDailyIdAndDeletedAtIsNull(dailyId)
+                .orElseThrow(()->new BusinessException(ErrorCode.DAILY_NOT_EXIST, ErrorCode.DAILY_NOT_EXIST.getMessage()));
+
+        // Challenge 정보
+        Challenge challenge = daily.getChallenge();
+
+        // Challenge 연속일 갱신
+        challenge.updateStreakCountMinus();
+        challengeRepository.save(challenge);
+
+        // Calendar 갱신
+        Calendar calendar = calendarRepository.findByChallengeAndDeletedAtIsNull(challenge);
+        calendar.updateDayStatus(daily.getDay(),DailyStatusType.NOT_ATTEMPTED);
+        calendarRepository.save(calendar);
+
+        // 해당 챌린지에 참여중인지 확인
+        if(!challengeUserRepository.existsByChallengeAndUserAndDeletedAtIsNull(challenge, user)) {
+            throw(new BusinessException(ErrorCode.CHALLENGE_ACCESS_DENIED, ErrorCode.CHALLENGE_ACCESS_DENIED.getMessage()));
+        }
+
+        dailyRepository.delete(daily);
+
+        return true;
     }
 }
