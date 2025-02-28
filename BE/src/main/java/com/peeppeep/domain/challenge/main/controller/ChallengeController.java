@@ -50,4 +50,9 @@ public class ChallengeController {
     public ApiResponse<Integer> createDaily(@PathVariable(value = "challenge-id") Integer challengeId, @RequestBody DailyRequestDTO dailyRequestDTO) {
         return ApiResponse.of(SuccessCode.DAILY_CREATE_SUCCESS, challengeService.createDaily(challengeId,dailyRequestDTO));
     }
+
+    @DeleteMapping("/daily/{daily-id}")
+    public ApiResponse<Boolean> deleteDaily(@PathVariable(value = "daily-id") Integer dailyId) {
+        return ApiResponse.of(SuccessCode.DAILY_DELETE_SUCCESS, challengeService.deleteDaily(dailyId));
+    }
 }

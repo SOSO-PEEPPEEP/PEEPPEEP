@@ -55,9 +55,9 @@ public enum ErrorCode {
     CATEGORY_NOT_EXIST(400,"카테고리가 존재하지 않습니다."),
     CHALLENGE_ACCESS_DENIED(403, "해당 챌린지에 접근할 수 없습니다."),
 
-    //Daily
+    // Daily
     DAY_FIELD_NOT_EXIST(400, "day 필드명이 존재하지 않습니다."),
-
+    DAILY_NOT_EXIST(400, "챌린지 데일리가 존재하지 않습니다."),
     ;
     /**
      * ******************************* Error Code Field ***************************************

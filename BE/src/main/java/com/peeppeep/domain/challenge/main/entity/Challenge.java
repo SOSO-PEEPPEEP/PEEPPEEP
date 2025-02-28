@@ -98,7 +98,11 @@ public class Challenge extends BaseBy {
         if (category != null) this.category = category;
     }
 
-    public void updateStreakCount() {
+    public void updateStreakCountPlus() {
         streakCount++;
+    }
+
+    public void updateStreakCountMinus() {
+        streakCount--;
     }
 }
