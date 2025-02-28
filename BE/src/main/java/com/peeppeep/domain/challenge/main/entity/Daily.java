@@ -1,5 +1,6 @@
 package com.peeppeep.domain.challenge.main.entity;
 
+import com.peeppeep.domain.challenge.main.dto.request.DailyRequestDTO;
 import com.peeppeep.global.entity.BaseBy;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -21,9 +22,6 @@ public class Daily extends BaseBy {
     @Column(name = "day")
     private Integer day;
 
-    @Column(name = "is_completed")
-    private Boolean isCompleted;
-
     @Column(name = "content")
     private String content;
 
@@ -35,12 +33,20 @@ public class Daily extends BaseBy {
     private Challenge challenge;
 
     @Builder
-    private Daily(Integer dailyId, Integer day, Boolean isCompleted, String content, String picture, Challenge challenge) {
-        this.dailyId = dailyId;
+    private Daily(Integer day, String content, String picture,
+                  Challenge challenge) {
         this.day = day;
-        this.isCompleted = isCompleted;
         this.content = content;
         this.picture = picture;
         this.challenge = challenge;
+    }
+
+    public static Daily of(Challenge challenge, DailyRequestDTO dailyRequestDTO) {
+        return builder()
+                .day(dailyRequestDTO.getDay())
+                .content(dailyRequestDTO.getContent())
+                .picture(dailyRequestDTO.getPicture())
+                .challenge(challenge)
+                .build();
     }
 }

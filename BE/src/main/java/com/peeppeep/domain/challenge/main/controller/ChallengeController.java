@@ -2,6 +2,7 @@ package com.peeppeep.domain.challenge.main.controller;
 
 import com.peeppeep.domain.challenge.main.dto.ChallengeDTO;
 import com.peeppeep.domain.challenge.main.dto.request.ChallengeRequestDTO;
+import com.peeppeep.domain.challenge.main.dto.request.DailyRequestDTO;
 import com.peeppeep.domain.challenge.main.dto.response.ChallengeListResponseDTO;
 import com.peeppeep.domain.challenge.main.service.ChallengeService;
 import com.peeppeep.global.response.success.ApiResponse;
@@ -38,5 +39,10 @@ public class ChallengeController {
     @PutMapping("/{challenge-id}")
     public ApiResponse<Integer> updateChallenge(@PathVariable("challenge-id") Integer challengeId, @RequestBody ChallengeRequestDTO challengeRequestDTO) {
         return ApiResponse.of(SuccessCode.CHALLENGE_UPDATE_SUCCESS, challengeService.updateChallenge(challengeId, challengeRequestDTO));
+    }
+
+    @PostMapping("/{challenge-id}/daily")
+    public ApiResponse<Integer> createDaily(@PathVariable(value = "challenge-id") Integer challengeId, @RequestBody DailyRequestDTO dailyRequestDTO) {
+        return ApiResponse.of(SuccessCode.DAILY_CREATE_SUCCESS, challengeService.createDaily(challengeId,dailyRequestDTO));
     }
 }

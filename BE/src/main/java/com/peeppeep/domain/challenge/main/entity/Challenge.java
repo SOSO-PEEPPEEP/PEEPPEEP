@@ -97,4 +97,8 @@ public class Challenge extends BaseBy {
         if (challengeRequestDTO.getAllowJoin() != null) this.allowJoin = challengeRequestDTO.getAllowJoin();
         if (category != null) this.category = category;
     }
+
+    public void updateStreakCount() {
+        streakCount++;
+    }
 }
