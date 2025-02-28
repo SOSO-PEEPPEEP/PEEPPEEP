@@ -1,5 +1,8 @@
 package com.peeppeep.domain.challenge.main.entity;
 
+import com.peeppeep.global.entity.BaseBy;
+import com.peeppeep.global.response.error.ErrorCode;
+import com.peeppeep.global.response.error.exception.BusinessException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -7,11 +10,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 
+import java.lang.reflect.Field;
+
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE calendar SET deleted_at = NOW() where calendar_id = ?")
-public class Calendar {
+public class Calendar extends BaseBy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "calendar_id")
@@ -92,5 +97,17 @@ public class Calendar {
         return builder()
                 .challenge(challenge)
                 .build();
+    }
+
+    public void updateDayStatus(int day, DailyStatusType status) {
+        try {
+            String fieldName = String.format("day%02d", day);
+            Field field = this.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true);
+
+            field.set(this, status);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new BusinessException(ErrorCode.DAY_FIELD_NOT_EXIST, ErrorCode.DAY_FIELD_NOT_EXIST.getMessage()+" : "+day);
+        }
     }
 }

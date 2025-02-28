@@ -2,14 +2,10 @@ package com.peeppeep.domain.challenge.main.service;
 
 import com.peeppeep.domain.challenge.main.dto.ChallengeDTO;
 import com.peeppeep.domain.challenge.main.dto.request.ChallengeRequestDTO;
+import com.peeppeep.domain.challenge.main.dto.request.DailyRequestDTO;
 import com.peeppeep.domain.challenge.main.dto.response.ChallengeListResponseDTO;
-import com.peeppeep.domain.challenge.main.entity.Category;
-import com.peeppeep.domain.challenge.main.entity.Challenge;
-import com.peeppeep.domain.challenge.main.entity.IsPublicType;
-import com.peeppeep.domain.challenge.main.entity.RoleType;
-import com.peeppeep.domain.challenge.main.repository.CategoryRepository;
-import com.peeppeep.domain.challenge.main.repository.ChallengeRepository;
-import com.peeppeep.domain.challenge.main.repository.ChallengeUserRepository;
+import com.peeppeep.domain.challenge.main.entity.*;
+import com.peeppeep.domain.challenge.main.repository.*;
 import com.peeppeep.domain.user.main.entity.User;
 import com.peeppeep.domain.user.main.repository.UserRepository;
 import com.peeppeep.global.response.error.ErrorCode;
@@ -34,6 +30,8 @@ public class ChallengeService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final ChallengeUserRepository challengeUserRepository;
+    private final DailyRepository dailyRepository;
+    private final CalendarRepository calendarRepository;
 
     /*챌린지 생성*/
     @Transactional
@@ -162,5 +160,39 @@ public class ChallengeService {
         challengeUserService.removeMissingParticipants(challenge, newParticipants);
 
         return challenge.getChallengeId();
+    }
+
+    /*챌린지 데일리 생성*/
+    public Integer createDaily(Integer challengeId, DailyRequestDTO dailyRequestDTO) {
+        //임의로 userId 설정
+        Integer userId = 1;
+
+        // User 정보
+        User user = userRepository.findByUserIdAndDeletedAtIsNull(userId)
+                .orElseThrow(()->new BusinessException(ErrorCode.USER_ID_NOT_EXIST, ErrorCode.USER_ID_NOT_EXIST.getMessage()));
+
+        // Challenge 정보
+        Challenge challenge = challengeRepository.findByChallengeIdAndDeletedAtIsNull(challengeId)
+                .orElseThrow(()->new BusinessException(ErrorCode.CHALLENGE_NOT_EXIST, ErrorCode.CHALLENGE_NOT_EXIST.getMessage()));
+
+        // 해당 챌린지에 참여중인지 확인
+        if(!challengeUserRepository.existsByChallengeAndUserAndDeletedAtIsNull(challenge, user)) {
+            throw(new BusinessException(ErrorCode.CHALLENGE_ACCESS_DENIED, ErrorCode.CHALLENGE_ACCESS_DENIED.getMessage()));
+        }
+
+        // Daily 생성
+        Daily daily = Daily.of(challenge, dailyRequestDTO);
+        dailyRepository.save(daily);
+
+        // Challenge 연속일 갱신
+        challenge.updateStreakCount();
+        challengeRepository.save(challenge);
+
+        // Calendar 갱신
+        Calendar calendar = calendarRepository.findByChallengeAndDeletedAtIsNull(challenge);
+        calendar.updateDayStatus(dailyRequestDTO.getDay(),DailyStatusType.SUCCESS);
+        calendarRepository.save(calendar);
+
+        return daily.getDailyId();
     }
 }
