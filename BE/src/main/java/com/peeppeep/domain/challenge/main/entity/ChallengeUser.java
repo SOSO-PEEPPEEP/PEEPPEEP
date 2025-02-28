@@ -16,8 +16,8 @@ import org.hibernate.annotations.SQLDelete;
 public class ChallengeUser extends BaseBy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_challenge_id")
-    private Integer userChallengeId;
+    @Column(name = "challenge_user_id")
+    private Integer challengeUserId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
