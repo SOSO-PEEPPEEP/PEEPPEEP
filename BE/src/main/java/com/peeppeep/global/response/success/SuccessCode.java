@@ -42,11 +42,12 @@ public enum SuccessCode {
     CHALLENGE_CREATE_SUCCESS(201, "챌린지 생성에 성공하였습니다."),
     CHALLENGE_GET_SUCCESS(200, "챌린지 조회에 성공하였습니다."),
     CHALLENGE_UPDATE_SUCCESS(204, "챌린지 수정에 성공하였습니다."),
-    CHALLENGE_DELETE_SUCCESS(204, "챌린지 삭제에 성공하였습니다"),
+    CHALLENGE_DELETE_SUCCESS(204, "챌린지 삭제에 성공하였습니다."),
+    CHALLENGE_RESULT_SUCCESS(200, "챌린지 결산에 성공하였습니다."),
 
     // Daily
-    DAILY_CREATE_SUCCESS(201, "챌린지 데일리 생성에 성공하였습니다"),
-    DAILY_DELETE_SUCCESS(204, "챌린지 데일리 삭제에 성공하였습니다"),
+    DAILY_CREATE_SUCCESS(201, "챌린지 데일리 생성에 성공하였습니다."),
+    DAILY_DELETE_SUCCESS(204, "챌린지 데일리 삭제에 성공하였습니다."),
     ;
 
     /**

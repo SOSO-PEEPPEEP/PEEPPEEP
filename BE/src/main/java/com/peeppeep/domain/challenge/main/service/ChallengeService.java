@@ -4,6 +4,7 @@ import com.peeppeep.domain.challenge.main.dto.ChallengeDTO;
 import com.peeppeep.domain.challenge.main.dto.request.ChallengeRequestDTO;
 import com.peeppeep.domain.challenge.main.dto.request.DailyRequestDTO;
 import com.peeppeep.domain.challenge.main.dto.response.ChallengeListResponseDTO;
+import com.peeppeep.domain.challenge.main.dto.response.ChallengeResultResponseDTO;
 import com.peeppeep.domain.challenge.main.entity.*;
 import com.peeppeep.domain.challenge.main.repository.*;
 import com.peeppeep.domain.user.main.entity.User;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +38,7 @@ public class ChallengeService {
     /*챌린지 생성*/
     @Transactional
     public Integer createChallenge(ChallengeRequestDTO challengeRequestDTO) {
-        //임의로 userId 설정
+        // 임의로 userId 설정
         Integer userId = 1;
 
         // User 정보
@@ -67,7 +69,7 @@ public class ChallengeService {
 
     /*나의 챌린지 목록 조회*/
     public List<ChallengeListResponseDTO> getMyChallenges() {
-        //임의로 userId 설정
+        // 임의로 userId 설정
         Integer userId = 1;
 
         // User 정보
@@ -76,16 +78,20 @@ public class ChallengeService {
 
         // User기반으로 있는 챌린지목록 조회
         List<Challenge> challenges = challengeUserRepository.findChallengesByUserAndDeletedAtIsNull(user);
+        // 챌린지 목록 중 완료되지 않은 목록만 조회
+        List<Challenge> incompleteChallenges = challenges.stream()
+                .filter(challenge -> !challenge.getIsCompleted())
+                .toList();
 
         // 챌린지 리스트 DTO 리스트로 변환 후 반환
-        return challenges.stream()
+        return incompleteChallenges.stream()
                 .map(ChallengeListResponseDTO::of)
                 .collect(Collectors.toList());
     }
 
     /*챌린지 상세 조회*/
     public ChallengeDTO getChallengeDetail(Integer challengeId) {
-        //임의로 userId 설정
+        // 임의로 userId 설정
         Integer userId = 1;
 
         // Challenge 정보
@@ -116,7 +122,7 @@ public class ChallengeService {
     /*챌린지 수정*/
     @Transactional
     public Integer updateChallenge(Integer challengeId, ChallengeRequestDTO challengeRequestDTO) {
-        //임의로 userId 설정
+        // 임의로 userId 설정
         Integer userId = 1;
 
         // User 정보
@@ -162,9 +168,10 @@ public class ChallengeService {
         return challenge.getChallengeId();
     }
 
+    /*챌린지 삭제*/
     @Transactional
     public Boolean deleteChallenge(Integer challengeId) {
-        //임의로 userId 설정
+        // 임의로 userId 설정
         Integer userId = 1;
 
         // User 정보
@@ -188,10 +195,89 @@ public class ChallengeService {
         return true;
     }
 
+    /*챌린지 결산*/
+    @Transactional
+    public ChallengeResultResponseDTO getChallengeResult(Integer challengeId) {
+        // 임의로 userId 설정
+        Integer userId = 1;
+
+        // User 정보
+        User user = userRepository.findByUserIdAndDeletedAtIsNull(userId)
+                .orElseThrow(()->new BusinessException(ErrorCode.USER_ID_NOT_EXIST, ErrorCode.USER_ID_NOT_EXIST.getMessage()));
+
+        // Challenge 정보
+        Challenge challenge = challengeRepository.findByChallengeIdAndDeletedAtIsNull(challengeId)
+                .orElseThrow(()->new BusinessException(ErrorCode.CHALLENGE_NOT_EXIST, ErrorCode.CHALLENGE_NOT_EXIST.getMessage()));
+
+        // 해당 챌린지에 참여중인지 확인
+        if(!challengeUserRepository.existsByChallengeAndUserAndDeletedAtIsNull(challenge, user)) {
+            throw(new BusinessException(ErrorCode.CHALLENGE_ACCESS_DENIED, ErrorCode.CHALLENGE_ACCESS_DENIED.getMessage()));
+        }
+
+        // 완료 갱신
+        challenge.updateIsCompleted();
+        challengeRepository.save(challenge);
+
+        // 챌린지 점수에 따른 결과물 계산
+        /**
+         * 7일 연속: 약 161점
+         * 14일 연속: 약 959점
+         * 21일 연속: 약 3080점
+         * 30일 연속: 약 8855점
+         * ------------------------------
+         * 점수 기준
+         * COMMON : 약 0 ~ 160점
+         * RARE : 약 161 ~ 960점
+         * UNIQUE : 약 961 ~ 3,080점
+         * EPIC : 약 3,081 ~ 7,210점
+         * LEGENDARY : 약 7,211 ~ 8,855점
+         */
+        int commonScore = 160;
+        int rareScore = 960;
+        int uniqueScore = 3080;
+        int epicScore = 7210;
+        int resultScore = challenge.getResultScore();
+
+        //==아이템 관련 로직은 추후 추가==//
+        // Common
+        if (resultScore<=commonScore) {
+
+        }
+        // Rare
+        else if(resultScore<=rareScore) {
+
+        }
+        // Unique
+        else if (resultScore<=uniqueScore) {
+
+        }
+        // epic
+        else if (resultScore<=epicScore) {
+
+        }
+        // legendary
+        else {
+
+        }
+
+
+        //==ItemDTOList를 담을 예정==//
+        // 임의의 아이템 return
+
+        List<String> items = new ArrayList<>();
+        items.add("당근");
+        items.add("샤워기");
+        items.add("덤벨");
+        items.add("휴지");
+        items.add("장난감");
+
+        return ChallengeResultResponseDTO.of(items);
+    }
+
     /*챌린지 데일리 생성*/
     @Transactional
     public Integer createDaily(Integer challengeId, DailyRequestDTO dailyRequestDTO) {
-        //임의로 userId 설정
+        // 임의로 userId 설정
         Integer userId = 1;
 
         // User 정보
@@ -211,21 +297,22 @@ public class ChallengeService {
         Daily daily = Daily.of(challenge, dailyRequestDTO);
         dailyRepository.save(daily);
 
-        // Challenge 연속일 갱신
-        challenge.updateStreakCountPlus();
+        // Challenge 연속일 및 점수 갱신
+        challenge.updateStreakCountAndResultScorePlus();
         challengeRepository.save(challenge);
 
         // Calendar 갱신
         Calendar calendar = calendarRepository.findByChallengeAndDeletedAtIsNull(challenge);
-        calendar.updateDayStatus(dailyRequestDTO.getDay(),DailyStatusType.SUCCESS);
+        calendar.updateDayStatus(dailyRequestDTO.getDay(),daily.getDailyId());
         calendarRepository.save(calendar);
 
         return daily.getDailyId();
     }
 
+    /*챌린지 데일리 삭제*/
     @Transactional
     public Boolean deleteDaily(Integer dailyId) {
-        //임의로 userId 설정
+        // 임의로 userId 설정
         Integer userId = 1;
 
         // User 정보
@@ -239,13 +326,13 @@ public class ChallengeService {
         // Challenge 정보
         Challenge challenge = daily.getChallenge();
 
-        // Challenge 연속일 갱신
-        challenge.updateStreakCountMinus();
+        // Challenge 연속일 및 점수 갱신
+        challenge.updateStreakCountAndResultScoreMinus();
         challengeRepository.save(challenge);
 
         // Calendar 갱신
         Calendar calendar = calendarRepository.findByChallengeAndDeletedAtIsNull(challenge);
-        calendar.updateDayStatus(daily.getDay(),DailyStatusType.NOT_ATTEMPTED);
+        calendar.updateDayStatus(daily.getDay(),null);
         calendarRepository.save(calendar);
 
         // 해당 챌린지에 참여중인지 확인
