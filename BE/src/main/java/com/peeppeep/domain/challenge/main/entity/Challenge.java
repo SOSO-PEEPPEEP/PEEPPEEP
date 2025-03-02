@@ -1,7 +1,6 @@
 package com.peeppeep.domain.challenge.main.entity;
 
 import com.peeppeep.domain.challenge.main.dto.request.ChallengeRequestDTO;
-import com.peeppeep.domain.user.main.entity.User;
 import com.peeppeep.global.entity.BaseBy;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -11,7 +10,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -49,6 +47,12 @@ public class Challenge extends BaseBy {
     @Column(name = "streak_count")
     private Integer streakCount;
 
+    @Column(name = "result_score")
+    private Integer resultScore;
+
+    @Column(name = "is_completed")
+    private Boolean isCompleted;
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
@@ -72,6 +76,8 @@ public class Challenge extends BaseBy {
         this.isPublic = isPublic;
         this.allowJoin = allowJoin;
         this.streakCount = 0;
+        this.resultScore = 0;
+        this.isCompleted = false;
         this.category = category;
         this.calendar = Calendar.of(this);
     }
@@ -98,11 +104,25 @@ public class Challenge extends BaseBy {
         if (category != null) this.category = category;
     }
 
-    public void updateStreakCountPlus() {
+    public void updateStreakCountAndResultScorePlus() {
+        // 연속일
         streakCount++;
+        // 점수
+        int basePoints = 10;
+        int bonusPoints = (streakCount - 1) * (streakCount - 1);
+        resultScore += basePoints + bonusPoints;
     }
 
-    public void updateStreakCountMinus() {
+    public void updateStreakCountAndResultScoreMinus() {
+        // 점수
+        int basePoints = 10;
+        int bonusPoints = (streakCount - 1) * (streakCount - 1);
+        resultScore -= basePoints + bonusPoints;
+        // 연속일
         streakCount--;
+    }
+
+    public void updateIsCompleted() {
+        isCompleted = true;
     }
 }

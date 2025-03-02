@@ -23,66 +23,71 @@ public class Calendar extends BaseBy {
     private Integer calendarId;
 
     // Day01~30
+    /**
+     * 1이상 Int : dailyId
+     * 0 : 실패
+     * null : 아직 수행하지 않음
+     * */
     @Column(name = "day01")
-    private DailyStatusType day01 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day01;
     @Column(name = "day02")
-    private DailyStatusType day02 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day02;
     @Column(name = "day03")
-    private DailyStatusType day03 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day03;
     @Column(name = "day04")
-    private DailyStatusType day04 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day04;
     @Column(name = "day05")
-    private DailyStatusType day05 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day05;
     @Column(name = "day06")
-    private DailyStatusType day06 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day06;
     @Column(name = "day07")
-    private DailyStatusType day07 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day07;
     @Column(name = "day08")
-    private DailyStatusType day08 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day08;
     @Column(name = "day09")
-    private DailyStatusType day09 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day09;
     @Column(name = "day10")
-    private DailyStatusType day10 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day10;
     @Column(name = "day11")
-    private DailyStatusType day11 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day11;
     @Column(name = "day12")
-    private DailyStatusType day12 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day12;
     @Column(name = "day13")
-    private DailyStatusType day13 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day13;
     @Column(name = "day14")
-    private DailyStatusType day14 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day14;
     @Column(name = "day15")
-    private DailyStatusType day15 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day15;
     @Column(name = "day16")
-    private DailyStatusType day16 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day16;
     @Column(name = "day17")
-    private DailyStatusType day17 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day17;
     @Column(name = "day18")
-    private DailyStatusType day18 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day18;
     @Column(name = "day19")
-    private DailyStatusType day19 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day19;
     @Column(name = "day20")
-    private DailyStatusType day20 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day20;
     @Column(name = "day21")
-    private DailyStatusType day21 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day21;
     @Column(name = "day22")
-    private DailyStatusType day22 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day22;
     @Column(name = "day23")
-    private DailyStatusType day23 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day23;
     @Column(name = "day24")
-    private DailyStatusType day24 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day24;
     @Column(name = "day25")
-    private DailyStatusType day25 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day25;
     @Column(name = "day26")
-    private DailyStatusType day26 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day26;
     @Column(name = "day27")
-    private DailyStatusType day27 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day27;
     @Column(name = "day28")
-    private DailyStatusType day28 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day28;
     @Column(name = "day29")
-    private DailyStatusType day29 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day29;
     @Column(name = "day30")
-    private DailyStatusType day30 = DailyStatusType.NOT_ATTEMPTED;
+    private Integer day30;
 
     @OneToOne
     @JoinColumn(name = "challenge_id")
@@ -99,13 +104,13 @@ public class Calendar extends BaseBy {
                 .build();
     }
 
-    public void updateDayStatus(int day, DailyStatusType status) {
+    public void updateDayStatus(int day, Integer dailyId) {
         try {
             String fieldName = String.format("day%02d", day);
             Field field = this.getClass().getDeclaredField(fieldName);
             field.setAccessible(true);
 
-            field.set(this, status);
+            field.set(this, dailyId);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new BusinessException(ErrorCode.DAY_FIELD_NOT_EXIST, ErrorCode.DAY_FIELD_NOT_EXIST.getMessage()+" : "+day);
         }

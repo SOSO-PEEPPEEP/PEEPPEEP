@@ -4,6 +4,7 @@ import com.peeppeep.domain.challenge.main.dto.ChallengeDTO;
 import com.peeppeep.domain.challenge.main.dto.request.ChallengeRequestDTO;
 import com.peeppeep.domain.challenge.main.dto.request.DailyRequestDTO;
 import com.peeppeep.domain.challenge.main.dto.response.ChallengeListResponseDTO;
+import com.peeppeep.domain.challenge.main.dto.response.ChallengeResultResponseDTO;
 import com.peeppeep.domain.challenge.main.service.ChallengeService;
 import com.peeppeep.global.response.success.ApiResponse;
 import com.peeppeep.global.response.success.SuccessCode;
@@ -44,6 +45,11 @@ public class ChallengeController {
     @DeleteMapping("/{challenge-id}")
     public ApiResponse<Boolean> deleteChallenge(@PathVariable("challenge-id") Integer challengeId) {
         return ApiResponse.of(SuccessCode.CHALLENGE_DELETE_SUCCESS, challengeService.deleteChallenge(challengeId));
+    }
+
+    @GetMapping("/{challenge-id}/result")
+    public ApiResponse<ChallengeResultResponseDTO> getChallengeResult(@PathVariable("challenge-id") Integer challengeId) {
+        return ApiResponse.of(SuccessCode.CHALLENGE_RESULT_SUCCESS, challengeService.getChallengeResult(challengeId));
     }
 
     @PostMapping("/{challenge-id}/daily")
