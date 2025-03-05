@@ -48,6 +48,10 @@ public enum SuccessCode {
     // Daily
     DAILY_CREATE_SUCCESS(201, "챌린지 데일리 생성에 성공하였습니다."),
     DAILY_DELETE_SUCCESS(204, "챌린지 데일리 삭제에 성공하였습니다."),
+
+    // Pet
+    PET_CREATE_SUCCESS(201, "펫 생성에 성공하였습니다.")
+
     ;
 
     /**

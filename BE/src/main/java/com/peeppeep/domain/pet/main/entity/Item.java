@@ -1,15 +1,13 @@
 package com.peeppeep.domain.pet.main.entity;
 
 import com.peeppeep.domain.challenge.main.entity.Category;
+import com.peeppeep.domain.pet.collection.entity.PetCollection;
 import com.peeppeep.domain.pet.collection.entity.ContentsType;
-import com.peeppeep.domain.pet.collection.entity.PetType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Setter
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,8 +27,8 @@ public class Item {
     private Integer rate;
 
     @ManyToOne
-    @JoinColumn(name = "pet_type_id")
-    private PetType petType;
+    @JoinColumn(name = "pet_collection_id")
+    private PetCollection petCollection;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
