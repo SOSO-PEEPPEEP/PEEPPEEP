@@ -1,6 +1,5 @@
 package com.peeppeep.domain.challenge.main.entity;
 
-import com.peeppeep.global.entity.BaseBy;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

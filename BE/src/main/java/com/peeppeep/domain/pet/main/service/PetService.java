@@ -1,0 +1,107 @@
+package com.peeppeep.domain.pet.main.service;
+
+import com.peeppeep.domain.pet.collection.entity.PetCollection;
+import com.peeppeep.domain.pet.collection.entity.PetType;
+import com.peeppeep.domain.pet.collection.entity.PetRankType;
+import com.peeppeep.domain.pet.collection.repository.PetCollectionRepository;
+import com.peeppeep.domain.pet.collection.repository.PetTypeRepository;
+import com.peeppeep.domain.pet.main.entity.Pet;
+import com.peeppeep.domain.pet.main.repository.PetRepository;
+import com.peeppeep.domain.user.main.entity.User;
+import com.peeppeep.domain.user.main.repository.UserRepository;
+import com.peeppeep.global.response.error.ErrorCode;
+import com.peeppeep.global.response.error.exception.BusinessException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class PetService {
+    private final Random random = new Random();
+
+    private final PetRepository petRepository;
+    private final UserRepository userRepository;
+    private final PetCollectionRepository petCollectionRepository;
+    private final PetTypeRepository petTypeRepository;
+
+    /**펫 등급 별 확률
+     * 합산 100(%) */
+    private static final Map<PetRankType, Double> PROBABILITY_MAP = Map.of(
+            PetRankType.COMMON, 50.0,
+            PetRankType.RARE, 30.0,
+            PetRankType.UNIQUE, 16.0,
+            PetRankType.EPIC, 3.0,
+            PetRankType.LEGENDARY, 1.0
+    );
+
+    /*펫 생성*/
+    public Integer createPet(Integer petTypeId) {
+        // 임의로 userId 설정
+        Integer userId = 1;
+
+        // User 정보
+        User user = userRepository.findByUserIdAndDeletedAtIsNull(userId)
+                .orElseThrow(()->new BusinessException(ErrorCode.USER_ID_NOT_EXIST, ErrorCode.USER_ID_NOT_EXIST.getMessage()));
+
+        // 펫 목록 조회
+        PetType petType = petTypeRepository.findById(petTypeId)
+                .orElseThrow(()->new BusinessException(ErrorCode.PET_TYPE_NOT_EXIST, ErrorCode.PET_TYPE_NOT_EXIST.getMessage()));
+        List<PetCollection> availablePets = petCollectionRepository.findByPetType(petType);
+        if (availablePets.isEmpty()) {
+            throw new BusinessException(ErrorCode.PET_COLLECTION_NOT_FOUND, ErrorCode.PET_COLLECTION_NOT_FOUND.getMessage());
+        }
+
+        // 랭크 랜덤 선정 후, 해당 랭크의 펫 목록 조회
+        PetRankType selectedRank = RandomRankSelection(availablePets);
+        List<PetCollection> filteredPets = availablePets.stream()
+                .filter(pet -> pet.getPetRank() == selectedRank)
+                .toList();
+        if (filteredPets.isEmpty()) {
+            throw new BusinessException(ErrorCode.PET_RANK_NOT_FOUND, ErrorCode.PET_RANK_NOT_FOUND.getMessage());
+        }
+
+        // 특정 랭크의 펫 랜덤 선정
+        PetCollection selectedPet = filteredPets.get(random.nextInt(filteredPets.size()));
+
+        // 펫 생성
+        Pet pet = Pet.of(user, selectedPet);
+        petRepository.save(pet);
+
+        return pet.getPetId();
+    }
+
+    /*랜덤 랭크 선정*/
+    private PetRankType RandomRankSelection(List<PetCollection> availablePets) {
+        // 존재하는 등급 가져오기
+        List<PetRankType> existingRanks = availablePets.stream()
+                .map(PetCollection::getPetRank)
+                .distinct()
+                .toList();
+
+        // 존재하는 등급의 확률 합산
+        double totalProbability = existingRanks.stream()
+                .mapToDouble(PROBABILITY_MAP::get)
+                .sum();
+
+        // 0~100 난수 생성
+        double randomValue = random.nextDouble() * 100;
+        double cumulativeProbability = 0.0;
+
+        // 난수와 비교하여 랭크 결정 (수치는 존재하는 등급을 100% 기준으로 보정)
+        for (PetRankType rank : existingRanks) {
+            cumulativeProbability += (PROBABILITY_MAP.get(rank) / totalProbability) * 100;
+            if (randomValue < cumulativeProbability) {
+                return rank;
+            }
+        }
+
+        // 모두 해당되지 않을 경우 마지막 등급 return
+        return existingRanks.get(existingRanks.size() - 1);
+    }
+}

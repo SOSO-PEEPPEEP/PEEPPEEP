@@ -58,6 +58,11 @@ public enum ErrorCode {
     // Daily
     DAY_FIELD_NOT_EXIST(400, "day 필드명이 존재하지 않습니다."),
     DAILY_NOT_EXIST(400, "챌린지 데일리가 존재하지 않습니다."),
+
+    // Pet
+    PET_TYPE_NOT_EXIST(400, "펫 타입이 존재하지 않습니다."),
+    PET_COLLECTION_NOT_FOUND(404,"펫 도감에 해당 펫을 찾을 수 없습니다."),
+    PET_RANK_NOT_FOUND(400,"펫 도감에 해당 랭크의 펫을 찾을 수 없습니다."),
     ;
     /**
      * ******************************* Error Code Field ***************************************
