@@ -63,6 +63,8 @@ public enum ErrorCode {
     PET_TYPE_NOT_EXIST(400, "펫 타입이 존재하지 않습니다."),
     PET_COLLECTION_NOT_FOUND(404,"펫 도감에 해당 펫을 찾을 수 없습니다."),
     PET_RANK_NOT_FOUND(400,"펫 도감에 해당 랭크의 펫을 찾을 수 없습니다."),
+    PET_NOT_EXIST(400, "펫이 존재하지 않습니다"),
+
     ;
     /**
      * ******************************* Error Code Field ***************************************
