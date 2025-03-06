@@ -53,8 +53,7 @@ public enum SuccessCode {
     PET_CREATE_SUCCESS(201, "펫 생성에 성공하였습니다."),
     PET_GET_SUCCESS(200,"펫 조회에 성공하였습니다."),
     PET_COLLECTION_GET_SUCCESS(200, "펫 도감 조회에 성공하였습니다."),
-
-    ;
+    PET_UPDATE_SUCCESS(204, "펫 정보 수정에 성공하였습니다.");
 
     /**
      * ******************************* Success Code Field ***************************************

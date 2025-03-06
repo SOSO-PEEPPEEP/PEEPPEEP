@@ -6,6 +6,7 @@ import com.peeppeep.domain.pet.collection.entity.PetRankType;
 import com.peeppeep.domain.pet.collection.repository.PetCollectionRepository;
 import com.peeppeep.domain.pet.collection.repository.PetTypeRepository;
 import com.peeppeep.domain.pet.main.dto.PetDTO;
+import com.peeppeep.domain.pet.main.dto.request.PetRequestDTO;
 import com.peeppeep.domain.pet.main.dto.response.PetListResponseDTO;
 import com.peeppeep.domain.pet.main.entity.Pet;
 import com.peeppeep.domain.pet.main.repository.PetRepository;
@@ -16,6 +17,7 @@ import com.peeppeep.global.response.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -44,6 +46,7 @@ public class PetService {
     );
 
     /*펫 생성*/
+    @Transactional
     public Integer createPet(Integer petTypeId) {
         // 임의로 userId 설정
         Integer userId = 1;
@@ -132,5 +135,32 @@ public class PetService {
                 .orElseThrow(()->new BusinessException(ErrorCode.PET_NOT_EXIST,ErrorCode.PET_NOT_EXIST.getMessage()));
 
         return PetDTO.of(pet);
+    }
+
+    /*펫 정보 수정*/
+    @Transactional
+    public Integer updatePet(Integer petId, PetRequestDTO petRequestDTO) {
+        // 임의로 userId 설정
+        Integer userId = 1;
+
+        // User 정보
+        User user = userRepository.findByUserIdAndDeletedAtIsNull(userId)
+                .orElseThrow(()->new BusinessException(ErrorCode.USER_ID_NOT_EXIST, ErrorCode.USER_ID_NOT_EXIST.getMessage()));
+
+        // Pet 정보
+        Pet pet = petRepository.findByPetIdAndDeletedAtIsNull(petId)
+                .orElseThrow(()->new BusinessException(ErrorCode.PET_NOT_EXIST, ErrorCode.PET_NOT_EXIST.getMessage()));
+
+        // 요청자와 펫 주인이 동일한지 확인
+        User petOwner = userRepository.findByUserIdAndDeletedAtIsNull(pet.getUser().getUserId())
+                .orElseThrow(()->new BusinessException(ErrorCode.USER_ID_NOT_EXIST, ErrorCode.USER_ID_NOT_EXIST.getMessage()));
+        if(!petOwner.equals(user)) {
+            throw new BusinessException(ErrorCode.PET_ACCESS_DENIED, ErrorCode.PET_ACCESS_DENIED.getMessage());
+        }
+
+        // 펫 정보 업데이트
+        pet.updatePet(petRequestDTO);
+
+        return pet.getPetId();
     }
 }
