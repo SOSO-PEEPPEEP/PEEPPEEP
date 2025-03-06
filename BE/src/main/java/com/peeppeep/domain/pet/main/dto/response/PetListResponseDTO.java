@@ -1,6 +1,8 @@
 package com.peeppeep.domain.pet.main.dto.response;
 
 import com.peeppeep.domain.pet.collection.dto.PetCollectionDTO;
+import com.peeppeep.domain.pet.collection.entity.PetCollection;
+import com.peeppeep.domain.pet.collection.entity.PetType;
 import com.peeppeep.domain.pet.main.entity.GrowthType;
 import com.peeppeep.domain.pet.main.entity.Pet;
 import lombok.Builder;
