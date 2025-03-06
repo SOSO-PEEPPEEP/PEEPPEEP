@@ -7,7 +7,9 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Setter
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -28,7 +30,7 @@ public class Item {
 
     @ManyToOne
     @JoinColumn(name = "pet_type_id")
-    private PetType petType;
+    private PetType petTypeId;
 
     @ManyToOne
     @JoinColumn(name = "category_id")

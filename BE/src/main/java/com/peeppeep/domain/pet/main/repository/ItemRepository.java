@@ -1,5 +1,6 @@
 package com.peeppeep.domain.pet.main.repository;
 
+import com.peeppeep.domain.pet.main.entity.Inventory;
 import com.peeppeep.domain.pet.main.entity.Item;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

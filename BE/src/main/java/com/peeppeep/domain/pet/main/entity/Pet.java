@@ -1,16 +1,13 @@
 package com.peeppeep.domain.pet.main.entity;
 
 import com.peeppeep.domain.pet.collection.entity.PetCollection;
-import com.peeppeep.domain.pet.main.dto.request.PetRequestDTO;
 import com.peeppeep.domain.user.main.entity.User;
 import com.peeppeep.global.entity.BaseBy;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 
+@Setter
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -52,9 +49,5 @@ public class Pet extends BaseBy {
                 .user(user)
                 .petCollection(petCollection)
                 .build();
-    }
-
-    public void updatePet(PetRequestDTO petRequestDTO) {
-        if (petRequestDTO.getNickname() != null) this.nickname = petRequestDTO.getNickname();
     }
 }
