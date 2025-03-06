@@ -39,4 +39,9 @@ public class PetController {
     public ApiResponse<Integer> updatePet(@PathVariable(value = "pet-id") Integer petId, @RequestBody PetRequestDTO petRequestDTO) {
         return ApiResponse.of(SuccessCode.PET_UPDATE_SUCCESS, petService.updatePet(petId, petRequestDTO));
     }
+
+    @DeleteMapping("/{pet-id}")
+    public ApiResponse<Boolean> deletePet(@PathVariable(value = "pet-id") Integer petId) {
+        return ApiResponse.of(SuccessCode.PET_DELETE_SUCCESS, petService.deletePet(petId));
+    }
 }
