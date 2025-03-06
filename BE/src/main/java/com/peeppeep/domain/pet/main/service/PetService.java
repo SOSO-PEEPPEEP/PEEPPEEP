@@ -5,6 +5,7 @@ import com.peeppeep.domain.pet.collection.entity.PetType;
 import com.peeppeep.domain.pet.collection.entity.PetRankType;
 import com.peeppeep.domain.pet.collection.repository.PetCollectionRepository;
 import com.peeppeep.domain.pet.collection.repository.PetTypeRepository;
+import com.peeppeep.domain.pet.main.dto.response.PetListResponseDTO;
 import com.peeppeep.domain.pet.main.entity.Pet;
 import com.peeppeep.domain.pet.main.repository.PetRepository;
 import com.peeppeep.domain.user.main.entity.User;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -35,9 +37,9 @@ public class PetService {
     private static final Map<PetRankType, Double> PROBABILITY_MAP = Map.of(
             PetRankType.COMMON, 50.0,
             PetRankType.RARE, 30.0,
-            PetRankType.UNIQUE, 16.0,
-            PetRankType.EPIC, 3.0,
-            PetRankType.LEGENDARY, 1.0
+            PetRankType.UNIQUE, 10.0,
+            PetRankType.EPIC, 7.0,
+            PetRankType.LEGENDARY, 3.0
     );
 
     /*펫 생성*/
@@ -103,5 +105,22 @@ public class PetService {
 
         // 모두 해당되지 않을 경우 마지막 등급 return
         return existingRanks.get(existingRanks.size() - 1);
+    }
+
+    /*나의 펫 목록 조회*/
+    public List<PetListResponseDTO> getMyPets() {
+        // 임의로 userId 설정
+        Integer userId = 1;
+
+        // User 정보
+        User user = userRepository.findByUserIdAndDeletedAtIsNull(userId)
+                .orElseThrow(()->new BusinessException(ErrorCode.USER_ID_NOT_EXIST, ErrorCode.USER_ID_NOT_EXIST.getMessage()));
+
+        // User기반으로 있는 펫목록 조회
+        List<Pet> pets = petRepository.findByUserAndDeletedAtIsNull(user);
+
+        return pets.stream()
+                .map(PetListResponseDTO::of)
+                .collect(Collectors.toList());
     }
 }
