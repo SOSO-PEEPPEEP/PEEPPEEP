@@ -163,4 +163,30 @@ public class PetService {
 
         return pet.getPetId();
     }
+
+    /*펫 삭제*/
+    @Transactional
+    public Boolean deletePet(Integer petId) {
+        // 임의로 userId 설정
+        Integer userId = 1;
+
+        // User 정보
+        User user = userRepository.findByUserIdAndDeletedAtIsNull(userId)
+                .orElseThrow(()->new BusinessException(ErrorCode.USER_ID_NOT_EXIST, ErrorCode.USER_ID_NOT_EXIST.getMessage()));
+
+        // Pet 정보
+        Pet pet = petRepository.findByPetIdAndDeletedAtIsNull(petId)
+                .orElseThrow(()->new BusinessException(ErrorCode.PET_NOT_EXIST, ErrorCode.PET_NOT_EXIST.getMessage()));
+
+        // 요청자와 펫 주인이 동일한지 확인
+        User petOwner = userRepository.findByUserIdAndDeletedAtIsNull(pet.getUser().getUserId())
+                .orElseThrow(()->new BusinessException(ErrorCode.USER_ID_NOT_EXIST, ErrorCode.USER_ID_NOT_EXIST.getMessage()));
+        if(!petOwner.equals(user)) {
+            throw new BusinessException(ErrorCode.PET_ACCESS_DENIED, ErrorCode.PET_ACCESS_DENIED.getMessage());
+        }
+
+        petRepository.delete(pet);
+
+        return true;
+    }
 }
