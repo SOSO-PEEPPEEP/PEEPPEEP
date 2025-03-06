@@ -5,6 +5,7 @@ import com.peeppeep.domain.pet.collection.entity.PetType;
 import com.peeppeep.domain.pet.collection.entity.PetRankType;
 import com.peeppeep.domain.pet.collection.repository.PetCollectionRepository;
 import com.peeppeep.domain.pet.collection.repository.PetTypeRepository;
+import com.peeppeep.domain.pet.main.dto.PetDTO;
 import com.peeppeep.domain.pet.main.dto.response.PetListResponseDTO;
 import com.peeppeep.domain.pet.main.entity.Pet;
 import com.peeppeep.domain.pet.main.repository.PetRepository;
@@ -122,5 +123,14 @@ public class PetService {
         return pets.stream()
                 .map(PetListResponseDTO::of)
                 .collect(Collectors.toList());
+    }
+
+    /*펫 상세 조회*/
+    public PetDTO getPetDetail(Integer petId) {
+        // 펫 정보
+        Pet pet = petRepository.findById(petId)
+                .orElseThrow(()->new BusinessException(ErrorCode.PET_NOT_EXIST,ErrorCode.PET_NOT_EXIST.getMessage()));
+
+        return PetDTO.of(pet);
     }
 }
