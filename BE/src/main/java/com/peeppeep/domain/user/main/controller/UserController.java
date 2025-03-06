@@ -6,8 +6,10 @@ import com.peeppeep.global.response.success.SuccessCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.*;
 
@@ -18,13 +20,13 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
+    public UserController(@RequestParam UserService userService, @RequestParam PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public Map<String, Object> login(String loginId, String userPw) {
+    public Map<String, Object> login(@RequestParam String loginId, @RequestParam String userPw) {
         Map<String, Object> user = userService.findUser(loginId);
         Map<String, Object> response = new HashMap<>();
         if(loginId != null && !loginId.isEmpty() && userPw != null && !userPw.isEmpty()){
@@ -50,27 +52,27 @@ public class UserController {
     }
 
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
-    public Map<String, Object> signUp(Map<String, Object> userInfo) {
+    public Map<String, Object> signUp(@RequestBody Map<String, Object> userInfo) {
         return userService.signUp(userInfo);
     }
 
     @RequestMapping(value = "/findId", method = RequestMethod.POST)
-    public Map<String, Object> findId(String name, String email){
+    public Map<String, Object> findId(@RequestParam String name, @RequestParam String email){
         return userService.findId(name, email);
     }
 
     @RequestMapping(value = "/findPw", method = RequestMethod.POST)
-    public Map<String, Object> findPw(String loginId, String name, String email){
+    public Map<String, Object> findPw(@RequestParam String loginId, @RequestParam String name, @RequestParam String email){
         return userService.findPw(loginId, name, email);
     }
 
     @RequestMapping(value = "/setNewPassword", method = RequestMethod.POST)
-    public Map<String, Object> setNewPassword(String loginId, String userPw) {
+    public Map<String, Object> setNewPassword(@RequestParam String loginId, @RequestParam String userPw) {
         return userService.setNewPassword(loginId, userPw);
     }
 
     @RequestMapping(value = "/updateUserInfo", method = RequestMethod.PUT)
-    public Map<String, Object> updateUserInfo(Map<String, Object> userInfo) {
+    public Map<String, Object> updateUserInfo(@RequestBody Map<String, Object> userInfo) {
         return userService.updateUserInfo(userInfo);
     }
 

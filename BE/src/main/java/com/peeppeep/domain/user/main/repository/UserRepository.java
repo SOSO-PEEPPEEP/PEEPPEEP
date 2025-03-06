@@ -19,10 +19,14 @@ public interface UserRepository extends JpaRepository<User, String> {
     Optional<User> login(@Param("loginId") String loginId, String userPw);
 
     /*ID찾기*/
-    @Query("SELECT u.loginId FROM User u WHERE u.name = :name and u.email = :email AND u.deletedAt IS NULL")
+    @Query("SELECT u.loginId FROM User u WHERE u.name = :name AND u.email = :email AND u.deletedAt IS NULL")
     Optional<String> findId(@Param("name") String name, @Param("email") String email);
 
     /*PASSWORD 찾기*/
-    @Query("SELECT u.loginId FROM User u WHERE u.loginId = :loginId and u.name = :name and u.email = :email AND u.deletedAt IS NULL")
+    @Query("SELECT u.loginId FROM User u WHERE u.loginId = :loginId AND u.name = :name AND u.email = :email AND u.deletedAt IS NULL")
     Optional<String> findPw(@Param("loginId") String loginId, @Param("name") String name, @Param("email") String email);
+
+    /*계정 존재 여부 확인*/
+    @Query("SELECT u FROM User u WHERE u.userId = :userId AND u.deletedAt IS NULL")
+    Optional<User> isIdPresent(@Param("userId") int userId);
 }
