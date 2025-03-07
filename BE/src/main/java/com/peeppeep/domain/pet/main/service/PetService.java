@@ -53,7 +53,7 @@ public class PetService {
         PetCollection petCollection = petColLectionInfo.get();
         PetType petType = petCollection.getPetType();
 
-        if(userInfo.isPresent()) {
+        if(user != null) {
 
             //Item 사용으로 인한 INVENTORY count -1
             Optional<Inventory> invenItemCnt = inventoryRepository.inventoryCountInfo(user, item);
