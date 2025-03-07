@@ -23,6 +23,18 @@ public class PetCollection {
     @Column(name = "content")
     private String content;
 
+    @Column(name = "egg_image")
+    private String eggImage;
+
+    @Column(name = "baby_image")
+    private String babyImage;
+
+    @Column(name = "youth_image")
+    private String youthImage;
+
+    @Column(name = "adult_image")
+    private String adultImage;
+
     @ManyToOne
     @JoinColumn(name = "pet_type_id")
     private PetType petType;
