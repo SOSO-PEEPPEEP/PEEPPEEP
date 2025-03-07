@@ -61,7 +61,7 @@ public class UserService {
         String profilePicture = (userInfo.get("profilePicture") != null) ? userInfo.get("profilePicture").toString() : "";
         String comment = (userInfo.get("comment") != null) ? userInfo.get("comment").toString() : "";
         int mainChallengeId = Integer.parseInt(userInfo.get("mainChallengeId").toString());
-        int mainCharacterId = Integer.parseInt(userInfo.get("mainCharacterId").toString());
+        int mainPetId = Integer.parseInt(userInfo.get("mainPetId").toString());
 
         Optional<User> idCheck = userRepository.findUser(loginId);
 
@@ -80,7 +80,7 @@ public class UserService {
                 .profilePicture(profilePicture)
                 .comment(comment)
                 .mainChallengeId(mainChallengeId)
-                .mainCharacterId(mainCharacterId)
+                .mainPetId(mainPetId)
                 .build();
         try{
             userRepository.save(user);
