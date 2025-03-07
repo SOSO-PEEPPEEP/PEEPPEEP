@@ -2,7 +2,6 @@ package com.peeppeep.domain.pet.main.entity;
 
 import com.peeppeep.domain.pet.collection.entity.PetCollection;
 import com.peeppeep.domain.pet.main.dto.request.PetRequestDTO;
-import com.peeppeep.domain.pet.main.dto.request.PetRequestDTO;
 import com.peeppeep.domain.user.main.entity.User;
 import com.peeppeep.global.entity.BaseBy;
 import jakarta.persistence.*;
