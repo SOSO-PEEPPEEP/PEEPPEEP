@@ -37,6 +37,7 @@ public class PetService {
         this.petCollectionRepository = petCollectionRepository;
     }
 
+    /*펫 상호작용*/
     public Map<String, Object> Interaction(int userId, int petId, int itemId, int colId) {
         Map<String, Object> response = new HashMap<>();
 
