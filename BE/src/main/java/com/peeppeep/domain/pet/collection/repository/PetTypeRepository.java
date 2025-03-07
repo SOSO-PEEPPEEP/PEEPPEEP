@@ -11,6 +11,6 @@ import java.util.Optional;
 @Repository
 public interface PetTypeRepository extends JpaRepository<PetType, Integer> {
 
-    @Query("SELECT pt FROM PetType pt WHERE petTypeId = :petTypeId")
+    @Query("SELECT pt FROM PetType pt WHERE pt.petTypeId = :petTypeId")
     Optional<PetType> petTypeId(@Param("petTypeId") int petTypeId);
 }
