@@ -9,8 +9,15 @@ import com.peeppeep.global.response.success.SuccessCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -43,5 +50,11 @@ public class PetController {
     @DeleteMapping("/{pet-id}")
     public ApiResponse<Boolean> deletePet(@PathVariable(value = "pet-id") Integer petId) {
         return ApiResponse.of(SuccessCode.PET_DELETE_SUCCESS, petService.deletePet(petId));
+    }
+
+    @RequestMapping(value = "/{pet-id}", method = RequestMethod.PUT)
+    public Map<String, Object> Interaction(HttpSession session, @PathVariable("pet-id") Integer petId, @RequestParam("itemId") Integer itemId, @RequestParam("petCollectionId") Integer colId) {
+        int userId = (int) session.getAttribute("userId");
+        return petService.Interaction(userId, petId, itemId, colId);
     }
 }
