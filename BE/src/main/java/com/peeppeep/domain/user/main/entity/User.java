@@ -4,6 +4,7 @@ import com.peeppeep.global.entity.BaseBy;
 import jakarta.persistence.*;
 import lombok.*;
 
+@Setter
 @Getter
 @Entity
 @Builder
@@ -42,4 +43,19 @@ public class User extends BaseBy {
     @Column(name = "main_pet_id")
     private Integer mainPetId;
 
+    @Override
+    public String toString() {
+        return "[" +
+                "userId='" + userId + '\'' +
+                ", loginId='" + loginId + '\'' +
+                ", userPw='" + userPw + '\'' +
+                ", name='" + name + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", email='" + email + '\'' +
+                ", profilePicture='" + profilePicture + '\'' +
+                ", comment='" + comment + '\'' +
+                ", mainChallengeId=" + mainChallengeId +
+                ", mainCharacterId=" + mainPetId +
+                ']';
+    }
 }

@@ -23,6 +23,6 @@ public abstract class BaseTime {
     @Column(nullable = false)
     private LocalDateTime modifiedAt;
 
-    @Column(nullable = true)
+    @Column
     private LocalDateTime deletedAt;
 }
