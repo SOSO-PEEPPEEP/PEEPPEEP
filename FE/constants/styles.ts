@@ -5,9 +5,6 @@ export const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "#F3F8FE",
       },
-    text: {
-        fontFamily: "PF-Stardust"
-    },
     title: {
         fontSize: 22,
         fontWeight: "bold",
