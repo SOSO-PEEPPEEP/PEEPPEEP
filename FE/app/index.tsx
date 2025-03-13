@@ -1,17 +1,12 @@
-import { Text, View } from 'react-native';
-import { useFonts } from "expo-font";
+import { View } from 'react-native';
 import { styles } from '@/constants/styles';
+import GlobalText from '@/constants/GlobalText';
 
 export default function App() {
-  const [fontsLoaded] = useFonts({
-    "PF-Stardust": require("@/assets/fonts/PFstardust3.0.ttf"),
-  });
-
-  if (!fontsLoaded) return null;
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>안녕요</Text>
+      <GlobalText style={styles.title}>안녕요</GlobalText>
     </View>
   );
 }
