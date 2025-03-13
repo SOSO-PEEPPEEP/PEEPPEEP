@@ -1,24 +1,17 @@
-import React from 'react';
-import { useEffect } from 'react';
-import { useRouter } from 'expo-router';
-import { View } from 'react-native';
-import Loading from '@/components/common/Loading';
+import { Text, View } from 'react-native';
+import { useFonts } from "expo-font";
+import { styles } from '@/constants/styles';
 
-export default function Index() {
+export default function App() {
+  const [fontsLoaded] = useFonts({
+    "PF-Stardust": require("@/assets/fonts/PFstardust3.0.ttf"),
+  });
 
-  const router = useRouter();
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      router.replace('/login'); // ✅ 라우터가 마운트된 후 이동
-    }, 8000); // 딜레이
-
-    return () => clearTimeout(timer);
-  }, []);
+  if (!fontsLoaded) return null;
 
   return (
-    <View style={{flex: 1}}>
-      {/* <ActivityIndicator size="large" /> */}
-      <Loading />
+    <View style={styles.container}>
+      <Text style={styles.text}>안녕요</Text>
     </View>
   );
 }
