@@ -1,12 +1,10 @@
-import { Text, TextProps } from "react-native";
-import { useFonts } from "expo-font";
+import { Text, TextProps, TextStyle, StyleSheet } from "react-native";
 
-export default (props: TextProps) => {
+export default ({ style, ...props }: TextProps) => {
+    const textStyle = StyleSheet.flatten(style || {}) as TextStyle;
+    const fontFamily =
+    textStyle?.fontWeight === "bold" ? "PF-Stardust-ExtraBold" : "PF-Stardust-Bold";
+    const { fontWeight, ...filteredStyle } = textStyle;
 
-    const [fontsLoaded] = useFonts({
-        "PF-Stardust": require("@/assets/fonts/PFstardust3.0.ttf"),
-    });
-
-    if (!fontsLoaded) return null;
-    return <Text {...props} style={[{ fontFamily: "PF-Stardust" }, props.style]} />;
+  return <Text {...props} style={[{ fontFamily }, filteredStyle ]} />;
 }
