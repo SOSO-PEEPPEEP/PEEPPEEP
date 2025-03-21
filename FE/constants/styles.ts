@@ -1,20 +1,23 @@
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
-    frameContainer: {
+    outerContainer: {
         flex: 1,
         backgroundColor: "#D3D3DD",
         padding: 4
     },
     container: {
-        backgroundColor:"#F3F8FE",
-        width: "100%", // 프레임 가로 크기
-        height: "100%", // ✅ 최소 높이 설정 (내용 없어도 프레임 유지됨)
-        borderWidth: 4, // 테두리 두께
-        borderColor: "#A6A9D8", // 테두리 색상
-        justifyContent: "center", // 내부 요소 가운데 정렬
+        backgroundColor: "#F3F8FE",
+        width: "100%",
+        height: "100%",
+        borderTopWidth: 2,
+        borderBottomWidth: 2,
+        borderLeftWidth: 3,
+        borderRightWidth: 3,
+        borderColor: "#8787A3",
+        justifyContent: "center",
         alignItems: "center",
-        padding: 10, // 내부 여백
+        padding: 10,
     },
     titleContainer: {
         flexDirection: "row",
@@ -59,5 +62,15 @@ export const styles = StyleSheet.create({
         width: 11,
         height: 1,
         backgroundColor: "#8787A3",
-    }
+    },
+    tabBarContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        width:"100%",
+        height: 11,
+        backgroundColor: "#C7CFFF",
+        borderColor: "#FFF",
+        borderTopWidth: 3,
+        borderLeftWidth: 3,
+    },
 });
