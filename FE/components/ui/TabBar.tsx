@@ -1,74 +1,89 @@
 import React, { useEffect, useRef } from "react";
-import { styles } from '@/constants/styles';
-import { View, TouchableOpacity, Image, Animated } from 'react-native';
+import { View, TouchableOpacity, Animated } from "react-native";
+import { useRouter, Router } from "expo-router";
+import { styles } from "@/constants/styles";
 
 const imageMap: { [key: string]: any } = {
-    "Home": require("@/assets/images/Home_icon_X2.png"),
-    "Friend": require("@/assets/images/Friend_icon_X2.png"),
-    "Calendar": require("@/assets/images/Calendar_icon_X2.png"),
+  Home: require("@/assets/images/Home_icon_X2.png"),
+  Friend: require("@/assets/images/Friend_icon_X2.png"),
+  Calendar: require("@/assets/images/Calendar_icon_X2.png"),
 };
 
-interface tabButtonProps {
-    isSelected: boolean;
-    onPress: () => void;
-    iconName: string;
+type ValidRoutes = Parameters<Router["push"]>[0];
+
+interface TabButtonProps {
+  routePath: ValidRoutes;
+  isSelected: boolean;
+  onPress: () => void;
+  iconName: string;
 }
 
-const TabButton = ({ isSelected, onPress, iconName }: tabButtonProps) => {
-    const scaleAnim = useRef(new Animated.Value(1)).current;
+const TabButton = ({ routePath, isSelected, onPress, iconName }: TabButtonProps) => {
+  const router = useRouter();
+  const scaleAnim = useRef(new Animated.Value(1)).current;
 
-    useEffect(() => {
-        Animated.parallel([
-            Animated.timing(scaleAnim, {
-                toValue: isSelected ? 1.75 : 1,
-                duration: 100,
-                useNativeDriver: true,
-            }),
-        ]).start();
-    }, [isSelected]);
+  useEffect(() => {
+    Animated.timing(scaleAnim, {
+      toValue: isSelected ? 1.5 : 1,
+      duration: 100,
+      useNativeDriver: true,
+    }).start();
+  }, [isSelected]);
 
-    return (
-        <TouchableOpacity
-            activeOpacity={1}
-            onPress={onPress}
-            style={{
-                flex: 1,
-                justifyContent: "flex-end",
-                alignItems: "center",
-            }}
-        >
-            <Animated.Image
-                source={imageMap[iconName]}
-                style={{
-                    width: 45,
-                    height: 45,
-                    transform: [
-                        { scaleX: scaleAnim },
-                        { scaleY: scaleAnim },
-                        { translateY: Animated.multiply(scaleAnim, -4) },
-                    ],
-                }}
-            />
-        </TouchableOpacity>
-    );
+  return (
+    <TouchableOpacity
+      activeOpacity={1}
+      onPress={() => {
+        onPress();
+        router.push(routePath);
+      }}
+      style={{
+        flex: 1,
+        justifyContent: "flex-end",
+        alignItems: "center",
+      }}
+    >
+      <Animated.Image
+        source={imageMap[iconName]}
+        style={{
+          width: 45,
+          height: 45,
+          transform: [
+            { scaleX: scaleAnim },
+            { scaleY: scaleAnim },
+            { translateY: Animated.multiply(scaleAnim, -5) },
+          ],
+        }}
+      />
+    </TouchableOpacity>
+  );
 };
 
-interface tabBarProps {
-    selectedTabIdx: number;
-    setSelectedTabIdx: (index: number) => void;
+interface TabBarProps {
+  selectedTabIdx: number;
+  setSelectedTabIdx: (index: number) => void;
 }
 
-export default ({ selectedTabIdx, setSelectedTabIdx }: tabBarProps) => {
-    return (
-        <View style={styles.tabBarContainer}>
-            {["Friend", "Calendar", "Home", "Friend", "Calendar"].map((icon, index) => (
-                <TabButton
-                    key={index}
-                    isSelected={selectedTabIdx === index}
-                    onPress={() => setSelectedTabIdx(index)}
-                    iconName={icon}
-                />
-            ))}
-        </View>
-    );
-};
+export default function TabBar({ selectedTabIdx, setSelectedTabIdx }: TabBarProps) {
+  const tabs = [
+    { path: "/", icon: "Home" },
+    { path: "/challenge", icon: "Calendar" },
+    { path: "/", icon: "Home" },
+    { path: "/", icon: "Home" },
+    { path: "/challenge", icon: "Calendar" },
+  ] as const;
+
+  return (
+    <View style={styles.tabBarContainer}>
+      {tabs.map((tab, index) => (
+        <TabButton
+          key={index}
+          routePath={tab.path as ValidRoutes}
+          isSelected={selectedTabIdx === index}
+          onPress={() => setSelectedTabIdx(index)}
+          iconName={tab.icon}
+        />
+      ))}
+    </View>
+  );
+}
