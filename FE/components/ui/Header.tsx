@@ -1,5 +1,5 @@
 import GlobalText from '@/constants/GlobalText'
-import { styles } from '@/constants/styles';
+import { styles } from './Header.style'
 import { Image, View } from 'react-native'
 
 export default () => {
