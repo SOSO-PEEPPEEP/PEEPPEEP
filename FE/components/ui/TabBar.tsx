@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { View, TouchableOpacity, Animated } from "react-native";
 import { useRouter, Router } from "expo-router";
-import { styles } from "@/constants/styles";
+import { styles } from './TabBar.style';
 
 const imageMap: { [key: string]: any } = {
   Home: require("@/assets/images/Home_icon_X2.png"),

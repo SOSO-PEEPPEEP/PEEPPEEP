@@ -15,15 +15,16 @@ export const styles = StyleSheet.create({
         position: "absolute",
         fontSize: 36,
         fontWeight: "bold",
-        color: COLORS.white,
-        paddingTop: 4,
+        color: COLORS.white
     },
     titleShadow1: {
+        position: "absolute",
         color: COLORS.purple,
         left: 2,
         top: 1,
     },
     titleShadow2: {
+        position: "absolute",
         color: COLORS.yellow,
         left: 4,
         top: 2,
@@ -33,7 +34,7 @@ export const styles = StyleSheet.create({
     menuBarContainer: {
         backgroundColor: COLORS.gray,
         flexDirection:"row",
-        gap:12,
+        gap:8,
         paddingHorizontal:12,
         paddingVertical:4
     },
@@ -47,24 +48,5 @@ export const styles = StyleSheet.create({
         width: 11,
         height: 1,
         backgroundColor: COLORS.dark,
-    },
-
-
-    //Modal
-    modalContainer: {
-        flex: 1, 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        backgroundColor: 'rgba(0, 0, 0, 0.5)' 
-    },
-    modalContent: {
-        width: '100%', 
-        height: 380 , 
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        // backgroundColor: '#f3f8fe',
-        justifyContent: 'center', 
-        alignItems: 'center',
-        borderColor: '#8787a3',
-        borderWidth: 4,
-    },
+    }
 });

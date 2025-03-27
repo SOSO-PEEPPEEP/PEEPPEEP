@@ -1,6 +1,6 @@
 import { View } from 'react-native'
 import { ReactNode } from 'react'
-import { styles } from '@/constants/styles'
+import { styles } from './Frame.style';
 
 interface FrameProps {
     children:ReactNode;
@@ -8,7 +8,7 @@ interface FrameProps {
 
 export default ({children}:FrameProps) => {
     return(
-        <View style={styles.container}>
+        <View style={styles.frameContainer}>
             <View>{children}</View>
         </View>
     )

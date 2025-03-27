@@ -5,8 +5,7 @@ import { useFonts } from 'expo-font';
 import { TabBarProvider } from '@/context/TabBarContext';
 import Header from '@/components/ui/Header';
 import TabBar from '@/components/ui/TabBar';
-import Frame from '@/components/ui/Frame';
-import { styles } from '@/constants/styles';
+import { COLORS } from '@/constants/COLORS';
 
 export default function RootLayout() {
   const [selectedTabIdx, setSelectedTabIdx] = useState(2);
@@ -21,17 +20,21 @@ export default function RootLayout() {
 
   return (
     <TabBarProvider>
-        <View style={styles.outerContainer}>
-            <Header />
-            <Stack screenOptions={{
-                headerShown: false,
-                animation: 'none', // ← 애니메이션 제거
-            }} />
-            <TabBar
-                selectedTabIdx={selectedTabIdx}
-                setSelectedTabIdx={setSelectedTabIdx}
-            />
-        </View>
-      </TabBarProvider>
+      <View style={{
+          flex: 1,
+          backgroundColor: COLORS.gray,
+          padding: 4
+        }}>
+        <Header />
+        <Stack screenOptions={{
+          headerShown: false,
+          animation: 'none',
+        }} />
+        <TabBar
+          selectedTabIdx={selectedTabIdx}
+          setSelectedTabIdx={setSelectedTabIdx}
+        />
+      </View>
+    </TabBarProvider>
   );
 }

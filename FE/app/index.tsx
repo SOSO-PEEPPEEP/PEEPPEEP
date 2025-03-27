@@ -1,4 +1,3 @@
-import { View } from 'react-native';
 import GlobalText from '@/constants/GlobalText';
 import Frame from '@/components/ui/Frame';
 
