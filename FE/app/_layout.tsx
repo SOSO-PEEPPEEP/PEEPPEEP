@@ -1,6 +1,5 @@
 import { Stack } from 'expo-router';
 import { View } from 'react-native';
-import { useState } from 'react';
 import { useFonts } from 'expo-font';
 import { TabBarProvider } from '@/context/TabBarContext';
 import Header from '@/components/ui/Header';
@@ -8,7 +7,6 @@ import TabBar from '@/components/ui/TabBar';
 import { COLORS } from '@/constants/COLORS';
 
 export default function RootLayout() {
-  const [selectedTabIdx, setSelectedTabIdx] = useState(2);
 
   const [fontsLoaded] = useFonts({
     'PF-Stardust': require('@/assets/fonts/PFstardust3.0.ttf'),
@@ -30,10 +28,7 @@ export default function RootLayout() {
           headerShown: false,
           animation: 'none',
         }} />
-        <TabBar
-          selectedTabIdx={selectedTabIdx}
-          setSelectedTabIdx={setSelectedTabIdx}
-        />
+        <TabBar/>
       </View>
     </TabBarProvider>
   );

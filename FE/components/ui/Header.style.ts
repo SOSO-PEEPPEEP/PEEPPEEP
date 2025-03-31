@@ -18,13 +18,11 @@ export const styles = StyleSheet.create({
         color: COLORS.white
     },
     titleShadow1: {
-        position: "absolute",
         color: COLORS.purple,
         left: 2,
         top: 1,
     },
     titleShadow2: {
-        position: "absolute",
         color: COLORS.yellow,
         left: 4,
         top: 2,

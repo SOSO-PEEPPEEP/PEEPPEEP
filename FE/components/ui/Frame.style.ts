@@ -5,13 +5,12 @@ export const styles = StyleSheet.create({
   frameContainer: {
     backgroundColor: COLORS.bg,
     width: "100%",
-    height: "100%",
+    flex: 1,
     borderTopWidth: 2,
     borderBottomWidth: 2,
     borderLeftWidth: 3,
     borderRightWidth: 3,
     borderColor: COLORS.dark,
-    justifyContent: "center",
-    padding: 10,
+    padding: 24,
   },
 });
