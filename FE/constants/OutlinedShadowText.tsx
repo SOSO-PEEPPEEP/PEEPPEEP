@@ -1,10 +1,9 @@
 import GlobalText from '@/constants/GlobalText';
 import { COLORS } from '@/constants/COLORS';
 import { View, StyleSheet, TextProps, TextStyle, StyleProp, Platform } from "react-native";
-import { ReactNode } from "react";
 
 interface OutlinedShadowTextProps extends TextProps {
-  children: ReactNode;
+  children: string;
   style?: StyleProp<TextStyle>;
 }
 

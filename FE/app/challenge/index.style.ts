@@ -17,5 +17,15 @@ export const styles = StyleSheet.create({
         fontSize: 32,
         left: 2,
         top: 2,
-    }
+    },
+    createButton: {
+        height: 64,
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 2,
+        backgroundColor: COLORS.pink,
+        justifyContent: "center",
+        alignItems: "center",
+      },
 });

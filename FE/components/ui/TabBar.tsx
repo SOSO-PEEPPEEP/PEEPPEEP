@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { View, TouchableOpacity, Animated } from "react-native";
 import { useRouter, Router } from "expo-router";
 import { styles } from './TabBar.style';
+import { useTabBar } from "@/context/TabBarContext";
 
 const imageMap: { [key: string]: any } = {
   Home: require("@/assets/images/Home_icon_X2.png"),
@@ -64,7 +65,9 @@ interface TabBarProps {
   setSelectedTabIdx: (index: number) => void;
 }
 
-export default function TabBar({ selectedTabIdx, setSelectedTabIdx }: TabBarProps) {
+export default function TabBar() {
+  const { selectedTabIdx, setSelectedTabIdx } = useTabBar();
+
   const tabs = [
     { path: "/", icon: "Home" },
     { path: "/challenge", icon: "Calendar" },

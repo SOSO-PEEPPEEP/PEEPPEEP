@@ -9,7 +9,7 @@ interface FrameProps {
 export default ({children}:FrameProps) => {
     return(
         <View style={styles.frameContainer}>
-            <View>{children}</View>
+            {children}
         </View>
     )
 }
