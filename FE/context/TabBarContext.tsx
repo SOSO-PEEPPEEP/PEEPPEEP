@@ -18,19 +18,25 @@ export const TabBarProvider = ({ children }: { children: React.ReactNode }) => {
     AsyncStorage.setItem("selectedTabIdx", index.toString());
   };
 
-  useEffect(() => {
-    const loadTabIdx = async () => {
+useEffect(() => {
+  const loadTabIdx = async () => {
+    const appClosed = await AsyncStorage.getItem("appClosed");
+
+    if (appClosed === "true") {
+      await AsyncStorage.removeItem("appClosed");
+      setSelectedTabIdxState(2);
+    } else {
+      // 새로고침 → 기존값 복구
       const savedIdx = await AsyncStorage.getItem("selectedTabIdx");
       if (savedIdx !== null) {
-        const idx = Number(savedIdx);
-        setSelectedTabIdxState(idx);
-        
+        setSelectedTabIdxState(Number(savedIdx));
         const tabRoutes = ["/", "/challenge"] as const;
-        router.push(tabRoutes[idx]);
+        router.push(tabRoutes[Number(savedIdx)]);
       }
-    };
-    loadTabIdx();
-  }, []);
+    }
+  };
+  loadTabIdx();
+}, []);
 
   return (
     <TabBarContext.Provider value={{ selectedTabIdx, setSelectedTabIdx }}>
