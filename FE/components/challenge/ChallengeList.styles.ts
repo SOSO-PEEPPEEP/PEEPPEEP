@@ -19,13 +19,16 @@ export const styles = StyleSheet.create({
         top: 2,
     },
     createButton: {
-        height: 64,
-        position: "absolute",
-        top: 0,
-        left: 0,
-        right: 2,
         backgroundColor: COLORS.pink,
-        justifyContent: "center",
-        alignItems: "center",
-      },
+        paddingHorizontal: 16,
+        paddingVertical: 24,
+    },
+    createButtonShadow: {
+        position: "absolute",
+        top: 2,
+        left: 2,
+        backgroundColor: COLORS.dark,
+        width: "100%",
+        height: "100%",
+    }
 });

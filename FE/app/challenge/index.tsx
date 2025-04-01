@@ -1,34 +1,40 @@
-import { View, FlatList } from 'react-native';
+import { View, FlatList, TouchableOpacity } from 'react-native';
 import GlobalText from '@/constants/GlobalText';
 import Frame from '@/components/ui/Frame';
-import { styles } from './index.style';
+import { styles } from '../../components/challenge/ChallengeList.styles';
 import Margin from '@/components/ui/Margin';
 import ChallengeListItem from '@/components/challenge/ChallengeListItem';
-import { COLORS } from '@/constants/COLORS';
 import OutlinedShadowText from '@/constants/OutlinedShadowText';
+import { useRouter } from 'expo-router';
 
 export default function ChallengeList() {
+    const router = useRouter();
+
     // 임시 데이터
     const ChallengeListData = [
         {
+            id: 1,
             title: "다이어리 꾸미기",
             period: 30,
             category: "취미",
             isBookmark: true
         },
         {
+            id: 2,
             title: "득근 챌린지",
             period: 15,
             category: "건강",
             isBookmark: false
         },
         {
+            id: 3,
             title: "바리바리바리스타공부하장",
             period: 7,
             category: "공부",
             isBookmark: false
         },
         {
+            id: 4,
             title: "목도리 뜨개질 도전!!",
             period: 3,
             category: "취미",
@@ -38,6 +44,7 @@ export default function ChallengeList() {
 
     //리스트
     interface ChallengeListProps {
+        id: number;
         title: string;
         period: number;
         category: string;
@@ -45,14 +52,17 @@ export default function ChallengeList() {
       };
 
     const renderItem = ({ item }: { item: ChallengeListProps }) => (
-        <View>
+        <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => router.push(`/challenge/detail?id=${item.id}`)}
+        >
             <ChallengeListItem
                 title={item.title}
                 period={item.period}
                 category={item.category}
                 isBookmark={item.isBookmark}
             />
-        </View>
+        </TouchableOpacity>
     )
     const ItemSeparatorComponent = () => <Margin height={16} />
 
@@ -73,24 +83,16 @@ export default function ChallengeList() {
                     showsVerticalScrollIndicator={false}
                 />
                 <Margin height={16}/>
-                <View style={{flexDirection:"row"}}>
-                    <Margin width={64}/>
-                    {/* 버튼 */}
-                    <View style={{flex:1}}>
-                        <View
-                            style={{
-                            backgroundColor: COLORS.dark,
-                            height: 65,
-                            marginTop: 1,
-                            marginLeft: 1,
-                            }}
-                        />
-                        <View style={styles.createButton} >
+                <TouchableOpacity activeOpacity={0.8} style={{ alignSelf: "center" }}>
+                    <View style={{ position: "relative" }}>
+                        {/* 그림자 */}
+                        <View style={styles.createButtonShadow} />
+                        {/* 버튼 */}
+                        <View style={styles.createButton}>
                             <OutlinedShadowText>NEW CHALLENGE</OutlinedShadowText>
                         </View>
                     </View>
-                    <Margin width={64}/>
-                </View>
+                </TouchableOpacity>
                 <Margin height={16}/>
             </View>
             <Margin height={48}/>

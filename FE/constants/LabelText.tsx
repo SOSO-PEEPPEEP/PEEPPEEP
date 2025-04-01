@@ -1,11 +1,16 @@
 import GlobalText from '@/constants/GlobalText';
 import { COLORS } from '@/constants/COLORS';
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, TextProps, TextStyle, StyleProp } from "react-native";
 
-export default ({ text, color }: { text: string, color: string }) => {
+interface LabelTextProps extends TextProps {
+  children: string;
+  style?: StyleProp<TextStyle>;
+}
+
+export default ({ children, style, ...props }: LabelTextProps) => {
   return (
     <View>
-        <GlobalText style={[styles.text, {backgroundColor:color}]}>{text}</GlobalText>
+        <GlobalText {...props} style={[styles.text, style]}>{children}</GlobalText>
     </View>
   );
 };
@@ -14,7 +19,7 @@ const styles = StyleSheet.create({
   text: {
     paddingHorizontal: 2,
     color:COLORS.white,
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "bold",
   },
 });

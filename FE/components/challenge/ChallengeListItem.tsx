@@ -53,9 +53,9 @@ export default ({ title, period, category, isBookmark }: Props) => {
           </View>
         </View>
         <View style={{ alignItems: "flex-end" }}>
-          <LabelText text={`${period}day`} color={getPeriodColor()}/>
+          <LabelText style={{backgroundColor:getPeriodColor(), fontSize:14}}>{`${period}day`}</LabelText>
           <Margin height={4}/>
-          <LabelText text={`#${category}`} color={COLORS.gray}/>
+          <LabelText style={{backgroundColor:COLORS.gray, fontSize:14}}>{`#${category}`}</LabelText>
         </View>
       </View>
     </View>
