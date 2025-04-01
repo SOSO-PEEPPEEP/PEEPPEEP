@@ -9,13 +9,17 @@ interface SpeechBubbleProps {
 }  
 
 export default ({ children, textStyle }: SpeechBubbleProps) => {
+    const flattenedStyle = StyleSheet.flatten(textStyle);
+    const fontSize = flattenedStyle?.fontSize || 16;
+    const dynamicLineHeight = Math.round(fontSize * 1.4);
+
     return(
         <View>
             <View style={styles.containerShadow}>
-                <GlobalText style={[styles.text, textStyle]}>{children}</GlobalText>
+                <GlobalText style={[styles.text, { lineHeight: dynamicLineHeight }, textStyle]}>{children}</GlobalText>
             </View>
             <View style={styles.container}>
-                <GlobalText style={[styles.text, textStyle]}>{children}</GlobalText>
+                <GlobalText style={[styles.text, { lineHeight: dynamicLineHeight }, textStyle]}>{children}</GlobalText>
             </View>
         </View>
     );
@@ -43,6 +47,6 @@ const styles = StyleSheet.create({
         top:2
     },
     text: {
-      textAlign: 'center'
+      textAlign: 'center',
     },
 });
