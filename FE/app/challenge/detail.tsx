@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from 'expo-router';
-import { View, Image } from 'react-native';
+import { View, Image, TouchableOpacity } from 'react-native';
 import GlobalText from '@/constants/GlobalText';
 import OutlinedShadowText from '@/constants/OutlinedShadowText';
 import LabelText from '@/constants/LabelText';
@@ -9,6 +9,8 @@ import Margin from '@/components/ui/Margin';
 import BookmarkYellow from '@/assets/svgs/Bookmark_yellow.svg';
 import BookmarkDark from '@/assets/svgs/Bookmark_dark.svg';
 import SpeechBubble from '@/components/ui/SpeechBubble';
+import ChallengeCalendar from '@/components/challenge/ChallengeCalendar';
+import CreateButton from '@/components/challenge/CreateButton';
 
 export default () => {
     const {id} = useLocalSearchParams();
@@ -25,16 +27,16 @@ export default () => {
         isBookmark: false,
         calendar: {
             day1: 1,
-            day2: 1,
-            day3: 1,
+            day2: 2,
+            day3: 3,
             day4: 0,
-            day5: 1,
-            day6: 1,
-            day7: 1,
-            day8: 1,
-            day9: 1,
-            day10: 1,
-            day11: 1,
+            day5: 4,
+            day6: 5,
+            day7: 6,
+            day8: 7,
+            day9: 8,
+            day10: 9,
+            day11: 10,
             day12: null,
             day13: null,
             day14: null,
@@ -190,6 +192,23 @@ export default () => {
 
             {/* 챌린지 설명 */}
             <SpeechBubble>{ChallengeDetailData.content}</SpeechBubble>
+
+            <Margin height={16}/>
+
+            {/* 챌린지 캘린더 */}
+            <ChallengeCalendar
+                calendar={ChallengeDetailData.calendar}
+                period={ChallengeDetailData.period}
+            />
+
+            <Margin height={16}/>
+
+            {/* 챌린지 생성 버튼 */}
+            <TouchableOpacity activeOpacity={0.8} style={{ alignSelf: "center" }}>
+                <CreateButton>NEW DAILY</CreateButton>
+            </TouchableOpacity>
+
+            <Margin height={36}/>
         </Frame>
     );
 }

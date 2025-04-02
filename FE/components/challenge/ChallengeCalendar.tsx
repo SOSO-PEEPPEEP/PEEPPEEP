@@ -1,7 +1,4 @@
-import React, { useState } from 'react';
-import { View, Image, StyleSheet, Pressable } from "react-native";
-import { useRouter } from 'expo-router';
-import EffectSound from '@/components/common/effectSound';
+import { View, Image, StyleSheet, ScrollView } from "react-native";
 
 interface ChallengeCalendarProps {
   calendar: { [key: `day${number}`]: number | null };
@@ -9,7 +6,6 @@ interface ChallengeCalendarProps {
 }
 
 export default ({ calendar, period }: ChallengeCalendarProps) => {
-  const router = useRouter();
   const calendarArray = Object.values(calendar);
 
   // period에 따른 row, col 계산
@@ -25,51 +21,40 @@ export default ({ calendar, period }: ChallengeCalendarProps) => {
 
   const getStatusImage = (value: number | null) => {
     if (value === null)
-      return require("@/assets/images/main/Stamp_NotAttempted_X2.png");
+      return require("@/assets/images/Stamp_NotAttempted_X2.png");
     if (value === 0)
-      return require("@/assets/images/main/Stamp_Failed_X2.png");
-    return require("@/assets/images/main/Stamp_Success_X2.png");
+      return require("@/assets/images/Stamp_Failed_X2.png");
+    return require("@/assets/images/Stamp_Success_X2.png");
   };
 
   let index = 0;
 
-  //소리 재생
-  const [playEffect, setPlayEffect] = useState(false);
-  const [voiceEffect, setVoiceEffect] = useState(false);
-
   return (
-    <View style={styles.wrapper}>
-        {Array.isArray(cols) &&
-        cols.map((colCount, rowIndex) => (
-            <View key={rowIndex} style={styles.row}>
-                {Array.from({ length: colCount }).map((_, colIndex) => {
-                    const value = calendarArray[index];
-                    index++;
-                    return (
-                      <View key={colIndex} style={styles.cell}>
-                        {value !== undefined && (
-                          <Pressable
-                            disabled={value === null || value === 0}
-                            onPress={() => {
-                              if (value !== null && value !== 0) {
-                                router.push(`/main/challenge/daily/detail?id=${value}`);
-                              };
-                              setPlayEffect(true);
-                            }}
-                          >
-                            <Image
-                              source={getStatusImage(value)}
-                              style={styles.image}
-                            />
-                          </Pressable>
-                        )}
-                      </View>
-                    );
-                })}
-            </View>
-        ))}
-    {playEffect && ( <EffectSound onPlaybackEnd={() => setPlayEffect(false)} />)}
-    </View>
+    <ScrollView
+        showsVerticalScrollIndicator={false}
+    >
+        <View style={styles.wrapper}>
+            {Array.isArray(cols) &&
+            cols.map((colCount, rowIndex) => (
+                <View key={rowIndex} style={styles.row}>
+                    {Array.from({ length: colCount }).map((_, colIndex) => {
+                        const value = calendarArray[index];
+                        index++;
+                        return (
+                            <View key={colIndex} style={styles.cell}>
+                                {value !== undefined && (
+                                    <Image
+                                        source={getStatusImage(value)}
+                                        style={styles.image}
+                                    />
+                                )}
+                            </View>
+                        );
+                    })}
+                </View>
+            ))}
+        </View>
+    </ScrollView>
   );
 };
 

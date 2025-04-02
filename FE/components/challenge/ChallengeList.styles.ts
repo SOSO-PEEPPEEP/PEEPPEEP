@@ -18,12 +18,4 @@ export const styles = StyleSheet.create({
         left: 2,
         top: 2,
     },
-    completedtext:{
-        color: COLORS.dark,
-        fontSize: 20,
-    },
-    completedDays:{
-        color: COLORS.purple,
-        fontSize: 32,
-    },
 });
