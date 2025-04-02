@@ -1,5 +1,5 @@
 import GlobalText from '@/constants/GlobalText';
-import { View,  StyleSheet, ViewStyle, TextStyle } from "react-native";
+import { View,  StyleSheet, TextStyle } from "react-native";
 import { ReactNode } from "react";
 import { COLORS } from "@/constants/COLORS";
 
