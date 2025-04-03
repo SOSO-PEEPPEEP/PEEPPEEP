@@ -30,7 +30,7 @@ useEffect(() => {
       const savedIdx = await AsyncStorage.getItem("selectedTabIdx");
       if (savedIdx !== null) {
         setSelectedTabIdxState(Number(savedIdx));
-        const tabRoutes = ["/", "/challenge"] as const;
+        const tabRoutes = ["/main", "/main/challenge"] as const;
         router.push(tabRoutes[Number(savedIdx)]);
       }
     }

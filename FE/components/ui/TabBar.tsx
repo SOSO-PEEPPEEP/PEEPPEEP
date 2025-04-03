@@ -69,11 +69,11 @@ export default function TabBar() {
   const { selectedTabIdx, setSelectedTabIdx } = useTabBar();
 
   const tabs = [
-    { path: "/", icon: "Home" },
-    { path: "/challenge", icon: "Calendar" },
-    { path: "/", icon: "Home" },
-    { path: "/", icon: "Home" },
-    { path: "/challenge", icon: "Calendar" },
+    { path: "/main", icon: "Home" },
+    { path: "/main/challenge", icon: "Calendar" },
+    { path: "/main", icon: "Home" },
+    { path: "/main", icon: "Home" },
+    { path: "/main/challenge", icon: "Calendar" },
   ] as const;
 
   return (
