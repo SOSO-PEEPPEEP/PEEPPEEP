@@ -70,10 +70,10 @@ export default function TabBar() {
 
   const tabs = [
     { path: "/main", icon: "Home" },
-    { path: "/main/challenge", icon: "Calendar" },
     { path: "/main", icon: "Home" },
     { path: "/main", icon: "Home" },
-    { path: "/main/challenge", icon: "Calendar" },
+    { path: "/main", icon: "Home" },
+    { path: "/main", icon: "Home" },
   ] as const;
 
   return (
