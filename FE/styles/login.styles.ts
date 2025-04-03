@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         top: '50%',
         left: '50%',
-        // transform: [{ translateX: -45 }, { translateY: '-65%' }],
+        transform: [{ translateX: -45 }, { translateY: '-60%' }],
     },
     textbox:{
         flex: 1,
@@ -35,18 +35,21 @@ export const styles = StyleSheet.create({
     },
     text1: { //노랑
         color: '#ffdbb7',
+        fontFamily: 'PF stardust ExtraBold',
         fontSize: 36,
         position: 'absolute',
         transform: [{ translateX: 4 }, { translateY: 2 }],
     },
     text2: { //보라
         color: '#9482ce',
+        fontFamily: 'PF stardust ExtraBold',
         fontSize: 36,
         position: 'absolute',
         transform: [{ translateX: 2 }, { translateY: 1 }],
     },
     text3: { //하양
         color: '#fff',
+        fontFamily: 'PF stardust ExtraBold',
         fontSize: 36,
     },
     topMargin:{
@@ -83,7 +86,7 @@ export const styles = StyleSheet.create({
 
     //Login 내부 Style
     pageTitle:{
-        fontWeight: 'bold',
+        fontFamily: 'PF stardust ExtraBold',
         color: '#8787a3',
         fontSize: 14,
         textAlign: 'left',
@@ -91,6 +94,7 @@ export const styles = StyleSheet.create({
         marginBottom: 12,
     },
     inputBox: {
+        fontFamily: 'PF stardust ExtraBold',
         color: '#8787a3',
         fontSize: 14,
         textAlign: 'left',
@@ -127,7 +131,7 @@ export const styles = StyleSheet.create({
         marginBottom: 8,
     },
     buttonText: {
-        fontWeight: 'bold',
+        fontFamily: 'PF stardust ExtraBold',
         color: '#8787A3',
         fontSize: 14,
         textAlign: 'center',
@@ -140,12 +144,14 @@ export const styles = StyleSheet.create({
         position: 'relative',
     },
     pageText:{
+        fontFamily: 'PF stardust ExtraBold',
         color: '#8787a3',
         fontSize: 14,
         textAlign: 'left',
         marginBottom: 4,
     },
     errorMsg:{
+        fontFamily: 'PF stardust ExtraBold',
         color: '#ff9b9b',
         fontSize: 14,
         textAlign: 'left',
@@ -157,6 +163,7 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
     },
     bottomContentsText: {
+        fontFamily: 'PF stardust ExtraBold',
         color: '#8787a3',
         fontSize: 14,
         textAlign: 'center',

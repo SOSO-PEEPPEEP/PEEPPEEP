@@ -1,19 +1,14 @@
-import React from 'react';
-import { View, TouchableOpacity } from "react-native";
+import React, { useState } from 'react';
+import { Text, View, TouchableOpacity, TextInput } from "react-native";
 import { useFonts } from 'expo-font';
-import GlobalText from '@/constants/GlobalText';
-import { FONT } from '@/constants/FONT';
 import { useRouter } from 'expo-router'; 
 import { styles } from "@/styles/login.styles";
 
 export default function Index() {
-  //font loading  
+  //font loading
   const [fontsLoaded] = useFonts({
-      'PF-Stardust': require('@/assets/fonts/PFstardust3.0.ttf'),
-      'PF-Stardust-Bold': require('@/assets/fonts/PFstardust3.0Bold.ttf'),
-      'PF-Stardust-ExtraBold': require('@/assets/fonts/PFstardust3.0ExtraBold.ttf'),
+    'PF stardust ExtraBold': require('@/assets/fonts/PFstardust3.0ExtraBold.ttf'),
   });
-  if (!fontsLoaded) return null;
   
   const router = useRouter();
 
@@ -27,11 +22,11 @@ export default function Index() {
       <View style={styles.topMargin}></View>
       {/* contents */}
       <View style={styles.contents}>
-        <GlobalText style={styles.pageTitle}>계정 및 비밀번호 찾기</GlobalText>
-        <GlobalText style={styles.pageTitle}>▼ 입력한 정보와 일치하는 계정 확인</GlobalText>
-        <GlobalText style={[styles.pageTitle, {color: '#d3d3dd', padding: 10}]}>ID 출력 박스</GlobalText>
+        <Text style={styles.pageTitle}>계정 및 비밀번호 찾기</Text>
+        <Text style={styles.pageTitle}>▼ 입력한 정보와 일치하는 계정 확인</Text>
+        <Text style={[styles.pageTitle, {color: '#d3d3dd', padding: 10}]}>ID 출력 박스</Text>
         <TouchableOpacity style={styles.agreeButton} onPress={login}>
-          <GlobalText style={styles.buttonText}>PEEP과 통신하기</GlobalText>
+          <Text style={styles.buttonText}>로그인 하러 가기</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.bottomMargin}></View>

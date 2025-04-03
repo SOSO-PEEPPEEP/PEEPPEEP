@@ -1,10 +1,9 @@
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { View, Image, TouchableOpacity, ScrollView, Pressable } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
+import { View, Image, TouchableOpacity } from 'react-native';
 import GlobalText from '@/constants/GlobalText';
 import OutlinedShadowText from '@/constants/OutlinedShadowText';
 import LabelText from '@/constants/LabelText';
 import Frame from '@/components/ui/Frame';
-import EffectSound from '@/components/common/effectSound';
 import { COLORS } from '@/constants/COLORS';
 import Margin from '@/components/ui/Margin';
 import BookmarkYellow from '@/assets/svgs/Bookmark_yellow.svg';
@@ -12,12 +11,8 @@ import BookmarkDark from '@/assets/svgs/Bookmark_dark.svg';
 import SpeechBubble from '@/components/ui/SpeechBubble';
 import ChallengeCalendar from '@/components/challenge/ChallengeCalendar';
 import CreateButton from '@/components/challenge/CreateButton';
-import { useEffect, useState } from 'react';
-import dayjs from 'dayjs';
-import ChallengeResult from '@/components/challenge/ChallengeResult';
 
 export default () => {
-    const router = useRouter();
     const {id} = useLocalSearchParams();
     
     // 임시 데이터
@@ -26,11 +21,10 @@ export default () => {
         content: "올해는 치과의사쌤한테 혼나지 말아봐요~🪥🫧\n모두 아자아자 파이팅!!👀",
         period: 30,
         startAt: "2025-03-01",
-        endAt: "2025-04-03",
+        endAt: "2025-03-30",
         category: "건강",
         strikeCount: 7,
         isBookmark: false,
-        isCompleted: true,
         calendar: {
             day1: 1,
             day2: 2,
@@ -96,7 +90,6 @@ export default () => {
         category: string;
         strikeCount: number;
         isBookmark: boolean;
-        isCompleted: boolean;
         calendar: DailyStatus;
         participant: User[];
     };
@@ -111,15 +104,6 @@ export default () => {
         image: string;
     };
 
-    const [showResultModal, setShowResultModal] = useState(false);
-
-    useEffect(() => {
-    const today = dayjs().format('YYYY-MM-DD');
-    if (!ChallengeDetailData.isCompleted && today > ChallengeDetailData.endAt) {
-        setShowResultModal(true);
-    }
-    }, []);
-
     const getPeriodColor = () => {
         if (ChallengeDetailData.period === 30) return COLORS.pink;
         if (ChallengeDetailData.period === 15) return COLORS.yellow;
@@ -127,20 +111,9 @@ export default () => {
         return COLORS.green;
     };
 
-    const [isBookmark, setIsBookmark] = useState(ChallengeDetailData.isBookmark);
-
     const getBookmark = () => {
-        return (
-            <Pressable
-                onPress={() => {
-                    if (!isBookmark) {
-                        setIsBookmark(true);
-                    }
-                }}
-            >
-                {isBookmark ? <BookmarkYellow /> : <BookmarkDark />}
-            </Pressable>
-        );
+        if (ChallengeDetailData.isBookmark) return <BookmarkYellow />;
+        return <BookmarkDark />
     };
 
     const formatDate = (date: string) => {
@@ -148,13 +121,10 @@ export default () => {
         return `${year.slice(2)}/${month}/${day}`;
     };
 
-    //소리 효과
-    const [playEffect, setPlayEffect] = useState(false);
-
     return(
         <Frame>
             <GlobalText style={{fontSize:16, color:COLORS.gray}}>CHALLENGE</GlobalText>
-            
+
             <Margin height={8}/>
 
             {/* 챌린지 제목 */}
@@ -164,10 +134,6 @@ export default () => {
             </View>
 
             <Margin height={16}/>
-            
-            <ScrollView
-                showsVerticalScrollIndicator={false}
-            >
 
             {/* 챌린지 정보 */}
             <View style={{flexDirection:"row", alignItems:"center", justifyContent:"space-between"}}>
@@ -225,9 +191,7 @@ export default () => {
             <Margin height={8}/>
 
             {/* 챌린지 설명 */}
-            <View style={{paddingHorizontal:4}}>
-                <SpeechBubble>{ChallengeDetailData.content}</SpeechBubble>
-            </View>
+            <SpeechBubble>{ChallengeDetailData.content}</SpeechBubble>
 
             <Margin height={16}/>
 
@@ -237,27 +201,14 @@ export default () => {
                 period={ChallengeDetailData.period}
             />
 
-            </ScrollView>
-
             <Margin height={16}/>
 
-            {/* 데일리 챌린지 생성 버튼 */}
-            <TouchableOpacity
-                onPress={() => { router.push('/main/challenge/daily/create'); setPlayEffect(true); }}
-                activeOpacity={0.8}
-                style={{ alignSelf: "center" }}
-            >
+            {/* 챌린지 생성 버튼 */}
+            <TouchableOpacity activeOpacity={0.8} style={{ alignSelf: "center" }}>
                 <CreateButton>NEW DAILY</CreateButton>
             </TouchableOpacity>
 
             <Margin height={36}/>
-
-            {/* 챌린지 결산 모달 */}
-            <ChallengeResult
-                visible={showResultModal}
-                onClose={() => setShowResultModal(false)}
-            />
-        {playEffect && ( <EffectSound onPlaybackEnd={() => setPlayEffect(false)} />)}
         </Frame>
     );
 }
