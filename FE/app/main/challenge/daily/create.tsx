@@ -40,23 +40,23 @@ export default () => {
     return (
         <Frame>
             <GlobalText style={{fontSize:16, color:COLORS.gray}}>DAILY CREATE</GlobalText>
-
-            <Margin height={8}/>
-
-            <View style={{alignItems:'center'}}>
-                <Image source={require("@/assets/images/Stamp_NotAttempted_X2.png")}/>
-            </View>
-
-            <Margin height={8}/>
-
-            {/* 데일리 */}
-            <View style={{alignItems:'center'}}>
-                <OutlinedShadowText style={{fontSize:32}}>DAY17</OutlinedShadowText>
-            </View>
-
-            <Margin height={16}/>
-
             <ScrollView showsVerticalScrollIndicator={false}>
+                <Margin height={8}/>
+
+                <View style={{alignItems:'center'}}>
+                    <Image source={require("@/assets/images/Stamp_NotAttempted_X2.png")}/>
+                </View>
+
+                <Margin height={8}/>
+
+                {/* 데일리 */}
+                <View style={{alignItems:'center'}}>
+                    <OutlinedShadowText style={{fontSize:32}}>DAY17</OutlinedShadowText>
+                </View>
+
+                <Margin height={16}/>
+
+            
                 {/* 사진 첨부 */}
                 <TouchableOpacity onPress={pickImage} activeOpacity={0.8}>
                     <View style={{backgroundColor:COLORS.dark, marginTop:1, marginLeft:1, height:173}}/>
@@ -65,7 +65,7 @@ export default () => {
                         source={{ uri: imageUri }}
                         resizeMode="cover"
                         style={{
-                            height:172, position: "absolute", top: 0, left: 0, right: 2
+                            backgroundColor:COLORS.green, height:172, position: "absolute", top: 0, left: 0, right: 2
                         }}
                       />
                     ):(
