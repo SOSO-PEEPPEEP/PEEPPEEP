@@ -2,7 +2,7 @@ import React from 'react';
 import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { View, ActivityIndicator } from 'react-native';
-import Loading from '@/app/Loading';
+import Loading from '@/components/common/Loading';
 
 export default function Index() {
   const router = useRouter();

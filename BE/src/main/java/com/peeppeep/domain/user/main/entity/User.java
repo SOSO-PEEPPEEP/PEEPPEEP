@@ -40,8 +40,8 @@ public class User extends BaseBy {
     @Column(name = "main_challenge_id")
     private Integer mainChallengeId;
 
-    @Column(name = "main_character_id")
-    private Integer mainCharacterId;
+    @Column(name = "main_pet_id")
+    private Integer mainPetId;
 
     @Override
     public String toString() {
@@ -55,7 +55,7 @@ public class User extends BaseBy {
                 ", profilePicture='" + profilePicture + '\'' +
                 ", comment='" + comment + '\'' +
                 ", mainChallengeId=" + mainChallengeId +
-                ", mainCharacterId=" + mainCharacterId +
+                ", mainCharacterId=" + mainPetId +
                 ']';
     }
 }

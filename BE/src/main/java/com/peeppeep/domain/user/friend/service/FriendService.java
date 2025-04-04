@@ -3,7 +3,6 @@ package com.peeppeep.domain.user.friend.service;
 import com.peeppeep.domain.user.friend.entity.Friend;
 import com.peeppeep.domain.user.friend.repository.FriendRepository;
 import com.peeppeep.domain.user.main.entity.User;
-import com.peeppeep.domain.user.main.repository.UserRepository;
 import com.peeppeep.global.response.error.ErrorCode;
 import com.peeppeep.global.response.success.SuccessCode;
 import org.springframework.stereotype.Service;

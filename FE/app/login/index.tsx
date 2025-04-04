@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { Text, View, TouchableOpacity, TextInput, Alert } from "react-native";
 import { useFonts } from 'expo-font';
 import { useRouter } from 'expo-router'; 
-import { styles } from "@/assets/styles/loginStyles";
+import { styles } from "@/styles/login.styles";
 
 export default function Index() {
   //font loading
   const [fontsLoaded] = useFonts({
-    'PF stardust ExtraBold': require('@/assets/fonts/PFstardust-ExtraBold.ttf'),
+    'PF stardust ExtraBold': require('@/assets/fonts/PFstardust3.0ExtraBold.ttf'),
   });
 
   //로그인 시 main 페이지 이동 또는 에러메세지 출력

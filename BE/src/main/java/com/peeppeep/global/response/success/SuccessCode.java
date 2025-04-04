@@ -45,7 +45,26 @@ public enum SuccessCode {
     //Friends
     FRIENDS_LIST_GET_SUCCESS(200, "친구 목록 조회에 성공하였습니다."),
     FRIENDS_STATUS_UPDATE_SUCCESS(204, "친구 관계 변경에 성공하였습니다."),
-    FRIENDS_DEACTIVATE_FRIENDSHIP_SUCCESS(204, "친구 삭제에 성공하였습니다.")
+    FRIENDS_DEACTIVATE_FRIENDSHIP_SUCCESS(204, "친구 삭제에 성공하였습니다."),
+
+    // Challenge
+    CHALLENGE_CREATE_SUCCESS(201, "챌린지 생성에 성공하였습니다."),
+    CHALLENGE_GET_SUCCESS(200, "챌린지 조회에 성공하였습니다."),
+    CHALLENGE_UPDATE_SUCCESS(204, "챌린지 수정에 성공하였습니다."),
+    CHALLENGE_DELETE_SUCCESS(204, "챌린지 삭제에 성공하였습니다."),
+    CHALLENGE_RESULT_SUCCESS(200, "챌린지 결산에 성공하였습니다."),
+
+    // Daily
+    DAILY_CREATE_SUCCESS(201, "챌린지 데일리 생성에 성공하였습니다."),
+    DAILY_DELETE_SUCCESS(204, "챌린지 데일리 삭제에 성공하였습니다."),
+
+    // Pet
+    PET_CREATE_SUCCESS(201, "펫 생성에 성공하였습니다."),
+    PET_GET_SUCCESS(200,"펫 조회에 성공하였습니다."),
+    PET_COLLECTION_GET_SUCCESS(200, "펫 도감 조회에 성공하였습니다."),
+    PET_UPDATE_SUCCESS(204, "펫 정보 수정에 성공하였습니다."),
+    PET_DELETE_SUCCESS(204, "펫 삭제에 성공하였습니다."),
+
     ;
 
     /**

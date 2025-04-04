@@ -6,7 +6,7 @@ export default function RootLayout() {
   const [selectedTabIdx, setSelectedTabIdx] = useState(2);
 
   const [fontsLoaded] = useFonts({
-    'PF stardust ExtraBold': require('@/assets/fonts/PFstardust-ExtraBold.ttf'),
+    'PF stardust ExtraBold': require('@/assets/fonts/PFstardust3.0ExtraBold.ttf'),
   });
 
   return (

@@ -3,12 +3,12 @@ import { Text, View, TextInput, TouchableOpacity } from "react-native";
 import { useFonts } from 'expo-font';
 import Checkbox from 'expo-checkbox';
 import { useRouter } from 'expo-router';
-import { styles } from "@/assets/styles/loginStyles";
+import { styles } from "@/styles/login.styles";
 
 export default function Index() {
   //font loading
   const [fontsLoaded] = useFonts({
-    'PF stardust ExtraBold': require('@/assets/fonts/PFstardust-ExtraBold.ttf'),
+    'PF stardust ExtraBold': require('@/assets/fonts/PFstardust3.0ExtraBold.ttf'),
   });
 
   //회원가입 시 login 페이지 이동 또는 에러메세지 출력

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState, useEffect  } from 'react';
 import { Text, View, TouchableOpacity, TextInput, Alert } from "react-native";
 import { useFonts } from 'expo-font';
@@ -14,3 +15,15 @@ export default function Index() {
     </View>
   );
 };
+=======
+import GlobalText from '@/constants/GlobalText';
+import Frame from '@/components/ui/Frame';
+
+export default function Index() {
+  return (
+    <Frame>
+      <GlobalText style={{textAlign:'center'}}>메인화면</GlobalText>
+    </Frame>
+  );
+}
+>>>>>>> c41219e (♻️ [FE] Refactor: 합본)
