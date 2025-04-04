@@ -75,7 +75,6 @@ const TabButton = ({ routePath, isSelected, onPress, iconName }: TabButtonProps)
       style={styles.friendListButtons}
     >
       {imageMap[iconName]}
-
     </TouchableOpacity>
   );
 };
