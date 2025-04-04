@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { View, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Image, TouchableOpacity, ScrollView, Pressable } from 'react-native';
 import GlobalText from '@/constants/GlobalText';
 import OutlinedShadowText from '@/constants/OutlinedShadowText';
 import LabelText from '@/constants/LabelText';
@@ -130,8 +130,7 @@ export default () => {
 
     const getBookmark = () => {
         return (
-            <TouchableOpacity
-                activeOpacity={0}
+            <Pressable
                 onPress={() => {
                     if (!isBookmark) {
                         setIsBookmark(true);
@@ -139,7 +138,7 @@ export default () => {
                 }}
             >
                 {isBookmark ? <BookmarkYellow /> : <BookmarkDark />}
-            </TouchableOpacity>
+            </Pressable>
         );
     };
 
