@@ -305,7 +305,7 @@ export default () => {
 
                 {/* 친구 초대 */}
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <GlobalText style={{ fontSize: 20 }}>참여자</GlobalText>
+                    <GlobalText style={{ fontSize: 20 }}>친구 초대</GlobalText>
                     <Margin width={16} />
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         {participant

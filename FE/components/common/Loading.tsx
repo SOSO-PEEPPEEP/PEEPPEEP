@@ -2,18 +2,19 @@ import React from 'react';
 import { Text, View, Image, Animated} from "react-native";
 import { useFonts } from 'expo-font';
 import { styles } from '@/styles/login.styles'
-import peepicon from '@/assets/images/PEEP_LOGO_X2.png';
+import peepicon from '@/assets/images/PEEP_LOGO_X4.png';
 
 const TEXT = "/n·/n·/n·";
 const ARR = TEXT.split("/n");
 
 
 export default function Index() {
-
-  const [fontsLoaded] = useFonts({
-    'PF stardust ExtraBold': require('@/assets/fonts/PFstardust3.0ExtraBold.ttf'),
-  });
-  // if(!fontsLoaded){return <AppLoading />}
+    //font loading  
+    const [fontsLoaded] = useFonts({
+        'PF-Stardust': require('@/assets/fonts/PFstardust3.0.ttf'),
+        'PF-Stardust-Bold': require('@/assets/fonts/PFstardust3.0Bold.ttf'),
+        'PF-Stardust-ExtraBold': require('@/assets/fonts/PFstardust3.0ExtraBold.ttf'),
+    });
 
   const ref_arr = React.useRef(Array.from({length: ARR.length}, () => new Animated.Value(0))).current;
 
