@@ -1,4 +1,5 @@
-import { View, Image, StyleSheet } from "react-native";
+import { View, Image, StyleSheet, Pressable } from "react-native";
+import { useRouter } from 'expo-router';
 
 interface ChallengeCalendarProps {
   calendar: { [key: `day${number}`]: number | null };
@@ -6,6 +7,7 @@ interface ChallengeCalendarProps {
 }
 
 export default ({ calendar, period }: ChallengeCalendarProps) => {
+  const router = useRouter();
   const calendarArray = Object.values(calendar);
 
   // period에 따른 row, col 계산
@@ -38,14 +40,23 @@ export default ({ calendar, period }: ChallengeCalendarProps) => {
                     const value = calendarArray[index];
                     index++;
                     return (
-                        <View key={colIndex} style={styles.cell}>
-                            {value !== undefined && (
-                                <Image
-                                    source={getStatusImage(value)}
-                                    style={styles.image}
-                                />
-                            )}
-                        </View>
+                      <View key={colIndex} style={styles.cell}>
+                        {value !== undefined && (
+                          <Pressable
+                            disabled={value === null || value === 0}
+                            onPress={() => {
+                              if (value !== null && value !== 0) {
+                                router.push(`/main/challenge/daily/detail?id=${value}`);
+                              }
+                            }}
+                          >
+                            <Image
+                              source={getStatusImage(value)}
+                              style={styles.image}
+                            />
+                          </Pressable>
+                        )}
+                      </View>
                     );
                 })}
             </View>

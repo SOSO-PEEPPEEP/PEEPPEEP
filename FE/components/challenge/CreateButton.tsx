@@ -5,15 +5,16 @@ import { COLORS } from '@/constants/COLORS';
 
 interface CreateButtonProps {
     children: ReactNode;
+    color?: string;
 }  
 
-export default ({ children }: CreateButtonProps) => {
+export default ({ children, color }: CreateButtonProps) => {
     return(
         <View style={{ position: "relative" }}>
             {/* 그림자 */}
             <View style={styles.createButtonShadow} />
             {/* 버튼 */}
-            <View style={styles.createButton}>
+            <View style={[styles.createButton, { backgroundColor: color }]}>
                 <OutlinedShadowText>{children}</OutlinedShadowText>
             </View>
         </View>
