@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { View, Image, TouchableOpacity } from 'react-native';
 import GlobalText from '@/constants/GlobalText';
 import OutlinedShadowText from '@/constants/OutlinedShadowText';
@@ -11,8 +11,12 @@ import BookmarkDark from '@/assets/svgs/Bookmark_dark.svg';
 import SpeechBubble from '@/components/ui/SpeechBubble';
 import ChallengeCalendar from '@/components/challenge/ChallengeCalendar';
 import CreateButton from '@/components/challenge/CreateButton';
+import { useEffect, useState } from 'react';
+import dayjs from 'dayjs';
+import ChallengeResult from '@/components/challenge/ChallengeResult';
 
 export default () => {
+    const router = useRouter();
     const {id} = useLocalSearchParams();
     
     // 임시 데이터
@@ -21,10 +25,11 @@ export default () => {
         content: "올해는 치과의사쌤한테 혼나지 말아봐요~🪥🫧\n모두 아자아자 파이팅!!👀",
         period: 30,
         startAt: "2025-03-01",
-        endAt: "2025-03-30",
+        endAt: "2025-04-03",
         category: "건강",
         strikeCount: 7,
         isBookmark: false,
+        isCompleted: true,
         calendar: {
             day1: 1,
             day2: 2,
@@ -90,6 +95,7 @@ export default () => {
         category: string;
         strikeCount: number;
         isBookmark: boolean;
+        isCompleted: boolean;
         calendar: DailyStatus;
         participant: User[];
     };
@@ -103,6 +109,15 @@ export default () => {
         nickname: string;
         image: string;
     };
+
+    const [showResultModal, setShowResultModal] = useState(false);
+
+    useEffect(() => {
+    const today = dayjs().format('YYYY-MM-DD');
+    if (!ChallengeDetailData.isCompleted && today > ChallengeDetailData.endAt) {
+        setShowResultModal(true);
+    }
+    }, []);
 
     const getPeriodColor = () => {
         if (ChallengeDetailData.period === 30) return COLORS.pink;
@@ -203,12 +218,22 @@ export default () => {
 
             <Margin height={16}/>
 
-            {/* 챌린지 생성 버튼 */}
-            <TouchableOpacity activeOpacity={0.8} style={{ alignSelf: "center" }}>
+            {/* 데일리 챌린지 생성 버튼 */}
+            <TouchableOpacity
+                onPress={() => router.push('/main/challenge/daily/create')}
+                activeOpacity={0.8}
+                style={{ alignSelf: "center" }}
+            >
                 <CreateButton>NEW DAILY</CreateButton>
             </TouchableOpacity>
 
             <Margin height={36}/>
+
+            {/* 챌린지 결산 모달 */}
+            <ChallengeResult
+                visible={showResultModal}
+                onClose={() => setShowResultModal(false)}
+            />
         </Frame>
     );
 }

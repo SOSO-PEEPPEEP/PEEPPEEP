@@ -1,11 +1,12 @@
 import { COLORS } from '@/constants/COLORS';
 import GlobalText from '@/constants/GlobalText';
 import { Modal, View, Pressable, Image } from 'react-native';
-import Margin from '@/components/ui/Margin';
+import Margin from '../ui/Margin';
 import { useRouter } from 'expo-router';
 
+
+
 export default ({ visible, onClose }: { visible: boolean; onClose: () => void;}) => {
-  const logo = require('@/assets/images/main/logo_x2.png');
     const router = useRouter();
     return (
     <Modal
@@ -31,27 +32,27 @@ export default ({ visible, onClose }: { visible: boolean; onClose: () => void;})
           <Margin height={16}/>
           <View>
             <View style={{flexDirection:'row', justifyContent:"center", alignItems:"center"}}>
-                <Image source={logo}/>
+                <Image source={require("@/assets/images/PEEP_LOGO.png")}/>
                 <Margin width={4}/>
                 <GlobalText>{`칫솔 X 1개`}</GlobalText>
             </View>
             <View style={{flexDirection:'row', justifyContent:"center", alignItems:"center"}}>
-                <Image source={logo}/>
+                <Image source={require("@/assets/images/PEEP_LOGO.png")}/>
                 <Margin width={4}/>
                 <GlobalText>{`휴지 X 1개`}</GlobalText>
             </View>
             <View style={{flexDirection:'row', justifyContent:"center", alignItems:"center"}}>
-                <Image source={logo}/>
+                <Image source={require("@/assets/images/PEEP_LOGO.png")}/>
                 <Margin width={4}/>
                 <GlobalText>{`샤워볼 X 1개`}</GlobalText>
             </View>
             <View style={{flexDirection:'row', justifyContent:"center", alignItems:"center"}}>
-                <Image source={logo}/>
+                <Image source={require("@/assets/images/PEEP_LOGO.png")}/>
                 <Margin width={4}/>
                 <GlobalText>{`장난감 X 1개`}</GlobalText>
             </View>
             <View style={{flexDirection:'row', justifyContent:"center", alignItems:"center"}}>
-                <Image source={logo}/>
+                <Image source={require("@/assets/images/PEEP_LOGO.png")}/>
                 <Margin width={4}/>
                 <GlobalText>{`빗 X 1개`}</GlobalText>
             </View>
