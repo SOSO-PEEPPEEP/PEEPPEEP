@@ -1,0 +1,41 @@
+spring:
+  profiles:
+    active: local
+    group:
+      local: db-local
+      server: db-server
+    include:
+      - db
+      - security
+      - mail
+  datasource:
+    driver-class-name: ${DATABASE_DRIVER}
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: ${JPA_HIBERNATE_DDL_AUTO}
+    open-in-view: false
+    dialect: org.hibernate.spatial.dialect.mysql.MySQL8SpatialDialect
+  output:
+    ansi:
+      enabled: always
+
+# 이메일 전송 smtp 설정
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    address: ${MAIL_ADDRESS}
+    password: ${MAIL_PASSWORD}
+    protocol: smtp
+    smtp:
+      auth: true
+      starttls:
+        enable: true
+    debug: true
+
+#Log Format
+logging:
+  pattern:
+    console: "[%d{yyyy-MM-dd HH:mm:ss.SSS}] %clr([%5p]) %clr([%logger.%method]){cyan} %msg%n"
