@@ -85,6 +85,7 @@ export default function ChallengeList() {
             </View>
             <Margin height={16}/>
             <TouchableOpacity
+                onPress={() => router.push(`/main/challenge/create`)}
                 activeOpacity={0.8}
                 style={{ alignSelf: "center" }}
             >
