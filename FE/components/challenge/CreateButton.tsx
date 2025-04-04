@@ -1,5 +1,5 @@
 import OutlinedShadowText from '@/constants/OutlinedShadowText'
-import { View, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import { ReactNode } from "react";
 import { COLORS } from '@/constants/COLORS';
 
@@ -8,7 +8,7 @@ interface CreateButtonProps {
     color?: string;
 }  
 
-export default ({ children, color }: CreateButtonProps) => {
+export default ({ children, color=COLORS.pink }: CreateButtonProps) => {
     return(
         <View style={{ position: "relative" }}>
             {/* 그림자 */}
@@ -23,7 +23,6 @@ export default ({ children, color }: CreateButtonProps) => {
 
 const styles = StyleSheet.create({
     createButton: {
-        backgroundColor: COLORS.pink,
         paddingHorizontal: 16,
         paddingVertical: 24,
     },
