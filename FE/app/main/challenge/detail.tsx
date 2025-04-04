@@ -126,9 +126,21 @@ export default () => {
         return COLORS.green;
     };
 
+    const [isBookmark, setIsBookmark] = useState(ChallengeDetailData.isBookmark);
+
     const getBookmark = () => {
-        if (ChallengeDetailData.isBookmark) return <BookmarkYellow />;
-        return <BookmarkDark />
+        return (
+            <TouchableOpacity
+                activeOpacity={0}
+                onPress={() => {
+                    if (!isBookmark) {
+                        setIsBookmark(true);
+                    }
+                }}
+            >
+                {isBookmark ? <BookmarkYellow /> : <BookmarkDark />}
+            </TouchableOpacity>
+        );
     };
 
     const formatDate = (date: string) => {
