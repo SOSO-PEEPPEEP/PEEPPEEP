@@ -1,4 +1,4 @@
-import { View, Image, StyleSheet, ScrollView } from "react-native";
+import { View, Image, StyleSheet } from "react-native";
 
 interface ChallengeCalendarProps {
   calendar: { [key: `day${number}`]: number | null };
@@ -30,31 +30,27 @@ export default ({ calendar, period }: ChallengeCalendarProps) => {
   let index = 0;
 
   return (
-    <ScrollView
-        showsVerticalScrollIndicator={false}
-    >
-        <View style={styles.wrapper}>
-            {Array.isArray(cols) &&
-            cols.map((colCount, rowIndex) => (
-                <View key={rowIndex} style={styles.row}>
-                    {Array.from({ length: colCount }).map((_, colIndex) => {
-                        const value = calendarArray[index];
-                        index++;
-                        return (
-                            <View key={colIndex} style={styles.cell}>
-                                {value !== undefined && (
-                                    <Image
-                                        source={getStatusImage(value)}
-                                        style={styles.image}
-                                    />
-                                )}
-                            </View>
-                        );
-                    })}
-                </View>
-            ))}
-        </View>
-    </ScrollView>
+    <View style={styles.wrapper}>
+        {Array.isArray(cols) &&
+        cols.map((colCount, rowIndex) => (
+            <View key={rowIndex} style={styles.row}>
+                {Array.from({ length: colCount }).map((_, colIndex) => {
+                    const value = calendarArray[index];
+                    index++;
+                    return (
+                        <View key={colIndex} style={styles.cell}>
+                            {value !== undefined && (
+                                <Image
+                                    source={getStatusImage(value)}
+                                    style={styles.image}
+                                />
+                            )}
+                        </View>
+                    );
+                })}
+            </View>
+        ))}
+    </View>
   );
 };
 
