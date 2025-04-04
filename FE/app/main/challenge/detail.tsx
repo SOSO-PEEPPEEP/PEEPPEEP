@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { View, Image, TouchableOpacity } from 'react-native';
+import { View, Image, TouchableOpacity, ScrollView } from 'react-native';
 import GlobalText from '@/constants/GlobalText';
 import OutlinedShadowText from '@/constants/OutlinedShadowText';
 import LabelText from '@/constants/LabelText';
@@ -139,7 +139,7 @@ export default () => {
     return(
         <Frame>
             <GlobalText style={{fontSize:16, color:COLORS.gray}}>CHALLENGE</GlobalText>
-
+            
             <Margin height={8}/>
 
             {/* 챌린지 제목 */}
@@ -149,6 +149,10 @@ export default () => {
             </View>
 
             <Margin height={16}/>
+            
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+            >
 
             {/* 챌린지 정보 */}
             <View style={{flexDirection:"row", alignItems:"center", justifyContent:"space-between"}}>
@@ -206,7 +210,9 @@ export default () => {
             <Margin height={8}/>
 
             {/* 챌린지 설명 */}
-            <SpeechBubble>{ChallengeDetailData.content}</SpeechBubble>
+            <View style={{paddingHorizontal:4}}>
+                <SpeechBubble>{ChallengeDetailData.content}</SpeechBubble>
+            </View>
 
             <Margin height={16}/>
 
@@ -215,6 +221,8 @@ export default () => {
                 calendar={ChallengeDetailData.calendar}
                 period={ChallengeDetailData.period}
             />
+
+            </ScrollView>
 
             <Margin height={16}/>
 
