@@ -6,6 +6,7 @@ import com.peeppeep.domain.user.main.entity.User;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -19,8 +20,10 @@ public interface UserFriendRepository extends JpaRepository<User, String> {
     @Query("SELECT uf FROM Friend uf WHERE (uf.senderId = :userId OR uf.receiverId = :userId) AND uf.status = :status")
     Optional<Friend> requestFriendship(@Param("userId") String userId, @Param("status") String status);
 
-    void saveUserFriend(Friend userFriend);
+//    void saveUserFriend(Friend userFriend);
 
-    @SQLDelete(sql = "UPDATE UserFriend uf SET uf.deleted_at = NOW() WHERE (uf.senderId = :userId OR uf.receiverId = :userId) AND uf.status = :status")
+    @Modifying
+    @Transactional
+    @Query("UPDATE Friend f SET f.deletedAt = CURRENT_TIMESTAMP WHERE (f.senderId = :userId OR f.receiverId = :userId) AND f.status = :status")
     Optional<Friend> deactivateFriendship(@Param("userId") String userId, @Param("status") String status);
 }

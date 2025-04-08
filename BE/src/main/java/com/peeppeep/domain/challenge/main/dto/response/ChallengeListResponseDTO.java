@@ -18,12 +18,15 @@ public class ChallengeListResponseDTO {
 
     private String category;
 
+    private Boolean isBookmark;
+
     @Builder
     private ChallengeListResponseDTO(Integer challengeId, String title, Integer period, String category) {
         this.challengeId = challengeId;
         this.title = title;
         this.period = period;
         this.category = category;
+        this.isBookmark = false;
     }
 
     public static ChallengeListResponseDTO of(Challenge challenge) {

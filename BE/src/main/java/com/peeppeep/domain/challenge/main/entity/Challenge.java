@@ -53,6 +53,9 @@ public class Challenge extends BaseBy {
     @Column(name = "is_completed")
     private Boolean isCompleted;
 
+    @Column(name="is_bookmark")
+    private Boolean isBookmark;
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
@@ -78,6 +81,7 @@ public class Challenge extends BaseBy {
         this.streakCount = 0;
         this.resultScore = 0;
         this.isCompleted = false;
+        this.isBookmark = false;
         this.category = category;
         this.calendar = Calendar.of(this);
     }
