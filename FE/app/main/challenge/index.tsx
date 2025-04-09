@@ -13,7 +13,7 @@ export default function ChallengeList() {
     const router = useRouter();
 
     interface ChallengeFromServer {
-        challengeId: number;
+        challengeUserId: number;
         title: string;
         period: number;
         category: string;
@@ -30,7 +30,7 @@ export default function ChallengeList() {
             const data = json.data;
         
             const parsedList: ChallengeListProps[] = data.map((item: ChallengeFromServer) => ({
-                id: item.challengeId,
+                id: item.challengeUserId,
                 title: item.title,
                 period: item.period,
                 category: item.category,
