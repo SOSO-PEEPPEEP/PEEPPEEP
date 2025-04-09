@@ -1,10 +1,12 @@
 package com.peeppeep.domain.challenge.main.service;
 
-import com.peeppeep.domain.challenge.main.entity.Challenge;
-import com.peeppeep.domain.challenge.main.entity.ChallengeUser;
-import com.peeppeep.domain.challenge.main.entity.RoleType;
+import com.peeppeep.domain.challenge.main.entity.*;
+import com.peeppeep.domain.challenge.main.repository.CalendarRepository;
 import com.peeppeep.domain.challenge.main.repository.ChallengeUserRepository;
+import com.peeppeep.domain.challenge.main.repository.DailyRepository;
 import com.peeppeep.domain.user.main.entity.User;
+import com.peeppeep.global.response.error.ErrorCode;
+import com.peeppeep.global.response.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChallengeUserService {
     private final ChallengeUserRepository challengeUserRepository;
+    private final CalendarRepository calendarRepository;
+    private final DailyRepository dailyRepository;
 
     // 챌린지장 설정
     public void setOrganizer(User organizer, Challenge challenge) {
@@ -42,6 +46,21 @@ public class ChallengeUserService {
 
         for (User existingParticipant : existingParticipants) {
             if (!newParticipants.contains(existingParticipant)) {
+//                // ChallengeUser 정보
+//                ChallengeUser challengeUser = challengeUserRepository.findByChallengeAndUserAndDeletedAtIsNull(challenge, existingParticipant)
+//                        .orElseThrow(() -> new BusinessException(ErrorCode.CHALLENGE_NOT_EXIST, ErrorCode.CHALLENGE_NOT_EXIST.getMessage()));
+//
+//                // Calendar 소프트 삭제
+//                Calendar calendar = challengeUser.getCalendar();
+//                if (calendar != null) {
+//                    calendarRepository.delete(calendar);
+//                }
+//
+//                // Daily 소프트 삭제
+//                List<Daily> dailies = dailyRepository.findByChallengeUserAndDeletedAtIsNull(challengeUser);
+//                dailyRepository.deleteAll(dailies);
+
+                // ChallengeUser 소프트 삭제
                 challengeUserRepository.softDeleteByChallengeAndUser(challenge, existingParticipant);
             }
         }

@@ -1,6 +1,7 @@
 package com.peeppeep.domain.challenge.main.controller;
 
 import com.peeppeep.domain.challenge.main.dto.ChallengeDTO;
+import com.peeppeep.domain.challenge.main.dto.DailyDTO;
 import com.peeppeep.domain.challenge.main.dto.request.ChallengeRequestDTO;
 import com.peeppeep.domain.challenge.main.dto.request.DailyRequestDTO;
 import com.peeppeep.domain.challenge.main.dto.response.ChallengeListResponseDTO;
@@ -32,29 +33,34 @@ public class ChallengeController {
         return ApiResponse.of(SuccessCode.CHALLENGE_GET_SUCCESS, challengeService.getMyChallenges());
     }
 
-    @GetMapping("/{challenge-id}")
-    public ApiResponse<ChallengeDTO> getChallengeDetail(@PathVariable(value = "challenge-id") Integer challengeId) {
-        return ApiResponse.of(SuccessCode.CHALLENGE_GET_SUCCESS, challengeService.getChallengeDetail(challengeId));
+    @GetMapping("/{challenge-user-id}")
+    public ApiResponse<ChallengeDTO> getChallengeDetail(@PathVariable(value = "challenge-user-id") Integer challengeUserId) {
+        return ApiResponse.of(SuccessCode.CHALLENGE_GET_SUCCESS, challengeService.getChallengeDetail(challengeUserId));
     }
 
-    @PutMapping("/{challenge-id}")
-    public ApiResponse<Integer> updateChallenge(@PathVariable("challenge-id") Integer challengeId, @RequestBody ChallengeRequestDTO challengeRequestDTO) {
-        return ApiResponse.of(SuccessCode.CHALLENGE_UPDATE_SUCCESS, challengeService.updateChallenge(challengeId, challengeRequestDTO));
+    @PutMapping("/{challenge-user-id}")
+    public ApiResponse<Integer> updateChallenge(@PathVariable("challenge-user-id") Integer challengeUserId, @RequestBody ChallengeRequestDTO challengeRequestDTO) {
+        return ApiResponse.of(SuccessCode.CHALLENGE_UPDATE_SUCCESS, challengeService.updateChallenge(challengeUserId, challengeRequestDTO));
     }
 
-    @DeleteMapping("/{challenge-id}")
-    public ApiResponse<Boolean> deleteChallenge(@PathVariable("challenge-id") Integer challengeId) {
-        return ApiResponse.of(SuccessCode.CHALLENGE_DELETE_SUCCESS, challengeService.deleteChallenge(challengeId));
+    @DeleteMapping("/{challenge-user-id}")
+    public ApiResponse<Boolean> deleteChallenge(@PathVariable("challenge-user-id") Integer challengeUserId) {
+        return ApiResponse.of(SuccessCode.CHALLENGE_DELETE_SUCCESS, challengeService.deleteChallenge(challengeUserId));
     }
 
-    @GetMapping("/{challenge-id}/result")
-    public ApiResponse<ChallengeResultResponseDTO> getChallengeResult(@PathVariable("challenge-id") Integer challengeId) {
-        return ApiResponse.of(SuccessCode.CHALLENGE_RESULT_SUCCESS, challengeService.getChallengeResult(challengeId));
+    @GetMapping("/{challenge-user-id}/result")
+    public ApiResponse<ChallengeResultResponseDTO> getChallengeResult(@PathVariable("challenge-user-id") Integer challengeUserId) {
+        return ApiResponse.of(SuccessCode.CHALLENGE_RESULT_SUCCESS, challengeService.getChallengeResult(challengeUserId));
     }
 
-    @PostMapping("/{challenge-id}/daily")
-    public ApiResponse<Integer> createDaily(@PathVariable(value = "challenge-id") Integer challengeId, @RequestBody DailyRequestDTO dailyRequestDTO) {
-        return ApiResponse.of(SuccessCode.DAILY_CREATE_SUCCESS, challengeService.createDaily(challengeId,dailyRequestDTO));
+    @PostMapping("/{challenge-user-id}/daily")
+    public ApiResponse<Integer> createDaily(@PathVariable(value = "challenge-user-id") Integer challengeUserId, @RequestBody DailyRequestDTO dailyRequestDTO) {
+        return ApiResponse.of(SuccessCode.DAILY_CREATE_SUCCESS, challengeService.createDaily(challengeUserId,dailyRequestDTO));
+    }
+
+    @GetMapping("/daily/{daily-id}")
+    public ApiResponse<DailyDTO> getDaily(@PathVariable(value = "daily-id") Integer dailyId) {
+        return ApiResponse.of(SuccessCode.DAILY_GET_SUCCESS, challengeService.getDaily(dailyId));
     }
 
     @DeleteMapping("/daily/{daily-id}")
