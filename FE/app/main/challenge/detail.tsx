@@ -48,6 +48,7 @@ export default () => {
     const [showResultModal, setShowResultModal] = useState(false);
     const [detail, setDetail] = useState<ChallengeDetailProps | null>(null);
     const [isBookmark, setIsBookmark] = useState(false);
+    const [playEffect, setPlayEffect] = useState(false);
 
     useEffect(() => {
         const fetchChallengeDetail = async () => {
@@ -103,9 +104,6 @@ export default () => {
         const [year, month, day] = date.split("-");
         return `${year.slice(2)}/${month}/${day}`;
     };
-
-    //소리 효과
-    const [playEffect, setPlayEffect] = useState(false);
 
     return(
         <Frame>

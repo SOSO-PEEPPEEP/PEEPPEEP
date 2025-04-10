@@ -27,10 +27,6 @@ public interface ChallengeUserRepository extends JpaRepository<ChallengeUser, In
     @Query("SELECT cu.user FROM ChallengeUser cu WHERE cu.challenge = :challenge AND cu.role = :role AND cu.deletedAt IS NULL")
     List<User> findUsersByChallengeAndRoleAndDeletedAtIsNull(@Param("challenge")Challenge challenge, @Param("role") RoleType role);
 
-    @Modifying
-    @Query("UPDATE ChallengeUser cu SET cu.deletedAt = CURRENT_TIMESTAMP WHERE cu.challenge = :challenge AND cu.user = :user")
-    void softDeleteByChallengeAndUser(@Param("challenge") Challenge challenge, @Param("user") User user);
-
     @Query("SELECT cu FROM ChallengeUser cu WHERE cu.isCompleted = false AND cu.deletedAt IS NULL")
     List<ChallengeUser> findAllByIsCompletedIsFalseAndDeletedAtIsNull();
 
@@ -41,4 +37,8 @@ public interface ChallengeUserRepository extends JpaRepository<ChallengeUser, In
     Optional<ChallengeUser> findByChallengeUserIdAndDeletedAtIsNull(@Param("challengeUserId") Integer challengeUserId);
 
     Optional<ChallengeUser> findByChallengeAndUserAndDeletedAtIsNull(Challenge challenge, User existingParticipant);
+
+    @Modifying
+    @Query("UPDATE ChallengeUser cu SET cu.deletedAt = CURRENT_TIMESTAMP WHERE cu.challengeUserId = :challengeUserId")
+    void softDelete(@Param("challengeUserId") Integer challengeUserId);
 }

@@ -46,22 +46,22 @@ public class ChallengeUserService {
 
         for (User existingParticipant : existingParticipants) {
             if (!newParticipants.contains(existingParticipant)) {
-//                // ChallengeUser 정보
-//                ChallengeUser challengeUser = challengeUserRepository.findByChallengeAndUserAndDeletedAtIsNull(challenge, existingParticipant)
-//                        .orElseThrow(() -> new BusinessException(ErrorCode.CHALLENGE_NOT_EXIST, ErrorCode.CHALLENGE_NOT_EXIST.getMessage()));
-//
-//                // Calendar 소프트 삭제
-//                Calendar calendar = challengeUser.getCalendar();
-//                if (calendar != null) {
-//                    calendarRepository.delete(calendar);
-//                }
-//
-//                // Daily 소프트 삭제
-//                List<Daily> dailies = dailyRepository.findByChallengeUserAndDeletedAtIsNull(challengeUser);
-//                dailyRepository.deleteAll(dailies);
+                // ChallengeUser 정보
+                ChallengeUser challengeUser = challengeUserRepository.findByChallengeAndUserAndDeletedAtIsNull(challenge, existingParticipant)
+                        .orElseThrow(() -> new BusinessException(ErrorCode.CHALLENGE_NOT_EXIST, ErrorCode.CHALLENGE_NOT_EXIST.getMessage()));
+
+                // Calendar 소프트 삭제
+                Calendar calendar = challengeUser.getCalendar();
+                if (calendar != null) {
+                    calendarRepository.softDelete(calendar.getCalendarId());
+                }
+
+                // Daily 소프트 삭제
+                List<Daily> dailies = dailyRepository.findByChallengeUserAndDeletedAtIsNull(challengeUser);
+                dailyRepository.softDeleteAll(dailies);
 
                 // ChallengeUser 소프트 삭제
-                challengeUserRepository.softDeleteByChallengeAndUser(challenge, existingParticipant);
+                challengeUserRepository.softDelete(challengeUser.getChallengeUserId());
             }
         }
     }
