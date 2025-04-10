@@ -15,77 +15,11 @@ import CreateButton from '@/components/challenge/CreateButton';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import ChallengeResult from '@/components/challenge/ChallengeResult';
+import { API_BASE_URL } from '@/constants/env';
 
 export default () => {
     const router = useRouter();
     const {id} = useLocalSearchParams();
-    
-    // 임시 데이터
-    const ChallengeDetailData = {
-        title: "양치질하기 챌린지",
-        content: "올해는 치과의사쌤한테 혼나지 말아봐요~🪥🫧\n모두 아자아자 파이팅!!👀",
-        period: 30,
-        startAt: "2025-03-01",
-        endAt: "2025-04-03",
-        category: "건강",
-        strikeCount: 7,
-        isBookmark: false,
-        isCompleted: true,
-        calendar: {
-            day1: 1,
-            day2: 2,
-            day3: 3,
-            day4: 0,
-            day5: 4,
-            day6: 5,
-            day7: 6,
-            day8: 7,
-            day9: 8,
-            day10: 9,
-            day11: 10,
-            day12: null,
-            day13: null,
-            day14: null,
-            day15: null,
-            day16: null,
-            day17: null,
-            day18: null,
-            day19: null,
-            day20: null,
-            day21: null,
-            day22: null,
-            day23: null,
-            day24: null,
-            day25: null,
-            day26: null,
-            day27: null,
-            day28: null,
-            day29: null,
-            day30: null
-        },
-        participant: [
-            {
-                id: 1,
-                nickname: "짱구",
-                image: "https://pbs.twimg.com/media/DFgrLkaUwAA3UBS.jpg"
-            },
-            {
-                id: 2,
-                nickname: "햇살",
-                image: "https://cafe24.poxo.com/ec01/jbloom20/HOvhRhvOk+Cp2KY4JuusAnntDlnXR3anZjopRQ92tJMeHcBK+bceYwGcsYVWaWCgtY91XBZzlP7g2JPnxIUjXQ==/_/web/product/big/202410/f66fef2cb16e682d861e4a0ca9bd4866.jpg"
-            },
-            {
-                id: 3,
-                nickname: "쿠로미",
-                image: "https://i.pinimg.com/736x/0a/35/da/0a35daba84215fc84d81d1349db8064e.jpg"
-            },
-            {
-                id: 4,
-                nickname: "키키",
-                image: "https://i.pinimg.com/236x/9d/0a/e0/9d0ae024a598f9b0169a2f27741efdc3.jpg"
-            }
-        ]
-    }
 
     type ChallengeDetailProps = {
         title: string;
@@ -93,12 +27,12 @@ export default () => {
         period: number;
         startAt: string;
         endAt: string;
-        category: string;
-        strikeCount: number;
+        streakCount: number;
         isBookmark: boolean;
         isCompleted: boolean;
+        category: string;
+        participants: User[];
         calendar: DailyStatus;
-        participant: User[];
     };
       
     type DailyStatus= {
@@ -106,28 +40,50 @@ export default () => {
     };
 
     type User = {
-        id: number;
-        nickname: string;
-        image: string;
+        userId: number;
+        profilePicture: string;
+        role: string;
     };
 
     const [showResultModal, setShowResultModal] = useState(false);
+    const [detail, setDetail] = useState<ChallengeDetailProps | null>(null);
+    const [isBookmark, setIsBookmark] = useState(false);
 
     useEffect(() => {
-    const today = dayjs().format('YYYY-MM-DD');
-    if (!ChallengeDetailData.isCompleted && today > ChallengeDetailData.endAt) {
-        setShowResultModal(true);
-    }
-    }, []);
+        const fetchChallengeDetail = async () => {
+          try {
+            const response = await fetch(`${API_BASE_URL}/api/challenges/${id}`);
+            const json = await response.json();
+            const data: ChallengeDetailProps = json.data;
+      
+            setDetail(data);
+      
+            const today = dayjs().format('YYYY-MM-DD');
+            if (!data.isCompleted && today > data.endAt) {
+              setShowResultModal(true);
+            }
+          } catch (error) {
+            console.error('챌린지 상세 조회 실패:', error);
+          }
+        };
+      
+        if (id) fetchChallengeDetail();
+    }, [id]);
+
+    if (!detail) {
+        return (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <GlobalText>로딩 중...</GlobalText>
+          </View>
+        );
+      }
 
     const getPeriodColor = () => {
-        if (ChallengeDetailData.period === 30) return COLORS.pink;
-        if (ChallengeDetailData.period === 15) return COLORS.yellow;
-        if (ChallengeDetailData.period === 7) return COLORS.blue;
+        if (detail.period === 30) return COLORS.pink;
+        if (detail.period === 15) return COLORS.yellow;
+        if (detail.period === 7) return COLORS.blue;
         return COLORS.green;
     };
-
-    const [isBookmark, setIsBookmark] = useState(ChallengeDetailData.isBookmark);
 
     const getBookmark = () => {
         return (
@@ -159,7 +115,7 @@ export default () => {
 
             {/* 챌린지 제목 */}
             <View style={{flexDirection:"row", alignItems:"center", justifyContent:"space-between"}}>
-                <OutlinedShadowText style={{fontSize:32}}>{ChallengeDetailData.title}</OutlinedShadowText>
+                <OutlinedShadowText style={{fontSize:32}}>{detail.title}</OutlinedShadowText>
                 {getBookmark()}
             </View>
 
@@ -172,19 +128,19 @@ export default () => {
             {/* 챌린지 정보 */}
             <View style={{flexDirection:"row", alignItems:"center", justifyContent:"space-between"}}>
                 <View style={{flexDirection:"row"}}>
-                    <LabelText style={{backgroundColor:getPeriodColor()}}>{`${ChallengeDetailData.period}day`}</LabelText>
+                    <LabelText style={{backgroundColor:getPeriodColor()}}>{`${detail.period}day`}</LabelText>
                     <Margin width={16}/>
-                    <LabelText style={{backgroundColor:COLORS.gray}}>{`#${ChallengeDetailData.category}`}</LabelText>
+                    <LabelText style={{backgroundColor:COLORS.gray}}>{`#${detail.category}`}</LabelText>
                 </View>
                 <View style={{flexDirection:"row", alignItems:"center"}}>
                     <LabelText style={{backgroundColor:COLORS.green}}>참여자</LabelText>
                     <Margin width={8}/>
-                    <GlobalText>{`${ChallengeDetailData.participant.length}명`}</GlobalText>
+                    <GlobalText>{`${detail.participants.length}명`}</GlobalText>
                     <Margin width={8}/>
                     <View style={{ flexDirection: "row" }}>
-                        {ChallengeDetailData.participant.slice(0, 4).map((user, index) => (
+                        {detail.participants.slice(0, 4).map((user, index) => (
                             <View
-                                key={user.id}
+                                key={user.userId}
                                 style={{
                                     marginLeft: index === 0 ? 0 : -4,
                                     borderRadius: 8,
@@ -193,7 +149,7 @@ export default () => {
                                   }}
                             >
                                 <Image
-                                    source={{ uri: user.image }}
+                                    source={{ uri: user.profilePicture }}
                                     style={{
                                         width: 16,
                                         height: 16,
@@ -201,8 +157,8 @@ export default () => {
                                 />
                             </View>
                         ))}
-                        {ChallengeDetailData.participant.length > 4 && (
-                            <GlobalText>+{ChallengeDetailData.participant.length - 4}</GlobalText>
+                        {detail.participants.length > 4 && (
+                            <GlobalText>+{detail.participants.length - 4}</GlobalText>
                         )}
                     </View>
                 </View>
@@ -216,25 +172,25 @@ export default () => {
                     <LabelText style={{backgroundColor: COLORS.green}}>기간</LabelText>
                     <Margin width={8}/>
                     <GlobalText>
-                        {`${formatDate(ChallengeDetailData.startAt)}~${formatDate(ChallengeDetailData.endAt)}`}
+                        {`${formatDate(detail.startAt)}~${formatDate(detail.endAt)}`}
                     </GlobalText>
                 </View>
-                <LabelText style={{backgroundColor:COLORS.green}}>{`연속 ${ChallengeDetailData.strikeCount}일`}</LabelText>
+                <LabelText style={{backgroundColor:COLORS.green}}>{`연속 ${detail.streakCount}일`}</LabelText>
             </View>
 
             <Margin height={8}/>
 
             {/* 챌린지 설명 */}
             <View style={{paddingHorizontal:4}}>
-                <SpeechBubble>{ChallengeDetailData.content}</SpeechBubble>
+                <SpeechBubble>{detail.content}</SpeechBubble>
             </View>
 
             <Margin height={16}/>
 
             {/* 챌린지 캘린더 */}
             <ChallengeCalendar
-                calendar={ChallengeDetailData.calendar}
-                period={ChallengeDetailData.period}
+                calendar={detail.calendar}
+                period={detail.period}
             />
 
             </ScrollView>

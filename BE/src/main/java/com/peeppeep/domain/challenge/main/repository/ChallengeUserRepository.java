@@ -16,8 +16,8 @@ import java.util.Optional;
 @Repository
 public interface ChallengeUserRepository extends JpaRepository<ChallengeUser, Integer> {
 
-    @Query("SELECT cu.challenge FROM ChallengeUser cu WHERE cu.user = :user AND cu.deletedAt IS NULL")
-    List<Challenge> findChallengesByUserAndDeletedAtIsNull(@Param("user") User user);
+    @Query("SELECT cu FROM ChallengeUser cu WHERE cu.user = :user AND cu.deletedAt IS NULL")
+    List<ChallengeUser> findAllByUserAndDeletedAtIsNull(User user);
 
     Boolean existsByChallengeAndUserAndDeletedAtIsNull(Challenge challenge, User user);
 
@@ -30,4 +30,15 @@ public interface ChallengeUserRepository extends JpaRepository<ChallengeUser, In
     @Modifying
     @Query("UPDATE ChallengeUser cu SET cu.deletedAt = CURRENT_TIMESTAMP WHERE cu.challenge = :challenge AND cu.user = :user")
     void softDeleteByChallengeAndUser(@Param("challenge") Challenge challenge, @Param("user") User user);
+
+    @Query("SELECT cu FROM ChallengeUser cu WHERE cu.isCompleted = false AND cu.deletedAt IS NULL")
+    List<ChallengeUser> findAllByIsCompletedIsFalseAndDeletedAtIsNull();
+
+    @Query("SELECT cu FROM ChallengeUser cu " +
+            "JOIN FETCH cu.challenge c " +
+            "LEFT JOIN FETCH c.challengeUsers " +
+            "WHERE cu.challengeUserId = :challengeUserId AND cu.deletedAt IS NULL")
+    Optional<ChallengeUser> findByChallengeUserIdAndDeletedAtIsNull(@Param("challengeUserId") Integer challengeUserId);
+
+    Optional<ChallengeUser> findByChallengeAndUserAndDeletedAtIsNull(Challenge challenge, User existingParticipant);
 }

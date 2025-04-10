@@ -90,17 +90,17 @@ public class Calendar extends BaseBy {
     private Integer day30;
 
     @OneToOne
-    @JoinColumn(name = "challenge_id")
-    private Challenge challenge;
+    @JoinColumn(name = "challenge_user_id")
+    private ChallengeUser challengeUser;
 
     @Builder
-    private Calendar (Challenge challenge) {
-        this.challenge = challenge;
+    private Calendar (ChallengeUser challengeUser) {
+        this.challengeUser = challengeUser;
     }
 
-    public static Calendar of (Challenge challenge) {
+    public static Calendar of (ChallengeUser challengeUser) {
         return builder()
-                .challenge(challenge)
+                .challengeUser(challengeUser)
                 .build();
     }
 
@@ -111,6 +111,17 @@ public class Calendar extends BaseBy {
             field.setAccessible(true);
 
             field.set(this, dailyId);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new BusinessException(ErrorCode.DAY_FIELD_NOT_EXIST, ErrorCode.DAY_FIELD_NOT_EXIST.getMessage()+" : "+day);
+        }
+    }
+
+    public Integer getDay(int day) {
+        try {
+            String fieldName = String.format("day%02d", day);
+            Field field = this.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true);
+            return (Integer) field.get(this);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new BusinessException(ErrorCode.DAY_FIELD_NOT_EXIST, ErrorCode.DAY_FIELD_NOT_EXIST.getMessage()+" : "+day);
         }

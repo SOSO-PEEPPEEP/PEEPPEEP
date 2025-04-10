@@ -29,24 +29,24 @@ public class Daily extends BaseBy {
     private String picture;
 
     @ManyToOne
-    @JoinColumn(name = "challenge_id")
-    private Challenge challenge;
+    @JoinColumn(name = "challenge_user_id")
+    private ChallengeUser challengeUser;
 
     @Builder
     private Daily(Integer day, String content, String picture,
-                  Challenge challenge) {
+                  ChallengeUser challengeUser) {
         this.day = day;
         this.content = content;
         this.picture = picture;
-        this.challenge = challenge;
+        this.challengeUser = challengeUser;
     }
 
-    public static Daily of(Challenge challenge, DailyRequestDTO dailyRequestDTO) {
+    public static Daily of(ChallengeUser challengeUser, DailyRequestDTO dailyRequestDTO) {
         return builder()
                 .day(dailyRequestDTO.getDay())
                 .content(dailyRequestDTO.getContent())
                 .picture(dailyRequestDTO.getPicture())
-                .challenge(challenge)
+                .challengeUser(challengeUser)
                 .build();
     }
 }

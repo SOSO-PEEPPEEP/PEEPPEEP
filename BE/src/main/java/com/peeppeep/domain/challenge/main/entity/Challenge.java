@@ -44,24 +44,12 @@ public class Challenge extends BaseBy {
     @Column(name = "allow_join")
     private Boolean allowJoin;
 
-    @Column(name = "streak_count")
-    private Integer streakCount;
-
-    @Column(name = "result_score")
-    private Integer resultScore;
-
-    @Column(name = "is_completed")
-    private Boolean isCompleted;
-
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
     @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChallengeUser> challengeUsers;
-
-    @OneToOne(mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Calendar calendar;
 
     @Builder
     private Challenge(String title, String content, Integer period,
@@ -75,11 +63,7 @@ public class Challenge extends BaseBy {
         this.endAt = endAt;
         this.isPublic = isPublic;
         this.allowJoin = allowJoin;
-        this.streakCount = 0;
-        this.resultScore = 0;
-        this.isCompleted = false;
         this.category = category;
-        this.calendar = Calendar.of(this);
     }
 
     // 챌린지 생성
@@ -102,27 +86,5 @@ public class Challenge extends BaseBy {
         if (challengeRequestDTO.getIsPublic() != null) this.isPublic = challengeRequestDTO.getIsPublic();
         if (challengeRequestDTO.getAllowJoin() != null) this.allowJoin = challengeRequestDTO.getAllowJoin();
         if (category != null) this.category = category;
-    }
-
-    public void updateStreakCountAndResultScorePlus() {
-        // 연속일
-        streakCount++;
-        // 점수
-        int basePoints = 10;
-        int bonusPoints = (streakCount - 1) * (streakCount - 1);
-        resultScore += basePoints + bonusPoints;
-    }
-
-    public void updateStreakCountAndResultScoreMinus() {
-        // 점수
-        int basePoints = 10;
-        int bonusPoints = (streakCount - 1) * (streakCount - 1);
-        resultScore -= basePoints + bonusPoints;
-        // 연속일
-        streakCount--;
-    }
-
-    public void updateIsCompleted() {
-        isCompleted = true;
     }
 }

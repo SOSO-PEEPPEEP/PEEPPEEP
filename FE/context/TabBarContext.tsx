@@ -30,7 +30,7 @@ useEffect(() => {
       const savedIdx = await AsyncStorage.getItem("selectedTabIdx");
       if (savedIdx !== null) {
         const idx = Number(savedIdx);
-        if (selectedTabIdx !== idx) {  // ✅ 중복 푸시 방지
+        if (selectedTabIdx !== idx) {
           setSelectedTabIdxState(idx);
           const tabRoutes = [
             "/main/pet", 
@@ -40,7 +40,7 @@ useEffect(() => {
             "/main/option"
           ] as const;
           if (idx >= 0 && idx < tabRoutes.length) {
-            router.replace(tabRoutes[idx]);  // ✅ push 대신 replace 사용
+            router.replace(tabRoutes[idx]);
           }
         }
       }

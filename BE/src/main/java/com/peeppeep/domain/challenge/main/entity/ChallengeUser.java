@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 
+import java.util.List;
+
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,6 +25,18 @@ public class ChallengeUser extends BaseBy {
     @Column(name = "role")
     private RoleType role;
 
+    @Column(name = "streak_count")
+    private Integer streakCount;
+
+    @Column(name = "result_score")
+    private Integer resultScore;
+
+    @Column(name = "is_completed")
+    private Boolean isCompleted;
+
+    @Column(name="is_bookmark")
+    private Boolean isBookmark;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -31,11 +45,22 @@ public class ChallengeUser extends BaseBy {
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
 
+    @OneToOne(mappedBy = "challengeUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Calendar calendar;
+
+    @OneToMany(mappedBy = "challengeUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Daily> dailies;
+
     @Builder
     private ChallengeUser(User user, Challenge challenge, RoleType role) {
         this.user = user;
         this.challenge = challenge;
         this.role = role;
+        this.streakCount = 0;
+        this.resultScore = 0;
+        this.isCompleted = false;
+        this.isBookmark = false;
+        this.calendar = Calendar.of(this);
     }
 
     public static ChallengeUser of(User user, Challenge challenge, RoleType role) {
@@ -44,5 +69,31 @@ public class ChallengeUser extends BaseBy {
                 .user(user)
                 .role(role)
                 .build();
+    }
+
+    public void updateStreakCountAndResultScorePlus() {
+        // 연속일
+        streakCount++;
+        // 점수
+        int basePoints = 10;
+        int bonusPoints = (streakCount - 1) * (streakCount - 1);
+        resultScore += basePoints + bonusPoints;
+    }
+
+    public void updateStreakCountAndResultScoreMinus() {
+        // 점수
+        int basePoints = 10;
+        int bonusPoints = (streakCount - 1) * (streakCount - 1);
+        resultScore -= basePoints + bonusPoints;
+        // 연속일
+        streakCount--;
+    }
+
+    public void updateIsCompleted() {
+        isCompleted = true;
+    }
+
+    public void resetStreak() {
+        this.streakCount = 0;
     }
 }
