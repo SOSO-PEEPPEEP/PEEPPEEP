@@ -47,6 +47,7 @@ export default () => {
     const [showResultModal, setShowResultModal] = useState(false);
     const [detail, setDetail] = useState<ChallengeDetailProps | null>(null);
     const [isBookmark, setIsBookmark] = useState(false);
+    const [playEffect, setPlayEffect] = useState(false);
 
     useEffect(() => {
         const fetchChallengeDetail = async () => {
