@@ -21,10 +21,19 @@ export const styles = StyleSheet.create({
         paddingBottom: 12,
     },
     buttonText: {
-        fontFamily: 'PF stardust ExtraBold',
         color: '#8787A3',
         fontSize: 14,
         textAlign: 'center',
+    },
+    search:{
+        color: '#8787A3',
+        fontSize: 14,
+        textAlign: 'left',
+        backgroundColor: '#fff',
+        borderColor: '#8787a3',
+        borderWidth: 1,
+        marginBottom: 8,
+        padding: 10,
     },
 
     //profile
@@ -42,41 +51,33 @@ export const styles = StyleSheet.create({
         marginRight: 8,
     },
     profileId: {
-        fontFamily: 'PF stardust ExtraBold',
         fontSize: 12,
         color: '#D3D3DD',
     },
     profileNickname: {
         color: '#9482CE',
-        fontFamily: 'PF stardust ExtraBold',
         fontSize: 20,
         position: 'absolute',
         transform: [{ translateX: 1 }, { translateY: 1 }],
-        marginBottom: 4,
     },
     profileNicknameshadow: {
         color: '#CED5FF',
-        fontFamily: 'PF stardust ExtraBold',
         fontSize: 20,
         transform: [{ translateX: 0 }, { translateY: 0 }],
-        marginBottom: 4,
     },
     profileMessegeBox: {
         width: '100%',
-        height: 52,
-        padding: 8,
+        height: 48,
+        padding: 4,
     },
     profileMessege:{
-        fontFamily: 'PF stardust ExtraBold',
         fontSize: 12,
         color: '#8787A3',
-        marginLeft: -4,
     },
     profileTagList: {
         flexDirection: 'row',
     },
     profileTag: {
-        fontFamily: 'PF stardust ExtraBold',
         fontSize: 12,
         color: '#fff',
         backgroundColor: '#BFE1E0',
@@ -101,7 +102,6 @@ export const styles = StyleSheet.create({
         backgroundColor: 'none',
     },
     friendButtonsText: {
-        fontFamily: 'PF stardust ExtraBold',
         fontSize: 14,
         color: '#fff',
         textAlign: 'center',
@@ -148,18 +148,14 @@ export const styles = StyleSheet.create({
     },
     friendprofileNickname: {
         color: '#9482CE',
-        fontFamily: 'PF stardust ExtraBold',
         fontSize: 20,
         position: 'absolute',
         transform: [{ translateX: 1 }, { translateY: 1 }],
-        marginBottom: 4,
     },
     friendprofileNicknameshadow: {
         color: '#CED5FF',
-        fontFamily: 'PF stardust ExtraBold',
         fontSize: 20,
         transform: [{ translateX: 0 }, { translateY: 0 }],
-        marginBottom: 4,
     },
     friendprofileTextShadow:{
         width: '100%',
@@ -275,9 +271,59 @@ export const styles = StyleSheet.create({
     },
     friendRequestWaitingText: {
         textAlign: 'left',
-        fontFamily: 'PF stardust ExtraBold',
         fontSize: 12,
         color: '#8787A3',
+    },
+    
+    
+    inputBox: {
+        color: '#8787a3',
+        fontSize: 20,
+        textAlign: 'left',
+        width: 120,
+        height: 45,
+        transform: [{ translateX: 0 }, { translateY: 0 }],
+    },
+    agreeButton: {
+        width: 172,
+        height: 36,
+        backgroundColor: '#BfE1E0',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 8,
+    },    
+    disagreeButton: {
+        width: 172,
+        height: 36,
+        backgroundColor: '#BfE1E0',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 8,
+    },    
+    nextButton: {
+        width: 172,
+        height: 36,
+        backgroundColor: '#ffdbb7',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 8,
+    },
+
+    //Modal
+    modalContainer: {
+        flex: 1, 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        backgroundColor: 'rgba(0, 0, 0, 0.5)' 
+    },
+    modalContent: {
+        width: 308, 
+        height: 240 , 
+        backgroundColor: '#f3f8fe',
+        justifyContent: 'center', 
+        alignItems: 'center',
+        borderColor: '#8787a3',
+        borderWidth: 4,
     },
 
 
