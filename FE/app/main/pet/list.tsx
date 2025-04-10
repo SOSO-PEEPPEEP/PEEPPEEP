@@ -1,20 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { Text, View, Image, ScrollView, TouchableOpacity } from "react-native";
+import React, { useState } from 'react';
+import { View, Image, ScrollView, TouchableOpacity } from "react-native";
 import { useFonts } from 'expo-font';
-import { styles } from "@/styles/styles";
+import Frame from '@/components/ui/Frame';
+import EffectSound from '@/components/common/effectSound';
+import VoiceSound from '@/components/common/voiceSound';
+import GlobalText from '@/constants/GlobalText';
 import { petstyles } from "@/styles/pet.styles";
 import { useRouter } from 'expo-router'; 
 import petImage from "@/assets/images/pet/adult/04.rabbit_adult.png";
-import Svg, { Polygon } from "react-native-svg";
+import back from "@/assets/images/icon/icon_back.png";
+import BookmarkYellow from '@/assets/svgs/Bookmark_yellow.svg';
+import BookmarkDark from '@/assets/svgs/Bookmark_dark.svg';
 
 export default function Index() {
-    //font loading  
-    const [fontsLoaded] = useFonts({
-        'PF-Stardust': require('@/assets/fonts/PFstardust3.0.ttf'),
-        'PF-Stardust-Bold': require('@/assets/fonts/PFstardust3.0Bold.ttf'),
-        'PF-Stardust-ExtraBold': require('@/assets/fonts/PFstardust3.0ExtraBold.ttf'),
-    });
-    if (!fontsLoaded) return null;
+  //font loading  
+  const [fontsLoaded] = useFonts({
+      'PF-Stardust': require('@/assets/fonts/PFstardust3.0.ttf'),
+      'PF-Stardust-Bold': require('@/assets/fonts/PFstardust3.0Bold.ttf'),
+      'PF-Stardust-ExtraBold': require('@/assets/fonts/PFstardust3.0ExtraBold.ttf'),
+  });
+  if (!fontsLoaded) return null;
 
   //peep Info
   const petType = '강아지';
@@ -50,47 +55,43 @@ export default function Index() {
     }
   };
 
-  const FavoritesColor = (favorites: string) => {
-    switch (favorites) {
-      case "Y":
-        return "#8787A3"; // 노랑색
-      default:
-        return "#FFFFFF"; // 기본값 (회색)
-    }
-  };
-
   const FavoritesCheck = () => (
-    <Svg width="24" height="24" viewBox="0 0 100 100">
-      <Polygon points="50,10 61,38 90,38 66,58 75,90 50,72 25,90 34,58 10,38 39,38"
-        fill={FavoritesColor(favorites)} stroke={FavoritesColor(favorites)} stroke-width="10" strokeLinejoin="round" strokeLinecap="round"/>
-    </Svg>
+    <BookmarkYellow />
+    // <Svg width="24" height="24" viewBox="0 0 100 100">
+    //   <Polygon points="50,10 61,38 90,38 66,58 75,90 50,72 25,90 34,58 10,38 39,38"
+    //     fill={FavoritesColor(favorites)} stroke={FavoritesColor(favorites)} stroke-width="10" strokeLinejoin="round" strokeLinecap="round"/>
+    // </Svg>
   );
    const FavoritesShadow = () => (
-    <Svg width="24" height="24" viewBox="0 0 100 100">
-      <Polygon points="50,10 61,38 90,38 66,58 75,90 50,72 25,90 34,58 10,38 39,38"
-        fill="#8787A3" stroke="#8787A3"stroke-width="10" strokeLinejoin="round" strokeLinecap="round"/>
-    </Svg>
+    <BookmarkDark />
+    // <Svg width="24" height="24" viewBox="0 0 100 100">
+    //   <Polygon points="50,10 61,38 90,38 66,58 75,90 50,72 25,90 34,58 10,38 39,38"
+    //     fill="#8787A3" stroke="#8787A3"stroke-width="10" strokeLinejoin="round" strokeLinecap="round"/>
+    // </Svg>
   ); 
   const FavoritesChk = () => {
     setFavorites(prev => (prev === "Y" ? "N" : "Y"));
   };
 
-  const router = useRouter();
+  //페이지 이동
+  const [playEffect, setPlayEffect] = useState(false);
 
+  const router = useRouter();
   const backButton = () => {
     router.push('/main/pet');
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.mainBody}>
-        <View style={petstyles.pageTitle}>
-            <View style={{width: '90%'}}><Text style={petstyles.pageTitleText}>보유한 PEEP 살펴보기</Text></View>
-            <View style={{width: '10%', alignItems: 'flex-end'}}>
-                <TouchableOpacity onPress={backButton}>
-                    <View style={{width: 20, height: 20, backgroundColor: '#000'}}></View>
-                </TouchableOpacity>
-            </View>
+    <Frame>
+        <View style={[petstyles.pageTitle, {height: 30}]}>
+          <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', }}>
+            <TouchableOpacity onPress={() => { setPlayEffect(true); backButton(); }} activeOpacity={1}> 
+              <View style={{width: 30, height: 30, marginRight: 8, alignItems: 'center', justifyContent: 'center', }}>
+                <Image source={back} style={{width: 30, height: 30}}></Image>
+              </View>
+            </TouchableOpacity>
+            <GlobalText style={petstyles.pageTitleText}>보유한 PEEP</GlobalText>
+          </View>
         </View>
         <ScrollView style={{width: '100%', paddingRight: 4}}>
             <View style={[petstyles.petListBox]}> 
@@ -110,9 +111,6 @@ export default function Index() {
                                     <View style={petstyles.favorites_shadow}>
                                         <FavoritesShadow />
                                     </View>
-                                    <View style={petstyles.favorites_non}>
-                                        <FavoritesCheck />
-                                    </View>
                                 </View>
                             )}
                         </TouchableOpacity>
@@ -121,44 +119,45 @@ export default function Index() {
                         <Image style={{ width: 72, height: 72, }} source={petImage}></Image>
                     </View>
                     <View style={petstyles.petData}>
-                        <View><Text style={petstyles.petInfo}>{petType} / {petGrade === "COMMON" ? "C" : petGrade === "RARE" ? "R" : petGrade === "UNIQUE" ? "U" : petGrade === "EPIC" ? "E" : petGrade === "LEGENDARY" ? "L" : ""}</Text></View>
+                        <View><GlobalText style={petstyles.petInfo}>{petType} / {petGrade === "COMMON" ? "C" : petGrade === "RARE" ? "R" : petGrade === "UNIQUE" ? "U" : petGrade === "EPIC" ? "E" : petGrade === "LEGENDARY" ? "L" : ""}</GlobalText></View>
                         {petGrade === "LEGENDARY" && (
                             <View style={{marginBottom: 8,}}>
-                                <View><Text style={petstyles.petNameShadow00}>{petName}</Text></View>
-                                <View><Text style={petstyles.petNameShadow01}>{petName}</Text></View>
-                                <View><Text style={[petstyles.petName, { color: petListNameColor(petGrade) }]}>{petName}</Text></View>
+                                <View><GlobalText style={petstyles.petNameShadow00}>{petName}</GlobalText></View>
+                                <View><GlobalText style={petstyles.petNameShadow01}>{petName}</GlobalText></View>
+                                <View><GlobalText style={[petstyles.petName, { color: petListNameColor(petGrade) }]}>{petName}</GlobalText></View>
                             </View>
                         )}
                         {petGrade === "EPIC" && (
                             <View style={{marginBottom: 8,}}>
-                                <View><Text style={petstyles.petNameShadow00}>{petName}</Text></View>
-                                <View><Text style={petstyles.petNameShadow01}>{petName}</Text></View>
-                                <View><Text style={petstyles.petNameShadow02}>{petName}</Text></View>
-                                <View><Text style={petstyles.petNameShadow03}>{petName}</Text></View>
-                                <View><Text style={petstyles.petNameShadow04}>{petName}</Text></View>
-                                <View><Text style={petstyles.petNameShadow05}>{petName}</Text></View>
-                                <View><Text style={[petstyles.petName, { color: petListNameColor(petGrade) }]}>{petName}</Text></View>
+                                <View><GlobalText style={petstyles.petNameShadow00}>{petName}</GlobalText></View>
+                                <View><GlobalText style={petstyles.petNameShadow01}>{petName}</GlobalText></View>
+                                <View><GlobalText style={petstyles.petNameShadow02}>{petName}</GlobalText></View>
+                                <View><GlobalText style={petstyles.petNameShadow03}>{petName}</GlobalText></View>
+                                <View><GlobalText style={petstyles.petNameShadow04}>{petName}</GlobalText></View>
+                                <View><GlobalText style={petstyles.petNameShadow05}>{petName}</GlobalText></View>
+                                <View><GlobalText style={[petstyles.petName, { color: petListNameColor(petGrade) }]}>{petName}</GlobalText></View>
                             </View>
                         )}
                         {petGrade !== "LEGENDARY" && petGrade !== "EPIC" && (
                             <View style={{marginBottom: 8,}}>
-                                <View><Text style={[petstyles.petName, { color: petListNameColor(petGrade) }]}>{petName}</Text></View>
+                                <View><GlobalText style={[petstyles.petName, { color: petListNameColor(petGrade) }]}>{petName}</GlobalText></View>
                             </View>
                         )}
 
                         <View style={petstyles.petStats}>
-                            <Text style={[petstyles.petStatsText, {marginRight: 8}]}>성장도</Text>
-                            <Text style={petstyles.petStatsText}>{petGrowth}</Text>
+                            <GlobalText style={[petstyles.petStatsText, {marginRight: 8}]}>성장도</GlobalText>
+                            <GlobalText style={petstyles.petStatsText}>{petGrowth}</GlobalText>
                         </View>
                         <View style={petstyles.petStats}>
-                            <Text style={[petstyles.petStatsText, {marginRight: 8}]}>애정도</Text>
-                            <Text style={petstyles.petStatsText}>{petAffection}</Text>
+                            <GlobalText style={[petstyles.petStatsText, {marginRight: 8}]}>애정도</GlobalText>
+                            <GlobalText style={petstyles.petStatsText}>{petAffection}</GlobalText>
                         </View>
                     </View>
                 </View>
             </View>
         </ScrollView>
-      </View>
-    </View>
+
+    {playEffect && ( <EffectSound onPlaybackEnd={() => setPlayEffect(false)} />)}
+    </Frame>
   );
 };

@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from "react";
-import { Text, View, TouchableOpacity, Animated } from "react-native";
-import { useRouter, Router } from "expo-router";
-import { useFonts } from 'expo-font';
+import React, { useState } from "react";
+import { View, TouchableOpacity, Animated } from "react-native";
+import { Router } from "expo-router";
 import { styles } from "@/styles/profile.styles";
+import GlobalText from '@/constants/GlobalText';
+import EffectSound from '@/components/common/effectSound';
 import FriendList from "@/app/main/profile/friend/friendList";  // 추가
 import FriendRequests from "@/app/main/profile/friend/friendRequests";  // 추가
 import FriendSent from "@/app/main/profile/friend/friendSent";  // 추가
@@ -22,42 +23,33 @@ interface TabBarProps {
 }
 
 export default function riend({ selectedTabIdx, setSelectedTabIdx }: TabBarProps) {
-//font loading  
-const [fontsLoaded] = useFonts({
-    'PF-Stardust': require('@/assets/fonts/PFstardust3.0.ttf'),
-    'PF-Stardust-Bold': require('@/assets/fonts/PFstardust3.0Bold.ttf'),
-    'PF-Stardust-ExtraBold': require('@/assets/fonts/PFstardust3.0ExtraBold.ttf'),
-});
-if (!fontsLoaded) {
-  return null; // 폰트 로딩이 안 됐다면 렌더링하지 않음
-}
   
 const imageMap: { [key: string]: any } = {
   FriendList: (
     <View style={[styles.friendButtons,
       selectedTabIdx === 0 && styles.selectFriendButtons,
     ]}>
-        <Text style={[styles.friendButtonsText,
+        <GlobalText style={[styles.friendButtonsText,
           selectedTabIdx === 0 && styles.selectFriendButtonsText,
-        ]}>친구 목록</Text>
+        ]}>친구 목록</GlobalText>
     </View>
   ),
   FriendRequests: (
     <View style={[styles.friendButtons,
       selectedTabIdx === 1 && styles.selectFriendButtons,
     ]}>
-        <Text style={[styles.friendButtonsText,
+        <GlobalText style={[styles.friendButtonsText,
           selectedTabIdx === 1 && styles.selectFriendButtonsText,
-        ]}>받은 요청</Text>
+        ]}>받은 요청</GlobalText>
     </View>
   ),
   FriendSent: (
     <View style={[styles.friendButtons,
       selectedTabIdx === 2 && styles.selectFriendButtons,
     ]}>
-        <Text style={[styles.friendButtonsText,
+        <GlobalText style={[styles.friendButtonsText,
           selectedTabIdx === 2 && styles.selectFriendButtonsText,
-        ]}>보낸 요청</Text>
+        ]}>보낸 요청</GlobalText>
     </View>
   ),
 };
@@ -82,6 +74,9 @@ const TabButton = ({ routePath, isSelected, onPress, iconName }: TabButtonProps)
     { path: "/FriendSent", icon: "FriendSent" },
   ] as const;
 
+  //소리 재생
+  const [playEffect, setPlayEffect] = useState(false);
+
   return (
     <View style={{flex: 1}}>
         <View style={styles.friendContainer}>
@@ -98,7 +93,7 @@ const TabButton = ({ routePath, isSelected, onPress, iconName }: TabButtonProps)
             key={index}
             routePath={tab.path as ValidRoutes}
             isSelected={selectedTabIdx === index}
-            onPress={() => setSelectedTabIdx(index)}
+            onPress={() => { setSelectedTabIdx(index);  setPlayEffect(true); }}
             iconName={tab.icon}
             />          
             {index < tabs.length - 1 && (
@@ -112,7 +107,9 @@ const TabButton = ({ routePath, isSelected, onPress, iconName }: TabButtonProps)
             {selectedTabIdx === 0 && <FriendList />}
             {selectedTabIdx === 1 && <FriendRequests />}
             {selectedTabIdx === 2 && <FriendSent />}
-        </View>
+        </View>      
+      
+    {playEffect && ( <EffectSound onPlaybackEnd={() => setPlayEffect(false)} />)}
     </View>
   );
 }

@@ -34,10 +34,10 @@ useEffect(() => {
           setSelectedTabIdxState(idx);
           const tabRoutes = [
             "/main/pet", 
-            "/main", 
+            "/main/challenge", 
             "/main", 
             "/main/profile", 
-            "/main"
+            "/main/option"
           ] as const;
           if (idx >= 0 && idx < tabRoutes.length) {
             router.replace(tabRoutes[idx]);  // ✅ push 대신 replace 사용

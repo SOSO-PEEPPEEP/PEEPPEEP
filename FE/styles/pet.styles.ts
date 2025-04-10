@@ -10,7 +10,6 @@ export const petstyles = StyleSheet.create({
         justifyContent: 'flex-end' 
     },
     peepName_01: {
-        fontFamily: 'PF stardust ExtraBold',
         color: "#8787A3",
         fontSize: 24,
         position: 'absolute',
@@ -18,7 +17,6 @@ export const petstyles = StyleSheet.create({
         left: 1,
     },
     peepName_02: {
-        fontFamily: 'PF stardust ExtraBold',
         color: "#8787A3",
         fontSize: 24,
         position: 'absolute',
@@ -26,7 +24,6 @@ export const petstyles = StyleSheet.create({
         left: -1,
     },
     peepName_03: {
-        fontFamily: 'PF stardust ExtraBold',
         color: "#8787A3",
         fontSize: 24,
         position: 'absolute',
@@ -34,7 +31,6 @@ export const petstyles = StyleSheet.create({
         left: 1,
     },
     peepName_04: {
-        fontFamily: 'PF stardust ExtraBold',
         color: "#8787A3",
         fontSize: 24,
         position: 'absolute',
@@ -42,7 +38,6 @@ export const petstyles = StyleSheet.create({
         left: -1,
     },
     peepName_05: {
-        fontFamily: 'PF stardust ExtraBold',
         color: "#8787A3",
         fontSize: 24,
         position: 'absolute',
@@ -50,7 +45,6 @@ export const petstyles = StyleSheet.create({
         left: 2,
     },
     peepName_06: {
-        fontFamily: 'PF stardust ExtraBold',
         color: "#8787A3",
         fontSize: 24,
         position: 'absolute',
@@ -58,7 +52,6 @@ export const petstyles = StyleSheet.create({
         left: 0,
     },
     peepName_07: {
-        fontFamily: 'PF stardust ExtraBold',
         color: "#8787A3",
         fontSize: 24,
         position: 'absolute',
@@ -66,7 +59,6 @@ export const petstyles = StyleSheet.create({
         left: 2,
     },    
     peepName_08: {
-        fontFamily: 'PF stardust ExtraBold',
         color: "#fff",
         fontSize: 24,
     },
@@ -88,14 +80,22 @@ export const petstyles = StyleSheet.create({
         position: 'relative',
         justifyContent: 'flex-end', // 이미지가 바닥에 위치하도록 함
         alignItems: 'center', // 이미지가 수평으로 가운데 정렬되도록 설정 (선택사항)
-        paddingBottom: 12
+        borderWidth: 4,
+        borderColor: '#C7CFFF',
+        borderRadius: 10,
+    },
+    PEEPRoomImg: {
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#D9D9D9',
+        borderRadius: 10,
     },
     PEEPImg:{
-        width: 240,
-        height: 240,
+        width: 140,
+        height: 140,
+        marginBottom: 24,
     },
     optionListText: {
-        fontFamily: 'PF stardust ExtraBold',
         color: '#8787A3',
         textAlign: 'left',
     },
@@ -109,7 +109,6 @@ export const petstyles = StyleSheet.create({
         alignItems: 'center',
     },
     pageTitleText: {
-        fontFamily: 'PF stardust ExtraBold',
         color: '#8787A3',
         textAlign: 'left',
         fontSize: 20,
@@ -168,12 +167,10 @@ export const petstyles = StyleSheet.create({
         width: '60%',
     },
     petInfo: {
-        fontFamily: 'PF stardust ExtraBold',
         color: '#8787A3',
         fontSize: 20,
     },
     petNameShadow00: {
-        fontFamily: 'PF stardust ExtraBold',
         color: '#8787A3',
         fontSize: 20,
         position: 'absolute',
@@ -181,7 +178,6 @@ export const petstyles = StyleSheet.create({
         left: 2,
     },
     petNameShadow01: {
-        fontFamily: 'PF stardust ExtraBold',
         color: '#8787A3',
         fontSize: 20,
         position: 'absolute',
@@ -189,7 +185,6 @@ export const petstyles = StyleSheet.create({
         left: 1,
     },
     petNameShadow02: {
-        fontFamily: 'PF stardust ExtraBold',
         color: '#8787A3',
         fontSize: 20,
         position: 'absolute',
@@ -197,7 +192,6 @@ export const petstyles = StyleSheet.create({
         left: 1,
     },
     petNameShadow03: {
-        fontFamily: 'PF stardust ExtraBold',
         color: '#8787A3',
         fontSize: 20,
         position: 'absolute',
@@ -205,7 +199,6 @@ export const petstyles = StyleSheet.create({
         left: -1,
     },
     petNameShadow04: {
-        fontFamily: 'PF stardust ExtraBold',
         color: '#8787A3',
         fontSize: 20,
         position: 'absolute',
@@ -213,7 +206,6 @@ export const petstyles = StyleSheet.create({
         left: 1,
     },
     petNameShadow05: {
-        fontFamily: 'PF stardust ExtraBold',
         color: '#8787A3',
         fontSize: 20,
         position: 'absolute',
@@ -221,7 +213,6 @@ export const petstyles = StyleSheet.create({
         left: -1,
     },
     petName: {
-        fontFamily: 'PF stardust ExtraBold',
         fontSize: 20,
     },
     petStats: {
@@ -229,7 +220,6 @@ export const petstyles = StyleSheet.create({
         alignItems: 'center',
     },
     petStatsText: {
-        fontFamily: 'PF stardust ExtraBold',
         color: '#8787A3',
         fontSize: 12,
     },
@@ -244,17 +234,17 @@ export const petstyles = StyleSheet.create({
         marginVertical: 20,
     },
     addPeepList:{
-        marginVertical: 8,
+        marginVertical: 4,
     },
     addPeepText: {
-        fontFamily: 'PF stardust ExtraBold',
+        fontWeight: 'bold',
         color: '#8787A3',
-        fontSize: 20,
+        fontSize: 24,
     },
     addPeepTextShadow: {
-        fontFamily: 'PF stardust ExtraBold',
+        fontWeight: 'bold',
         color: '#8787A3',
-        fontSize: 20,
+        fontSize: 24,
         position: 'absolute',
         top: -1,
         left: 1,
@@ -269,10 +259,9 @@ export const petstyles = StyleSheet.create({
         marginVertical: 20,
     },
     addPeepInfoBoxShadow:{
-        width: 300,
-        height: 400,
+        width: 310,
+        height: 380,
         backgroundColor: '#8787A3',
-        
         borderColor: '#8787A3',
         borderWidth: 2,
         borderTopRightRadius: 10,
@@ -283,14 +272,13 @@ export const petstyles = StyleSheet.create({
         left: 3,
     },
     addPeepInfoBox: {
-        width: 300,
-        height: 400,
+        width: 310,
+        height: 380,
         alignItems: 'center', 
         justifyContent: 'center',
         paddingHorizontal: 12,
         paddingVertical: 24,
         backgroundColor: '#fff',
-        
         borderColor: '#8787A3',
         borderWidth: 2,
         borderTopRightRadius: 10,
@@ -306,13 +294,73 @@ export const petstyles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     entryNumberText:{
-        fontFamily: 'PF stardust ExtraBold',
         color: '#8787A3',
         textAlign: 'center',
         fontSize: 20,
     },
+    addPeepNameText:{
+        color: '#fff',
+        fontSize: 20,
+        textAlign: 'left',
+        marginBottom: 4,
+    },
+    addPeepNameTextShadow01: {
+        color: '#8787A3',
+        fontSize: 20,
+        textAlign: 'left',
+        position: 'absolute',
+        top: 1,
+        left: 1,
+    },
+    addPeepNameTextShadow02: {
+        color: '#8787A3',
+        fontSize: 20,
+        textAlign: 'left',
+        position: 'absolute',
+        top: 1,
+        left: -1,
+    },
+    addPeepNameTextShadow03: {
+        color: '#8787A3',
+        fontSize: 20,
+        textAlign: 'left',
+        position: 'absolute',
+        top: -1,
+        left: 1,
+    },
+    addPeepNameTextShadow04: {
+        color: '#8787A3',
+        fontSize: 20,
+        textAlign: 'left',
+        position: 'absolute',
+        top: -1,
+        left: -1,
+    },
+    addPeepNameTextShadow05: {
+        color: '#8787A3',
+        fontSize: 20,
+        textAlign: 'left',
+        position: 'absolute',
+        top: 2,
+        left: 2,
+    },
+    addPeepNameTextShadow06: {
+        color: '#8787A3',
+        fontSize: 20,
+        textAlign: 'left',
+        position: 'absolute',
+        top: 2,
+        left: 1,
+    },
+    addPeepNameTextShadow07: {
+        color: '#8787A3',
+        fontSize: 20,
+        textAlign: 'left',
+        position: 'absolute',
+        top: 0,
+        left: 2,
+    },
     addPeepInfoText: {
-        fontFamily: 'PF stardust ExtraBold',
         color: '#8787A3',
         fontSize: 16,
         textAlign: 'left',
@@ -320,7 +368,7 @@ export const petstyles = StyleSheet.create({
     addPeepMessage:{
         alignItems: 'center', 
         justifyContent: 'center',
-        marginTop: 20,
+        marginTop: 10,
     },
     addPeepInfoListBox: {
         width: '100%', 
@@ -334,11 +382,162 @@ export const petstyles = StyleSheet.create({
         marginRight: 12,
         marginBottom: 4,
     },
-    petInfoMessage:{
+    petInfoMessage: {
+        width: 270,
         alignItems: 'center', 
         justifyContent: 'center',
         marginTop: 16,
         marginBottom: 16,
     },
 
+    //collection
+    collectionlist: {
+        flex: 1,
+        justifyContent: 'center',
+        flexDirection: 'row',
+        flexWrap: 'wrap', 
+    },
+    collectioncard: {
+        justifyContent: 'center',
+        marginRight: 4,
+        marginLeft: 4,
+    },
+    collections: {
+        width: '100%',
+        marginBottom: 4,
+    },
+    bookmark: {
+        width: 44,
+        height: 8,
+        backgroundColor: '#8787A3',
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+    },
+    collection: {
+        alignItems: 'center', 
+        justifyContent: 'center',
+        width: 132,
+        height: 160,
+        borderWidth: 1,
+        borderColor: '#8787A3',
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        borderBottomRightRadius: 10,
+        position: 'absolute',
+        top: 4,
+        left: 8,
+        padding: 12,
+    },
+    collectionShadow: {
+        width: 136,
+        height: 164,
+        borderWidth: 1,
+        backgroundColor: '#8787A3',
+        borderColor: '#8787A3',
+        borderTopRightRadius: 10,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+    },
+    collectionPetImg: {
+        alignItems: 'center', 
+        justifyContent: 'center',
+        width: '100%',
+        height: '70%',
+        marginBottom: 12,
+    },
+    collectionInfoBox:{
+        width: '100%',
+        textAlign: 'left',
+        marginBottom: 2,
+    },
+    collectionInfoText: {
+        color: '#8787A3',
+        fontSize: 10,
+    },
+    collectionNameBox:{
+        width: '100%',
+        textAlign: 'left',
+    },
+    collectionNameText: {
+        color: '#fff',
+    },
+    collectionNameTextShadow01: {
+        color: '#8787A3',
+        position: 'absolute',
+        top: 1,
+        left: 1,
+    },
+    collectionNameTextShadow02: {
+        color: '#8787A3',
+        position: 'absolute',
+        top: 1,
+        left: -1,
+    },
+    collectionNameTextShadow03: {
+        color: '#8787A3',
+        position: 'absolute',
+        top: -1,
+        left: 1,
+    },
+    collectionNameTextShadow04: {
+        color: '#8787A3',
+        position: 'absolute',
+        top: -1,
+        left: -1,
+    },
+    collectionNameTextShadow05: {
+        color: '#8787A3',
+        position: 'absolute',
+        top: 2,
+        left: 2,
+    },
+    collectionNameTextShadow06: {
+        color: '#8787A3',
+        position: 'absolute',
+        top: 2,
+        left: 0,
+    },
+    collectionNameTextShadow07: {
+        color: '#8787A3',
+        position: 'absolute',
+        top: 0,
+        left: 2,
+    },
+    collectionNameTextShadow08: {
+        color: '#8787A3',
+        position: 'absolute',
+        top: 2,
+        left: 1,
+    },
+    collectionNameTextShadow09: {
+        color: '#8787A3',
+        position: 'absolute',
+        top: 1,
+        left: 2,
+    },
+    collectionentryNumber: {
+        justifyContent: 'center',
+        backgroundColor: '#C7CFFF',
+        width : 60,
+        height: 16,
+        marginBottom: 8,
+    },
+    collectionentryNumberText: {
+        color: '#fff',
+        fontSize: 12,
+        textAlign: 'center',
+    },
+
+    //petCollectionInfo
+    petGrowth: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center', 
+        height: 60,
+        width: '100%',
+    },
+    petimg:{
+        width: 52,
+        height: 52,
+    },
 });
