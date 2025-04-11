@@ -2,7 +2,7 @@ import 'dotenv/config';
 
 export default {
   expo: {
-    name: "FE",
+    name: "PEEPPEEP",
     slug: "FE",
     version: "1.0.0",
     orientation: "portrait",
@@ -22,7 +22,7 @@ export default {
     web: {
       bundler: "metro",
       output: "static",
-      favicon: "./assets/images/favicon.png"
+      favicon: "./assets/images/main/logo_X4.png"
     },
     plugins: [
       "expo-router",
