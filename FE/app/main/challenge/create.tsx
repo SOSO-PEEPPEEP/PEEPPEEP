@@ -1,19 +1,21 @@
-import { ScrollView, View, Pressable, Modal, TouchableOpacity, Image } from 'react-native'
-import Frame from '@/components/ui/Frame'
-import GlobalText from '@/constants/GlobalText'
-import Margin from '@/components/ui/Margin'
-import { COLORS } from '@/constants/COLORS'
-import SpeechBubble from '@/components/ui/SpeechBubble'
-import { useState } from 'react';
-import GlobalInput from '@/constants/GlobalInput'
-import LabelText from '@/constants/LabelText'
-import OutlinedShadowText from '@/constants/OutlinedShadowText'
+import { useEffect, useState } from 'react';
+import { ScrollView, View, Pressable, Modal, TouchableOpacity, Image, Alert } from 'react-native';
+import Frame from '@/components/ui/Frame';
+import EffectSound from '@/components/common/effectSound';
+import GlobalText from '@/constants/GlobalText';
+import Margin from '@/components/ui/Margin';
+import { COLORS } from '@/constants/COLORS';
+import SpeechBubble from '@/components/ui/SpeechBubble';
+import GlobalInput from '@/constants/GlobalInput';
+import LabelText from '@/constants/LabelText';
+import OutlinedShadowText from '@/constants/OutlinedShadowText';
 import { format, addDays, addMonths, endOfMonth } from 'date-fns';
 import { Calendar } from 'react-native-calendars';
 import type { DateData } from 'react-native-calendars';
-import CreateButton from '@/components/challenge/CreateButton'
-import { useRouter } from 'expo-router'
-import AddParticipant from '@/assets/svgs/Add_Participant.svg'
+import CreateButton from '@/components/challenge/CreateButton';
+import { useRouter } from 'expo-router';
+import AddParticipant from '@/assets/svgs/Add_Participant.svg';
+import { API_BASE_URL } from '@/constants/env';
 
 export default () => {
     const router = useRouter();
@@ -28,9 +30,16 @@ export default () => {
 
     const isPublics = ['공개', '친구만', '비공개'];
     const [isPublic, setIsPublic] = useState(0);
+    const isPublicMapping: { [key in typeof isPublics[number]]: "PUBLIC" | "FRIEND_ONLY" | "PRIVATE" } = {
+        "공개": "PUBLIC",
+        "친구만": "FRIEND_ONLY",
+        "비공개": "PRIVATE"
+    };
+
+    const [friends, setFriends] = useState<Friend[]>([]);
 
     const [selectedFriends, setSelectedFriends] = useState<number[]>([]);
-
+    
     const [showFriendModal, setShowFriendModal] = useState(false);
 
     const [startDate, setStartDate] = useState(addDays(new Date(), 1));
@@ -38,6 +47,8 @@ export default () => {
     const endDate = addDays(startDate, periods[period] - 1);
 
     const [content, setContent] = useState('');
+
+    const [playEffect, setPlayEffect] = useState(false);
 
     const handlePress = () => {
         setShowPicker(true);
@@ -50,11 +61,11 @@ export default () => {
         textColor?: string;
         disabled?: boolean;
         disableTouchEvent?: boolean;
-      };
+    };
       
-      type MarkedDates = {
+    type MarkedDates = {
         [date: string]: MarkedDate;
-      };
+    };
 
     const getMarkedDates = () => {
         const marked: MarkedDates = {};
@@ -71,58 +82,117 @@ export default () => {
         return marked;
     };
 
-    const participant = [
-        {
-            id: 1,
-            nickname: "짱구",
-            image: "https://pbs.twimg.com/media/DFgrLkaUwAA3UBS.jpg"
-        },
-        {
-            id: 2,
-            nickname: "햇살",
-            image: "https://cafe24.poxo.com/ec01/jbloom20/HOvhRhvOk+Cp2KY4JuusAnntDlnXR3anZjopRQ92tJMeHcBK+bceYwGcsYVWaWCgtY91XBZzlP7g2JPnxIUjXQ==/_/web/product/big/202410/f66fef2cb16e682d861e4a0ca9bd4866.jpg"
-        },
-        {
-            id: 3,
-            nickname: "쿠로미",
-            image: "https://i.pinimg.com/736x/0a/35/da/0a35daba84215fc84d81d1349db8064e.jpg"
-        },
-        {
-            id: 4,
-            nickname: "키키",
-            image: "https://i.pinimg.com/236x/9d/0a/e0/9d0ae024a598f9b0169a2f27741efdc3.jpg"
-        },
-    ]
+    const MAX_LINES = 30;
+
+    const handleContentChange = (text: string) => {
+        const lines = text.split('\n');
+        if (lines.length > MAX_LINES) {
+            setContent(lines.slice(0, MAX_LINES).join('\n'));
+        } else {
+            setContent(text);
+        }
+    };
+
+    type Friend = {
+        userId: number;
+        loginId: string;
+        nickname: string;
+        profilePicture: string;
+        comment?: string;
+    };
+
+    // 친구 목록 API
+    const fetchFriendsList = async () => {
+      try {
+          const response = await fetch(`${API_BASE_URL}/api/friends?userId=1&status=ACCEPTED&req=0`);
+          const json = await response.json();
+          const data: Friend[] = json.data;
+
+          setFriends(data);
+      } catch (error) {
+          if (error instanceof Error) {
+              Alert.alert("네트워크 에러", error.message);
+              console.error("Error fetching friend list", error);
+          } else {
+              Alert.alert("네트워크 에러", "알 수 없는 에러가 발생했습니다.");
+              console.error("Error fetching friend list", error);
+          }
+      }
+    };
+
+    useEffect(() => {
+      fetchFriendsList();
+    }, []);
+
+    // 챌린지 생성 API
+    const createChallenge = async () => {
+        const challengeRequest = {
+            title: title,
+            content: content,
+            period: periods[period],
+            startAt: format(startDate, 'yyyy-MM-dd'),
+            endAt: format(endDate, 'yyyy-MM-dd'),
+            isPublic: isPublicMapping[isPublics[isPublic]],
+            allowJoin: true, // true로 고정, 수정 필요
+            category: category + 1,
+            participants: selectedFriends,
+        };
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/challenges`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(challengeRequest)
+            });
+
+            if (response.ok) {
+                setPlayEffect(true);
+                router.push('/main/challenge');
+            } else {
+                const errData = await response.json();
+                Alert.alert("챌린지 생성 실패", JSON.stringify(errData));
+            }
+        } catch (error) {
+          if (error instanceof Error) {
+            Alert.alert("네트워크 에러", error.message);
+            console.error("Error creating challenge", error);
+          } else {
+            Alert.alert("네트워크 에러", "알 수 없는 에러가 발생했습니다.");
+            console.error("Error creating challenge", error);
+          }
+        }
+    };
 
     return (
         <Frame>
-            <GlobalText style={{fontSize:16, color:COLORS.gray}}>CHALLENGE CREATE</GlobalText>
-
-            <Margin height={8}/>
-
+            <GlobalText style={{ fontSize: 16, color: COLORS.gray }}>CHALLENGE CREATE</GlobalText>
+            <Margin height={8} />
             <ScrollView showsVerticalScrollIndicator={false}>
                 {/* 타이틀 */}
-                <View style={{alignItems:'center'}}>
-                    <OutlinedShadowText style={{fontSize:24}}>챌린지명</OutlinedShadowText>
+                <View style={{ alignItems: 'center' }}>
+                    <OutlinedShadowText style={{ fontSize: 24 }}>챌린지명</OutlinedShadowText>
                 </View>
-                <Margin height={8}/>
-                <View style={{paddingHorizontal:4}}>
+                <Margin height={8} />
+                <View style={{ paddingHorizontal: 4 }}>
                     <SpeechBubble>
-                            <GlobalInput
-                                value={title}
-                                onChangeText={setTitle}
-                                placeholder="챌린지명을 입력해 주세요."
-                                style={{ textAlign: 'center', width:"100%" }}
-                            />
+                        <GlobalInput
+                            value={title}
+                            onChangeText={setTitle}
+                            placeholder="챌린지명을 입력해 주세요."
+                            style={{ textAlign: 'center', width: "100%" }}
+                            maxLength={20}
+                        />
                     </SpeechBubble>
                 </View>
 
-                <Margin height={16}/>
+                <Margin height={16} />
 
                 {/* 카테고리 */}
-                <View style={{flexDirection:"row", alignItems:"center"}}>
-                    <GlobalText style={{fontSize:20}}>카테고리</GlobalText>
-                    <Margin width={16}/>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <GlobalText style={{ fontSize: 20 }}>카테고리</GlobalText>
+                    <Margin width={16} />
                     <View style={{ flex: 1 }}>
                         <ScrollView
                             horizontal
@@ -136,8 +206,8 @@ export default () => {
                                 <Pressable key={index} onPress={() => setCategory(index)}>
                                     <LabelText
                                         style={{
-                                        backgroundColor: category === index ? COLORS.green : COLORS.gray,
-                                        fontSize: 20
+                                            backgroundColor: category === index ? COLORS.green : COLORS.gray,
+                                            fontSize: 20
                                         }}
                                     >
                                         {'#' + item}
@@ -148,12 +218,12 @@ export default () => {
                     </View>
                 </View>
 
-                <Margin height={16}/>
+                <Margin height={16} />
 
                 {/* 데일리 */}
-                <View style={{flexDirection:"row", alignItems:"center"}}>
-                    <GlobalText style={{fontSize:20}}>데일리</GlobalText>
-                    <Margin width={16}/>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <GlobalText style={{ fontSize: 20 }}>데일리</GlobalText>
+                    <Margin width={16} />
                     <View style={{ flex: 1 }}>
                         <ScrollView
                             horizontal
@@ -172,12 +242,12 @@ export default () => {
                                     return COLORS.gray;
                                 };
 
-                                return(
+                                return (
                                     <Pressable key={index} onPress={() => setPeriod(index)}>
                                         <LabelText
                                             style={{
-                                            backgroundColor: period === index ? getColor() : COLORS.gray,
-                                            fontSize: 20
+                                                backgroundColor: period === index ? getColor() : COLORS.gray,
+                                                fontSize: 20
                                             }}
                                         >
                                             {item + 'day'}
@@ -189,7 +259,7 @@ export default () => {
                     </View>
                 </View>
 
-                <Margin height={16}/>
+                <Margin height={16} />
 
                 {/* 기간 */}
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -202,12 +272,12 @@ export default () => {
                     </Pressable>
                 </View>
 
-                {/* 커스텀 달력 모달 */}
+                {/* 달력 모달 */}
                 <Modal visible={showPicker} transparent animationType="fade">
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.3)' }}>
                         <View style={{ backgroundColor: COLORS.bg, padding: 20, width: '90%' }}>
-                            <GlobalText style={{ fontSize: 16, textAlign: 'center', color:COLORS.blue }}>챌린지 기간을 선택하세요</GlobalText>
-                            <Margin height={16}/>
+                            <GlobalText style={{ fontSize: 16, textAlign: 'center', color: COLORS.blue }}>챌린지 기간을 선택하세요</GlobalText>
+                            <Margin height={16} />
                             <Calendar
                                 onDayPress={(day: DateData) => {
                                     const selected = new Date(day.dateString);
@@ -228,34 +298,34 @@ export default () => {
                                     backgroundColor: COLORS.bg
                                 }}
                             />
-                            <Margin height={16}/>
+                            <Margin height={16} />
                             <Pressable
                                 onPress={() => setShowPicker(false)}
                                 style={{
-                                    flexDirection:'row',
+                                    flexDirection: 'row',
                                     backgroundColor: COLORS.blue,
                                     padding: 8,
                                     alignSelf: 'center',
                                 }}
                             >
-                                <Margin width={16}/>
+                                <Margin width={16} />
                                 <GlobalText style={{ color: 'white', textAlign: 'center' }}>OK</GlobalText>
-                                <Margin width={16}/>
+                                <Margin width={16} />
                             </Pressable>
                         </View>
                     </View>
                 </Modal>
 
-                <Margin height={16}/>
+                <Margin height={16} />
 
-                {/* 설명 */}
-                <GlobalText style={{fontSize:20}}>챌린지 설명</GlobalText>
-                <Margin height={8}/>
-                <View style={{paddingHorizontal:4}}>
+                {/* 챌린지 설명 */}
+                <GlobalText style={{ fontSize: 20 }}>챌린지 설명</GlobalText>
+                <Margin height={8} />
+                <View style={{ paddingHorizontal: 4 }}>
                     <SpeechBubble>
                         <GlobalInput
                             value={content}
-                            onChangeText={setContent}
+                            onChangeText={handleContentChange}
                             placeholder="챌린지 설명을 작성해 주세요."
                             multiline
                             numberOfLines={4}
@@ -270,12 +340,12 @@ export default () => {
                     </SpeechBubble>
                 </View>
 
-                <Margin height={16}/>
+                <Margin height={16} />
 
                 {/* 공개 여부 */}
-                <View style={{flexDirection:"row", alignItems:"center"}}>
-                    <GlobalText style={{fontSize:20}}>공개 여부</GlobalText>
-                    <Margin width={16}/>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <GlobalText style={{ fontSize: 20 }}>공개 여부</GlobalText>
+                    <Margin width={16} />
                     <View style={{ flex: 1 }}>
                         <ScrollView
                             horizontal
@@ -289,8 +359,8 @@ export default () => {
                                 <Pressable key={index} onPress={() => setIsPublic(index)}>
                                     <LabelText
                                         style={{
-                                        backgroundColor: isPublic === index ? COLORS.green : COLORS.gray,
-                                        fontSize: 20
+                                            backgroundColor: isPublic === index ? COLORS.green : COLORS.gray,
+                                            fontSize: 20
                                         }}
                                     >
                                         {item}
@@ -301,32 +371,33 @@ export default () => {
                     </View>
                 </View>
 
-                <Margin height={16}/>
+                <Margin height={16} />
 
-                {/* 친구 초대 */}
+                {/* 친구 초대 - 백엔드에서 받아온 친구 목록(friends) 사용 */}
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <GlobalText style={{ fontSize: 20 }}>참여자</GlobalText>
+                    <GlobalText style={{ fontSize: 20 }}>친구 초대</GlobalText>
                     <Margin width={16} />
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        {participant
-                        .filter((user) => selectedFriends.includes(user.id))
-                        .slice(0, 4)
-                        .map((user, index) => (
-                            <View
-                                key={user.id}
-                                style={{
-                                    marginLeft: index === 0 ? 0 : -18,
-                                    borderRadius: 24,
-                                    overflow: 'hidden',
-                                    zIndex: 4 - index,
-                                }}
-                            >
-                                <Image
-                                    source={{ uri: user.image }}
-                                    style={{ width: 48, height: 48 }}
-                                />
-                            </View>
-                        ))}
+                        {friends
+                          .filter((user) => selectedFriends.includes(user.userId))
+                          .slice(0, 4)
+                          .map((user, index) => (
+                              <View
+                                  key={user.userId}
+                                  style={{
+                                      marginLeft: index === 0 ? 0 : -18,
+                                      borderRadius: 24,
+                                      overflow: 'hidden',
+                                      zIndex: 4 - index,
+                                  }}
+                              >
+                                  <Image
+                                      source={{ uri: user.profilePicture }}
+                                      style={{ width: 48, height: 48 }}
+                                  />
+                              </View>
+                          ))
+                        }
                         {selectedFriends.length > 4 && (
                             <GlobalText style={{ fontSize: 16 }}> + {selectedFriends.length - 4}</GlobalText>
                         )}
@@ -338,63 +409,57 @@ export default () => {
                 </View>
             </ScrollView>
 
-            <Modal
-                visible={showFriendModal}
-                transparent
-                animationType="fade"
-            >
+            {/* 친구 선택 모달 */}
+            <Modal visible={showFriendModal} transparent animationType="fade">
                 <View
                     style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: 'rgba(0,0,0,0.3)',
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: 'rgba(0,0,0,0.3)',
                     }}
                 >
                     <View
-                    style={{
-                        width: '90%',
-                        maxHeight: '70%',
-                        backgroundColor: COLORS.bg,
-                        padding: 20,
-                    }}
+                        style={{
+                            width: '90%',
+                            maxHeight: '70%',
+                            backgroundColor: COLORS.bg,
+                            padding: 20,
+                        }}
                     >
-                        <GlobalText style={{ fontSize: 16, textAlign: 'center', color:COLORS.blue}}>
+                        <GlobalText style={{ fontSize: 16, textAlign: 'center', color: COLORS.blue }}>
                             함께 챌린지에 도전할 친구를 선택해 주세요
                         </GlobalText>
-
-                        <Margin height={16}/>
-
+                        <Margin height={16} />
                         <ScrollView>
-                            {participant.map((user) => {
-                                const isSelected = selectedFriends.includes(user.id);
-
+                            {friends.map((user) => {
+                                const isSelected = selectedFriends.includes(user.userId);
                                 return (
-                                <Pressable
-                                    key={user.id}
-                                    onPress={() => {
-                                    setSelectedFriends((prev) =>
-                                        isSelected
-                                        ? prev.filter((id) => id !== user.id)
-                                        : [...prev, user.id]
-                                    );
-                                    }}
-                                    style={{
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        padding: 8,
-                                        backgroundColor: isSelected ? COLORS.green : 'transparent',
-                                    }}
-                                >
-                                    <Image
-                                    source={{ uri: user.image }}
-                                    style={{ width: 40, height: 40, borderRadius: 20 }}
-                                    />
-                                    <Margin width={12} />
-                                    <GlobalText style={{ fontSize: 16, color: isSelected ? COLORS.bg : COLORS.dark }}>
-                                    {user.nickname}
-                                    </GlobalText>
-                                </Pressable>
+                                    <Pressable
+                                        key={user.userId}
+                                        onPress={() => {
+                                            setSelectedFriends((prev) =>
+                                                isSelected
+                                                    ? prev.filter((id) => id !== user.userId)
+                                                    : [...prev, user.userId]
+                                            );
+                                        }}
+                                        style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            padding: 8,
+                                            backgroundColor: isSelected ? COLORS.green : 'transparent',
+                                        }}
+                                    >
+                                        <Image
+                                            source={{ uri: user.profilePicture }}
+                                            style={{ width: 40, height: 40, borderRadius: 20 }}
+                                        />
+                                        <Margin width={12} />
+                                        <GlobalText style={{ fontSize: 16, color: isSelected ? COLORS.bg : COLORS.dark }}>
+                                            {user.nickname}
+                                        </GlobalText>
+                                    </Pressable>
                                 );
                             })}
                         </ScrollView>
@@ -404,10 +469,10 @@ export default () => {
                         <Pressable
                             onPress={() => setShowFriendModal(false)}
                             style={{
-                            alignSelf: 'center',
-                            backgroundColor: COLORS.blue,
-                            paddingVertical: 10,
-                            paddingHorizontal: 20,
+                                alignSelf: 'center',
+                                backgroundColor: COLORS.blue,
+                                paddingVertical: 10,
+                                paddingHorizontal: 20,
                             }}
                         >
                             <GlobalText style={{ color: COLORS.white }}>OK</GlobalText>
@@ -416,18 +481,20 @@ export default () => {
                 </View>
             </Modal>
 
-            <Margin height={16}/>
+            <Margin height={16} />
 
             {/* 생성 버튼 */}
             <TouchableOpacity
-                onPress={() => router.push(`/main/challenge`)}
+                onPress={createChallenge}
                 activeOpacity={0.8}
                 style={{ alignSelf: "center" }}
             >
                 <CreateButton>NEW CHALLENGE</CreateButton>
             </TouchableOpacity>
 
-            <Margin height={36}/>
+            <Margin height={36} />
+
+            {playEffect && (<EffectSound onPlaybackEnd={() => setPlayEffect(false)} />)}
         </Frame>
-    )
-}
+    );
+};

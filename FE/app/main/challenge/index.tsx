@@ -1,13 +1,14 @@
 import { View, FlatList, TouchableOpacity } from 'react-native';
 import GlobalText from '@/constants/GlobalText';
 import Frame from '@/components/ui/Frame';
-import { styles } from '../../../components/challenge/ChallengeList.styles';
+import { styles } from '@/components/challenge/ChallengeList.styles';
 import Margin from '@/components/ui/Margin';
 import ChallengeListItem from '@/components/challenge/ChallengeListItem';
 import { useRouter } from 'expo-router';
 import CreateButton from '@/components/challenge/CreateButton';
 import { useEffect, useState } from 'react';
 import { API_BASE_URL } from '@/constants/env';
+import EffectSound from '@/components/common/effectSound';
 
 export default function ChallengeList() {
     const router = useRouter();
@@ -39,7 +40,7 @@ export default function ChallengeList() {
         
             setChallengeList(parsedList);
             } catch (err) {
-            console.error('챌린지 조회 실패:', err);
+                console.error('챌린지 조회 실패:', err);
             }
         };
         
@@ -56,7 +57,7 @@ export default function ChallengeList() {
     const renderItem = ({ item }: { item: ChallengeListProps }) => (
         <TouchableOpacity
             activeOpacity={0.8}
-            onPress={() => router.push(`/main/challenge/detail?id=${item.id}`)}
+            onPress={() => { setPlayEffect(true); router.push(`/main/challenge/detail?id=${item.id}`); }}
         >
             <ChallengeListItem
                 title={item.title}
@@ -67,6 +68,9 @@ export default function ChallengeList() {
         </TouchableOpacity>
     )
     const ItemSeparatorComponent = () => <Margin height={16} />
+
+    //소리 효과  
+    const [playEffect, setPlayEffect] = useState(false);
 
     return(
         <Frame>
@@ -87,13 +91,15 @@ export default function ChallengeList() {
             </View>
             <Margin height={16}/>
             <TouchableOpacity
-                onPress={() => router.push(`/main/challenge/create`)}
+                onPress={() => { setPlayEffect(true); router.push(`/main/challenge/create`); }}
                 activeOpacity={0.8}
                 style={{ alignSelf: "center" }}
             >
                 <CreateButton>NEW CHALLENGE</CreateButton>
             </TouchableOpacity>
             <Margin height={36}/>
+
+        {playEffect && ( <EffectSound onPlaybackEnd={() => setPlayEffect(false)} />)}
         </Frame>
     );
 }
