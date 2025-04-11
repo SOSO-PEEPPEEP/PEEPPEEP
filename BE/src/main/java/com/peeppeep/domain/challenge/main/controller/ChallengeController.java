@@ -38,14 +38,14 @@ public class ChallengeController {
         return ApiResponse.of(SuccessCode.CHALLENGE_GET_SUCCESS, challengeService.getChallengeDetail(challengeUserId));
     }
 
-    @PutMapping("/{challenge-user-id}")
-    public ApiResponse<Integer> updateChallenge(@PathVariable("challenge-user-id") Integer challengeUserId, @RequestBody ChallengeRequestDTO challengeRequestDTO) {
-        return ApiResponse.of(SuccessCode.CHALLENGE_UPDATE_SUCCESS, challengeService.updateChallenge(challengeUserId, challengeRequestDTO));
+    @PutMapping("/{challenge-id}")
+    public ApiResponse<Integer> updateChallenge(@PathVariable("challenge-id") Integer challengeId, @RequestBody ChallengeRequestDTO challengeRequestDTO) {
+        return ApiResponse.of(SuccessCode.CHALLENGE_UPDATE_SUCCESS, challengeService.updateChallenge(challengeId, challengeRequestDTO));
     }
 
-    @DeleteMapping("/{challenge-user-id}")
-    public ApiResponse<Boolean> deleteChallenge(@PathVariable("challenge-user-id") Integer challengeUserId) {
-        return ApiResponse.of(SuccessCode.CHALLENGE_DELETE_SUCCESS, challengeService.deleteChallenge(challengeUserId));
+    @DeleteMapping("/{challenge-id}")
+    public ApiResponse<Boolean> deleteChallenge(@PathVariable("challenge-id") Integer challengeId) {
+        return ApiResponse.of(SuccessCode.CHALLENGE_DELETE_SUCCESS, challengeService.deleteChallenge(challengeId));
     }
 
     @GetMapping("/{challenge-user-id}/result")
