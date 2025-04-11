@@ -125,7 +125,7 @@ public class ChallengeService {
 
     /*챌린지 수정*/
     @Transactional
-    public Integer updateChallenge(Integer challengeUserId, ChallengeRequestDTO challengeRequestDTO) {
+    public Integer updateChallenge(Integer challengeId, ChallengeRequestDTO challengeRequestDTO) {
         // 임의로 userId 설정
         Integer userId = 1;
 
@@ -133,12 +133,9 @@ public class ChallengeService {
         User user = userRepository.findByUserIdAndDeletedAtIsNull(userId)
                 .orElseThrow(()->new BusinessException(ErrorCode.USER_ID_NOT_EXIST, ErrorCode.USER_ID_NOT_EXIST.getMessage()));
 
-        // ChallengeUser 정보
-        ChallengeUser challengeUser = challengeUserRepository.findByChallengeUserIdAndDeletedAtIsNull(challengeUserId)
-                .orElseThrow(()->new BusinessException(ErrorCode.CHALLENGE_NOT_EXIST, ErrorCode.CHALLENGE_NOT_EXIST.getMessage()));
-
         // Challenge 정보
-        Challenge challenge = challengeUser.getChallenge();
+        Challenge challenge = challengeRepository.findById(challengeId)
+                .orElseThrow(()->new BusinessException(ErrorCode.CHALLENGE_NOT_EXIST, ErrorCode.CHALLENGE_NOT_EXIST.getMessage()));
 
         // 요청자와 챌린지장이 동일한지 확인
         RoleType roleType = challengeUserRepository.findRoleByUserAndChallengeAndDeletedAtIsNull(user, challenge)
@@ -176,7 +173,7 @@ public class ChallengeService {
 
     /*챌린지 삭제*/
     @Transactional
-    public Boolean deleteChallenge(Integer challengeUserId) {
+    public Boolean deleteChallenge(Integer challengeId) {
         // 임의로 userId 설정
         Integer userId = 1;
 
@@ -184,12 +181,9 @@ public class ChallengeService {
         User user = userRepository.findByUserIdAndDeletedAtIsNull(userId)
                 .orElseThrow(()->new BusinessException(ErrorCode.USER_ID_NOT_EXIST, ErrorCode.USER_ID_NOT_EXIST.getMessage()));
 
-        // ChallengeUser 정보
-        ChallengeUser challengeUser = challengeUserRepository.findByChallengeUserIdAndDeletedAtIsNull(challengeUserId)
-                .orElseThrow(()->new BusinessException(ErrorCode.CHALLENGE_NOT_EXIST, ErrorCode.CHALLENGE_NOT_EXIST.getMessage()));
-
         // Challenge 정보
-        Challenge challenge = challengeUser.getChallenge();
+        Challenge challenge = challengeRepository.findById(challengeId)
+                .orElseThrow(()->new BusinessException(ErrorCode.CHALLENGE_NOT_EXIST, ErrorCode.CHALLENGE_NOT_EXIST.getMessage()));
 
         // 요청자와 챌린지장이 동일한지 확인
         RoleType roleType = challengeUserRepository.findRoleByUserAndChallengeAndDeletedAtIsNull(user, challenge)
