@@ -40,7 +40,7 @@ export default function ChallengeList() {
         
             setChallengeList(parsedList);
             } catch (err) {
-            console.error('챌린지 조회 실패:', err);
+                console.error('챌린지 조회 실패:', err);
             }
         };
         
@@ -57,7 +57,7 @@ export default function ChallengeList() {
     const renderItem = ({ item }: { item: ChallengeListProps }) => (
         <TouchableOpacity
             activeOpacity={0.8}
-            onPress={() => router.push(`/main/challenge/detail?id=${item.id}`)}
+            onPress={() => { setPlayEffect(true); router.push(`/main/challenge/detail?id=${item.id}`); }}
         >
             <ChallengeListItem
                 title={item.title}
@@ -91,7 +91,7 @@ export default function ChallengeList() {
             </View>
             <Margin height={16}/>
             <TouchableOpacity
-                onPress={() => { router.push(`/main/challenge/create`); setPlayEffect(true); }}
+                onPress={() => { setPlayEffect(true); router.push(`/main/challenge/create`); }}
                 activeOpacity={0.8}
                 style={{ alignSelf: "center" }}
             >

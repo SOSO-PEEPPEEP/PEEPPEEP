@@ -170,7 +170,7 @@ export default () => {
                     <LabelText style={{backgroundColor: COLORS.green}}>기간</LabelText>
                     <Margin width={8}/>
                     <GlobalText>
-                        {`${formatDate(detail.startAt)}~${formatDate(detail.endAt)}`}
+                        {`${formatDate(detail.startAt)} ~ ${formatDate(detail.endAt)}`}
                     </GlobalText>
                 </View>
                 <LabelText style={{backgroundColor:COLORS.green}}>{`연속 ${detail.streakCount}일`}</LabelText>
