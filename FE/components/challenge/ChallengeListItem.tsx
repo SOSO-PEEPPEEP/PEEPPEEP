@@ -52,6 +52,7 @@ export default ({ title, period, category, isBookmark }: Props) => {
             <OutlinedShadowText>{title}</OutlinedShadowText>
           </View>
         </View>
+        <Margin width={8}/>
         <View style={{ alignItems: "flex-end" }}>
           <LabelText style={{backgroundColor:getPeriodColor(), fontSize:14}}>{`${period}day`}</LabelText>
           <Margin height={4}/>

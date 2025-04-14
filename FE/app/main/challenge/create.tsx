@@ -54,6 +54,8 @@ export default () => {
         setShowPicker(true);
     };
 
+    const [inputHeight, setInputHeight] = useState(100);
+
     type MarkedDate = {
         startingDay?: boolean;
         endingDay?: boolean;
@@ -82,7 +84,7 @@ export default () => {
         return marked;
     };
 
-    const MAX_LINES = 30;
+    const MAX_LINES = 20;
 
     const handleContentChange = (text: string) => {
         const lines = text.split('\n');
@@ -182,7 +184,7 @@ export default () => {
                             onChangeText={setTitle}
                             placeholder="챌린지명을 입력해 주세요."
                             style={{ textAlign: 'center', width: "100%" }}
-                            maxLength={20}
+                            maxLength={25}
                         />
                     </SpeechBubble>
                 </View>
@@ -328,13 +330,15 @@ export default () => {
                             onChangeText={handleContentChange}
                             placeholder="챌린지 설명을 작성해 주세요."
                             multiline
-                            numberOfLines={4}
                             maxLength={300}
+                            onContentSizeChange={(e) =>
+                                setInputHeight(e.nativeEvent.contentSize.height)
+                            }
                             style={{
                                 textAlign: 'left',
                                 textAlignVertical: 'top',
                                 width: '100%',
-                                height: 100,
+                                height: inputHeight,
                             }}
                         />
                     </SpeechBubble>
@@ -487,7 +491,8 @@ export default () => {
             <TouchableOpacity
                 onPress={createChallenge}
                 activeOpacity={0.8}
-                style={{ alignSelf: "center" }}
+                disabled={!title.trim() || !content.trim()}
+                style={{ alignSelf: "center", opacity: (!title.trim() || !content.trim()) ? 0.5 : 1 }}
             >
                 <CreateButton>NEW CHALLENGE</CreateButton>
             </TouchableOpacity>
