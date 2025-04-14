@@ -22,10 +22,10 @@ public class Challenge extends BaseBy {
     @Column(name = "challenge_id")
     private Integer challengeId;
 
-    @Column(name = "title")
+    @Column(name = "title", length = 25)
     private String title;
 
-    @Column(name = "content")
+    @Column(name = "content", length = 300)
     private String content;
 
     @Column(name = "period")
