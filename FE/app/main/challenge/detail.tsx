@@ -48,6 +48,7 @@ export default () => {
     const [detail, setDetail] = useState<ChallengeDetailProps | null>(null);
     const [isBookmark, setIsBookmark] = useState(false);
     const [playEffect, setPlayEffect] = useState(false);
+    const [expanded, setExpanded] = useState(false);
 
     useEffect(() => {
         const fetchChallengeDetail = async () => {
@@ -89,9 +90,8 @@ export default () => {
         return (
             <Pressable
                 onPress={() => {
-                    if (!isBookmark) {
-                        setIsBookmark(true);
-                    }
+                    setIsBookmark(!isBookmark);
+                    setPlayEffect(true);
                 }}
             >
                 {isBookmark ? <BookmarkYellow /> : <BookmarkDark />}
@@ -103,6 +103,18 @@ export default () => {
         const [year, month, day] = date.split("-");
         return `${year.slice(2)}/${month}/${day}`;
     };
+    
+    const truncateText = (text: string, maxLines: number): string => {
+        const lines = text.split('\n');
+        if (lines.length > maxLines) {
+          return lines.slice(0, maxLines).join('\n') + '\n▼';
+        }
+        else if (text.length > 100) {
+            return text.substring(0, 100) + '\n▼';
+        }
+        return text;
+    };
+    const displayedContent = expanded ? detail.content : truncateText(detail.content, 4);
 
     return(
         <Frame>
@@ -113,6 +125,7 @@ export default () => {
             {/* 챌린지 제목 */}
             <View style={{flexDirection:"row", alignItems:"center", justifyContent:"space-between"}}>
                 <OutlinedShadowText style={{fontSize:32}}>{detail.title}</OutlinedShadowText>
+                <Margin width={8}/>
                 {getBookmark()}
             </View>
 
@@ -179,7 +192,13 @@ export default () => {
 
             {/* 챌린지 설명 */}
             <View style={{paddingHorizontal:4}}>
-                <SpeechBubble>{detail.content}</SpeechBubble>
+                <Pressable onPress={() => setExpanded(prev => !prev)}>
+                    <SpeechBubble>
+                        <GlobalText>
+                            {displayedContent}
+                        </GlobalText>
+                    </SpeechBubble>
+                </Pressable>
             </View>
 
             <Margin height={16}/>
