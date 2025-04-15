@@ -4,6 +4,8 @@ import com.peeppeep.global.entity.BaseBy;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Objects;
+
 @Setter
 @Getter
 @Entity
@@ -57,5 +59,14 @@ public class User extends BaseBy {
                 ", mainChallengeId=" + mainChallengeId +
                 ", mainCharacterId=" + mainPetId +
                 ']';
+    }
+
+    public void updateBookmark(Integer challengeUserId) {
+        if(Objects.equals(mainChallengeId,challengeUserId)) {
+            mainChallengeId=null;
+        }
+        else {
+            mainChallengeId=challengeUserId;
+        }
     }
 }

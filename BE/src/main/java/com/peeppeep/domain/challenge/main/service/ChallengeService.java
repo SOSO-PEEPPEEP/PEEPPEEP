@@ -193,6 +193,13 @@ public class ChallengeService {
             throw new BusinessException(ErrorCode.CHALLENGE_ACCESS_DENIED, ErrorCode.CHALLENGE_ACCESS_DENIED.getMessage());
         }
 
+        // 북마크로 설정해두었다면, 사용자의 북마크 null 변환
+        ChallengeUser challengeUser = challengeUserRepository.findByChallengeAndUserAndDeletedAtIsNull(challenge,user)
+                .orElseThrow(() -> new BusinessException(ErrorCode.CHALLENGE_USER_NOT_EXIST, ErrorCode.CHALLENGE_USER_NOT_EXIST.getMessage()));
+        if(user.getMainChallengeId()!=null && !user.getMainChallengeId().equals(challengeUser.getChallengeUserId())) {
+            user.updateBookmark(challengeUser.getChallengeUserId());
+        }
+
         challengeRepository.delete(challenge);
 
         return true;
@@ -381,5 +388,39 @@ public class ChallengeService {
         dailyRepository.delete(daily);
 
         return true;
+    }
+
+    /*북마크 갱신*/
+    @Transactional
+    public Integer updateBookmark(Integer challengeUserId) {
+        // 임의로 userId 설정
+        Integer userId = 1;
+
+        // User 정보
+        User user = userRepository.findByUserIdAndDeletedAtIsNull(userId)
+                .orElseThrow(()->new BusinessException(ErrorCode.USER_ID_NOT_EXIST, ErrorCode.USER_ID_NOT_EXIST.getMessage()));
+
+        // ChallengeUser 정보
+        ChallengeUser challengeUser = challengeUserRepository.findByChallengeUserIdAndDeletedAtIsNull(challengeUserId)
+                .orElseThrow(()->new BusinessException(ErrorCode.CHALLENGE_USER_NOT_EXIST, ErrorCode.CHALLENGE_USER_NOT_EXIST.getMessage()));
+
+        // User 메인 챌린지 갱신
+
+        Integer preMainChallengeId = user.getMainChallengeId();
+        // 이전 챌린지 북마크 삭제
+        if(preMainChallengeId!=null && !preMainChallengeId.equals(challengeUserId)) {
+            ChallengeUser preMainChallenge = challengeUserRepository.findByChallengeUserIdAndDeletedAtIsNull(preMainChallengeId)
+                    .orElseThrow(()->new BusinessException(ErrorCode.CHALLENGE_USER_NOT_EXIST, ErrorCode.CHALLENGE_USER_NOT_EXIST.getMessage()));
+            preMainChallenge.updateBookmark(preMainChallenge.getIsBookmark());
+            challengeUserRepository.save(preMainChallenge);
+        }
+
+        // 메인 챌린지 및 새 챌린지 북마크 생성
+        user.updateBookmark(challengeUserId);
+        challengeUser.updateBookmark(challengeUser.getIsBookmark());
+        userRepository.save(user);
+        challengeUserRepository.save(challengeUser);
+
+        return user.getMainChallengeId();
     }
 }

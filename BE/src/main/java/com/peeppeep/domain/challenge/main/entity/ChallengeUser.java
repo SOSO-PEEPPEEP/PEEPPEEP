@@ -94,6 +94,10 @@ public class ChallengeUser extends BaseBy {
     }
 
     public void resetStreak() {
-        this.streakCount = 0;
+        streakCount = 0;
+    }
+
+    public void updateBookmark(Boolean isBookmark) {
+        this.isBookmark=!isBookmark;
     }
 }
