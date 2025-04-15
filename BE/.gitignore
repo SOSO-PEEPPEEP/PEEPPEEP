@@ -38,5 +38,6 @@ out/
 
 
 ### secret-key ###
+/src/main/resources/application-security.yml
 /src/main/resources/application-db.yml
 /src/main/resources/application-mail.yml
