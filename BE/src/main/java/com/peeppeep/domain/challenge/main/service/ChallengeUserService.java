@@ -50,6 +50,11 @@ public class ChallengeUserService {
                 ChallengeUser challengeUser = challengeUserRepository.findByChallengeAndUserAndDeletedAtIsNull(challenge, existingParticipant)
                         .orElseThrow(() -> new BusinessException(ErrorCode.CHALLENGE_NOT_EXIST, ErrorCode.CHALLENGE_NOT_EXIST.getMessage()));
 
+                // 북마크로 설정해두었다면, 사용자의 북마크 null 변환
+                if(existingParticipant.getMainChallengeId()!=null && existingParticipant.getMainChallengeId().equals(challengeUser.getChallengeUserId())) {
+                    existingParticipant.updateBookmark(challengeUser.getChallengeUserId());
+                }
+
                 // Calendar 소프트 삭제
                 Calendar calendar = challengeUser.getCalendar();
                 if (calendar != null) {
