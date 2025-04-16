@@ -68,7 +68,7 @@ public class ChallengeController {
         return ApiResponse.of(SuccessCode.DAILY_DELETE_SUCCESS, challengeService.deleteDaily(dailyId));
     }
 
-    @PutMapping("/bookmark/{challenge-user-id}")
+    @PutMapping("/{challenge-user-id}/bookmark")
     public ApiResponse<Integer> updateBookmark(@PathVariable(value = "challenge-user-id") Integer challengeUserId) {
         return ApiResponse.of(SuccessCode.BOOKMARK_UPDATE_SUCCESS, challengeService.updateBookmark(challengeUserId));
     }

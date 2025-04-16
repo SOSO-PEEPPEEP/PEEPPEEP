@@ -404,6 +404,11 @@ public class ChallengeService {
         ChallengeUser challengeUser = challengeUserRepository.findByChallengeUserIdAndDeletedAtIsNull(challengeUserId)
                 .orElseThrow(()->new BusinessException(ErrorCode.CHALLENGE_USER_NOT_EXIST, ErrorCode.CHALLENGE_USER_NOT_EXIST.getMessage()));
 
+        // 해당 챌린지에 참여중인지 확인
+        if(!challengeUserRepository.existsByChallengeAndUserAndDeletedAtIsNull(challengeUser.getChallenge(), user)) {
+            throw(new BusinessException(ErrorCode.CHALLENGE_ACCESS_DENIED, ErrorCode.CHALLENGE_ACCESS_DENIED.getMessage()));
+        }
+
         // User 메인 챌린지 갱신
 
         Integer preMainChallengeId = user.getMainChallengeId();
