@@ -59,6 +59,7 @@ export default () => {
             const data: ChallengeDetailProps = json.data;
       
             setDetail(data);
+            setIsBookmark(data.isBookmark);
       
             const today = dayjs().format('YYYY-MM-DD');
             if (!data.isCompleted && today > data.endAt) {
@@ -80,24 +81,26 @@ export default () => {
         );
       }
 
+    const toggleBookmark = async () => {
+        try {
+            await fetch(`${API_BASE_URL}/api/challenges/${id}/bookmark`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                });
+            setIsBookmark(!isBookmark);
+            setPlayEffect(true);
+        } catch (error) {
+            console.error('Bookmark API 호출 실패:', error);
+        }
+    };
+
     const getPeriodColor = () => {
         if (detail.period === 30) return COLORS.pink;
         if (detail.period === 15) return COLORS.yellow;
         if (detail.period === 7) return COLORS.blue;
         return COLORS.green;
-    };
-
-    const getBookmark = () => {
-        return (
-            <Pressable
-                onPress={() => {
-                    setIsBookmark(!isBookmark);
-                    setPlayEffect(true);
-                }}
-            >
-                {isBookmark ? <BookmarkYellow /> : <BookmarkDark />}
-            </Pressable>
-        );
     };
 
     const formatDate = (date: string) => {
@@ -127,7 +130,9 @@ export default () => {
             <View style={{flexDirection:"row", alignItems:"center", justifyContent:"space-between"}}>
                 <OutlinedShadowText style={{fontSize:32}}>{detail.title}</OutlinedShadowText>
                 <Margin width={8}/>
-                {getBookmark()}
+                <Pressable onPress={toggleBookmark}>
+                    {isBookmark ? <BookmarkYellow /> : <BookmarkDark />}
+                </Pressable>
             </View>
 
             <Margin height={16}/>
