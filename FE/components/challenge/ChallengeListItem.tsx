@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { View, Pressable } from 'react-native';
 import Margin from '@/components/ui/Margin';
 import { COLORS } from '@/constants/COLORS';
 import BookmarkYellow from '@/assets/svgs/Bookmark_yellow.svg';
@@ -12,9 +12,10 @@ interface Props {
   period: number;
   category: string;
   isBookmark: boolean;
+  onBookmarkToggle: () => void;
 }
 
-export default ({ title, period, category, isBookmark }: Props) => {
+export default ({ title, period, category, isBookmark, onBookmarkToggle }: Props) => {
   const getPeriodColor = () => {
     if (period === 30) return COLORS.pink;
     if (period === 15) return COLORS.yellow;
@@ -26,8 +27,8 @@ export default ({ title, period, category, isBookmark }: Props) => {
     if (isBookmark) return <BookmarkYellow />;
     return (
       <View>
-        <BookmarkDark style={{position:"absolute", left:-1, top:-1}}/>
-        <BookmarkWhite style={{zIndex:1}}/>
+        <BookmarkDark style={{ position: "absolute", left: -1, top: -1 }} />
+        <BookmarkWhite style={{ zIndex: 1 }} />
       </View>
     );
   };
@@ -44,21 +45,39 @@ export default ({ title, period, category, isBookmark }: Props) => {
         }}
       />
       {/* 본문 박스 */}
-      <View style={{backgroundColor:COLORS.green, height:48, position: "absolute", top: 0, left: 0, right: 2, flexDirection: "row", justifyContent: "space-between", alignItems:"center", padding:8}}>
-        <View style={{flexDirection:"row", alignItems:"center", flex:1}}>
-          {getBookmark()}
-          <Margin width={8}/>
-          <View style={{flex:1}}>
+      <View
+        style={{
+          backgroundColor: COLORS.green,
+          height: 48,
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 2,
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: 8,
+        }}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
+          {/* 북마크 아이콘에 터치 이벤트 부여 */}
+          <Pressable onPress={onBookmarkToggle}>
+            {getBookmark()}
+          </Pressable>
+          <Margin width={8} />
+          <View style={{ flex: 1 }}>
             <OutlinedShadowText>{title}</OutlinedShadowText>
           </View>
         </View>
-        <Margin width={8}/>
+        <Margin width={8} />
         <View style={{ alignItems: "flex-end" }}>
-          <LabelText style={{backgroundColor:getPeriodColor(), fontSize:14}}>{`${period}day`}</LabelText>
-          <Margin height={4}/>
-          <LabelText style={{backgroundColor:COLORS.gray, fontSize:14}}>{`#${category}`}</LabelText>
+          <LabelText
+            style={{ backgroundColor: getPeriodColor(), fontSize: 14 }}
+          >{`${period}day`}</LabelText>
+          <Margin height={4} />
+          <LabelText style={{ backgroundColor: COLORS.gray, fontSize: 14 }}>{`#${category}`}</LabelText>
         </View>
       </View>
     </View>
   );
-}
+};
