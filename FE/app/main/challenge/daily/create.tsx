@@ -1,4 +1,4 @@
-import { View, ScrollView, Image, TouchableOpacity } from 'react-native'
+import { View, ScrollView, Image, TouchableOpacity, Alert } from 'react-native'
 import Frame from '@/components/ui/Frame'
 import EffectSound from '@/components/common/effectSound';
 import GlobalText from '@/constants/GlobalText'
@@ -11,6 +11,7 @@ import { useState } from 'react'
 import SpeechBubble from '@/components/ui/SpeechBubble'
 import GlobalInput from '@/constants/GlobalInput'
 import * as ImagePicker from 'expo-image-picker'
+import { API_BASE_URL } from '@/constants/env';
 
 export default () => {
     const [imageUri, setImageUri] = useState<string | null>(null);
@@ -40,6 +41,39 @@ export default () => {
 
     //소리 효과
     const [playEffect, setPlayEffect] = useState(false);
+
+    const createDaily = async () => {
+        const formData = new FormData();
+      
+        formData.append('day', '4');
+        formData.append('content', content);
+        formData.append('picture', {
+          uri: imageUri,
+          name: 'photo.jpg',
+          type: 'image/jpeg',
+        } as any);
+      
+        try {
+          const response = await fetch(`${API_BASE_URL}/api/challenges/15/daily`, {
+            method: 'POST',
+            body: formData,
+          });
+      
+          if (response.ok) {
+            setPlayEffect(true);
+            router.push('/main/challenge/detail');
+          } else {
+            const errData = await response.json();
+            Alert.alert("데일리 생성 실패", JSON.stringify(errData));
+          }
+        } catch (error) {
+          if (error instanceof Error) {
+            Alert.alert("네트워크 에러", error.message);
+          } else {
+            Alert.alert("알 수 없는 에러", "문제가 발생했습니다.");
+          }
+        }
+    };
 
     return (
         <Frame>
@@ -111,7 +145,7 @@ export default () => {
             
             {/* 데일리 챌린지 생성 버튼 */}
             <TouchableOpacity
-                onPress={() => { router.push('/main/challenge/detail'); setPlayEffect(true); }}
+                onPress={() => createDaily()}
                 activeOpacity={0.8}
                 style={{ alignSelf: "center" }}
             >
