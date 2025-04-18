@@ -2,6 +2,7 @@ package com.peeppeep.domain.challenge.main.dto.request;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -10,5 +11,5 @@ public class DailyRequestDTO {
 
     private String content;
 
-    private String picture;
+    private MultipartFile picture;
 }

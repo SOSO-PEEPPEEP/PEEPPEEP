@@ -10,8 +10,10 @@ import com.peeppeep.domain.challenge.main.entity.*;
 import com.peeppeep.domain.challenge.main.repository.*;
 import com.peeppeep.domain.user.main.entity.User;
 import com.peeppeep.domain.user.main.repository.UserRepository;
+import com.peeppeep.global.entity.S3Folder;
 import com.peeppeep.global.response.error.ErrorCode;
 import com.peeppeep.global.response.error.exception.BusinessException;
+import com.peeppeep.global.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ChallengeService {
     private final ChallengeUserService challengeUserService;
+    private final S3Service s3Service;
 
     private final ChallengeRepository challengeRepository;
     private final UserRepository userRepository;
@@ -305,6 +308,10 @@ public class ChallengeService {
 
         // Daily 생성
         Daily daily = Daily.of(challengeUser, dailyRequestDTO);
+        if(dailyRequestDTO.getPicture()!=null && !dailyRequestDTO.getPicture().isEmpty()) {
+            String imgS3Url = s3Service.saveFile(dailyRequestDTO.getPicture(), S3Folder.DAILY_IMAGE);
+            daily.updatePicture(imgS3Url);
+        }
         dailyRepository.save(daily);
 
         // Challenge 연속일 및 점수 갱신
