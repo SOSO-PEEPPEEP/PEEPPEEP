@@ -41,6 +41,10 @@ public enum ErrorCode {
     /**
      * ******************************* Custom Error CodeList ***************************************
      */
+    // S3
+    S3_SAVE_ERROR(400, "S3에 파일 저장에 실패하였습니다."),
+    S3_DELETE_ERROR(400, "S3에 파일 삭제에 실패하였습니다."),
+    FILE_FORMAT_NOT_EXIST(400, "존재하지 않은 형식의 파일입니다"),
 
     // User
     FAIL_TO_OAUTH_LOGIN(400, "소셜 로그인에 실패했습니다."),
