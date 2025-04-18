@@ -37,7 +37,7 @@ public class Daily extends BaseBy {
                   ChallengeUser challengeUser) {
         this.day = day;
         this.content = content;
-        this.picture = picture;
+        this.picture = "";
         this.challengeUser = challengeUser;
     }
 
@@ -45,8 +45,11 @@ public class Daily extends BaseBy {
         return builder()
                 .day(dailyRequestDTO.getDay())
                 .content(dailyRequestDTO.getContent())
-                .picture(dailyRequestDTO.getPicture())
                 .challengeUser(challengeUser)
                 .build();
+    }
+
+    public void updatePicture(String imgS3Url) {
+        this.picture=imgS3Url;
     }
 }

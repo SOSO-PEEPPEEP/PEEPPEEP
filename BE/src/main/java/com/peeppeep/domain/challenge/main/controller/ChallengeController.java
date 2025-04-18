@@ -12,6 +12,7 @@ import com.peeppeep.global.response.success.SuccessCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class ChallengeController {
     }
 
     @PostMapping("/{challenge-user-id}/daily")
-    public ApiResponse<Integer> createDaily(@PathVariable(value = "challenge-user-id") Integer challengeUserId, @RequestBody DailyRequestDTO dailyRequestDTO) {
+    public ApiResponse<Integer> createDaily(@PathVariable(value = "challenge-user-id") Integer challengeUserId, @ModelAttribute DailyRequestDTO dailyRequestDTO) {
         return ApiResponse.of(SuccessCode.DAILY_CREATE_SUCCESS, challengeService.createDaily(challengeUserId,dailyRequestDTO));
     }
 
