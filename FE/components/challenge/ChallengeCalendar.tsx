@@ -1,5 +1,7 @@
+import React, { useState } from 'react';
 import { View, Image, StyleSheet, Pressable } from "react-native";
 import { useRouter } from 'expo-router';
+import EffectSound from '@/components/common/effectSound';
 
 interface ChallengeCalendarProps {
   calendar: { [key: `day${number}`]: number | null };
@@ -23,13 +25,17 @@ export default ({ calendar, period }: ChallengeCalendarProps) => {
 
   const getStatusImage = (value: number | null) => {
     if (value === null)
-      return require("@/assets/images/Stamp_NotAttempted_X2.png");
+      return require("@/assets/images/main/Stamp_NotAttempted_X2.png");
     if (value === 0)
-      return require("@/assets/images/Stamp_Failed_X2.png");
-    return require("@/assets/images/Stamp_Success_X2.png");
+      return require("@/assets/images/main/Stamp_Failed_X2.png");
+    return require("@/assets/images/main/Stamp_Success_X2.png");
   };
 
   let index = 0;
+
+  //소리 재생
+  const [playEffect, setPlayEffect] = useState(false);
+  const [voiceEffect, setVoiceEffect] = useState(false);
 
   return (
     <View style={styles.wrapper}>
@@ -46,8 +52,9 @@ export default ({ calendar, period }: ChallengeCalendarProps) => {
                             disabled={value === null || value === 0}
                             onPress={() => {
                               if (value !== null && value !== 0) {
+                                setPlayEffect(true);
                                 router.push(`/main/challenge/daily/detail?id=${value}`);
-                              }
+                              };
                             }}
                           >
                             <Image
@@ -61,6 +68,7 @@ export default ({ calendar, period }: ChallengeCalendarProps) => {
                 })}
             </View>
         ))}
+    {playEffect && ( <EffectSound onPlaybackEnd={() => setPlayEffect(false)} />)}
     </View>
   );
 };
