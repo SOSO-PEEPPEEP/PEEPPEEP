@@ -37,7 +37,7 @@ public class Daily extends BaseBy {
                   ChallengeUser challengeUser) {
         this.day = day;
         this.content = content;
-        this.picture = "";
+        this.picture = null;
         this.challengeUser = challengeUser;
     }
 

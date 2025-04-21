@@ -24,11 +24,7 @@ export default ({ visible, onCancel, onConfirm }: DeleteConfirmModalProps) => {
           <Margin height={24}/>
           <View style={styles.buttonContainer}>
             <Pressable 
-                onPress={() => {
-                    onConfirm();
-                    router.replace('/main/challenge/detail');
-                }}
-                style={[styles.button, { backgroundColor: COLORS.pink }]}>
+                onPress={onConfirm} style={[styles.button, { backgroundColor: COLORS.pink }]}>
               <GlobalText style={styles.buttonText}>OK</GlobalText>
             </Pressable>
             <Pressable onPress={onCancel} style={[styles.button, { backgroundColor: COLORS.blue }]}>

@@ -392,6 +392,10 @@ public class ChallengeService {
         calendar.updateDayStatus(daily.getDay(),null);
         calendarRepository.save(calendar);
 
+        // Daily 이미지 S3 삭제
+        s3Service.deleteFile(daily.getPicture());
+
+        // Daily Soft Delete
         dailyRepository.delete(daily);
 
         return true;
