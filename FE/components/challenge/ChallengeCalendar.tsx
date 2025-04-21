@@ -52,9 +52,9 @@ export default ({ calendar, period }: ChallengeCalendarProps) => {
                             disabled={value === null || value === 0}
                             onPress={() => {
                               if (value !== null && value !== 0) {
+                                setPlayEffect(true);
                                 router.push(`/main/challenge/daily/detail?id=${value}`);
                               };
-                              setPlayEffect(true);
                             }}
                           >
                             <Image
