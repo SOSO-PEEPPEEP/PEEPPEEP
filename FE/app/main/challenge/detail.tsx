@@ -4,6 +4,7 @@ import GlobalText from '@/constants/GlobalText';
 import OutlinedShadowText from '@/constants/OutlinedShadowText';
 import LabelText from '@/constants/LabelText';
 import Frame from '@/components/ui/Frame';
+import EffectSound from '@/components/common/effectSound';
 import { COLORS } from '@/constants/COLORS';
 import Margin from '@/components/ui/Margin';
 import BookmarkYellow from '@/assets/svgs/Bookmark_yellow.svg';
@@ -16,33 +17,33 @@ import dayjs from 'dayjs';
 import ChallengeResult from '@/components/challenge/ChallengeResult';
 import { API_BASE_URL } from '@/constants/env';
 
+type ChallengeDetailProps = {
+    title: string;
+    content: string;
+    period: number;
+    startAt: string;
+    endAt: string;
+    streakCount: number;
+    isBookmark: boolean;
+    isCompleted: boolean;
+    category: string;
+    participants: User[];
+    calendar: DailyStatus;
+};
+  
+type DailyStatus= {
+    [key: `day${number}`]: number | null;
+};
+
+type User = {
+    userId: number;
+    profilePicture: string;
+    role: string;
+};
+
 export default () => {
     const router = useRouter();
     const {id} = useLocalSearchParams();
-
-    type ChallengeDetailProps = {
-        title: string;
-        content: string;
-        period: number;
-        startAt: string;
-        endAt: string;
-        streakCount: number;
-        isBookmark: boolean;
-        isCompleted: boolean;
-        category: string;
-        participants: User[];
-        calendar: DailyStatus;
-    };
-      
-    type DailyStatus= {
-        [key: `day${number}`]: number | null;
-    };
-
-    type User = {
-        userId: number;
-        profilePicture: string;
-        role: string;
-    };
 
     const [showResultModal, setShowResultModal] = useState(false);
     const [detail, setDetail] = useState<ChallengeDetailProps | null>(null);
@@ -78,7 +79,13 @@ export default () => {
             <GlobalText>로딩 중...</GlobalText>
           </View>
         );
-      }
+    }
+
+    const start = dayjs(detail.startAt);
+    const today = dayjs();
+    const diff = today.diff(start, 'day') + 1;
+    const todayIndex = diff >= 1 && diff <= detail.period ? diff : null;
+    const hasDoneToday = todayIndex !== null && detail.calendar[`day${todayIndex}`] != null;
 
     const toggleBookmark = async () => {
         try {
@@ -219,14 +226,20 @@ export default () => {
             <Margin height={16}/>
 
             {/* 데일리 챌린지 생성 버튼 */}
+            {todayIndex && !hasDoneToday && (
             <TouchableOpacity
-                onPress={() => router.push('/main/challenge/daily/create')}
+                onPress={() => {
+                    setPlayEffect(true);
+                    router.push(
+                    `/main/challenge/daily/create?challengeId=${id}&day=${todayIndex}`
+                    );
+                }}
                 activeOpacity={0.8}
-                style={{ alignSelf: "center" }}
-            >
+                style={{ alignSelf: 'center' }}
+                >
                 <CreateButton>NEW DAILY</CreateButton>
-            </TouchableOpacity>
-
+                </TouchableOpacity>
+            )}
             <Margin height={36}/>
 
             {/* 챌린지 결산 모달 */}
@@ -234,6 +247,7 @@ export default () => {
                 visible={showResultModal}
                 onClose={() => setShowResultModal(false)}
             />
+        {playEffect && ( <EffectSound onPlaybackEnd={() => setPlayEffect(false)} />)}
         </Frame>
     );
 }

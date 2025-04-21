@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.UUID;
 
 @Slf4j
@@ -56,7 +57,8 @@ public class S3Service {
     public void deleteFile(String originalFilenUrl)  {
         try {
             // URL 주소에서 key값 생성
-            String key = originalFilenUrl.split("/")[3];
+            URI uri = new URI(originalFilenUrl);
+            String key = uri.getPath().substring(1);
             // 버킷에 파일 삭제
             amazonS3.deleteObject(bucket, key);
         } catch (Exception e) {
