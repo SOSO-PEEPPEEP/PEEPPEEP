@@ -54,7 +54,7 @@ export default () => {
         setShowPicker(true);
     };
 
-    const [inputHeight, setInputHeight] = useState(100);
+    const [inputHeight, setInputHeight] = useState(40);
 
     type MarkedDate = {
         startingDay?: boolean;
