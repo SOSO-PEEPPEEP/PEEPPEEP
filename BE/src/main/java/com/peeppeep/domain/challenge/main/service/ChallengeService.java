@@ -8,6 +8,7 @@ import com.peeppeep.domain.challenge.main.dto.response.ChallengeListResponseDTO;
 import com.peeppeep.domain.challenge.main.dto.response.ChallengeResultResponseDTO;
 import com.peeppeep.domain.challenge.main.entity.*;
 import com.peeppeep.domain.challenge.main.repository.*;
+import com.peeppeep.domain.user.friend.repository.FriendRepository;
 import com.peeppeep.domain.user.main.entity.User;
 import com.peeppeep.domain.user.main.repository.UserRepository;
 import com.peeppeep.global.entity.S3Folder;
@@ -38,6 +39,7 @@ public class ChallengeService {
     private final ChallengeUserRepository challengeUserRepository;
     private final DailyRepository dailyRepository;
     private final CalendarRepository calendarRepository;
+    private final FriendRepository friendRepository;
 
     /*챌린지 생성*/
     @Transactional
@@ -111,15 +113,17 @@ public class ChallengeService {
             User user = userRepository.findByUserIdAndDeletedAtIsNull(userId)
                     .orElseThrow(()->new BusinessException(ErrorCode.USER_ID_NOT_EXIST, ErrorCode.USER_ID_NOT_EXIST.getMessage()));
 
-            // 해당 챌린지에 참여중인지 확인 -> 아닐 경우 추가 검사 후 throw
+            // 해당 챌린지에 참여중인지 확인
             if(!challengeUserRepository.existsByChallengeAndUserAndDeletedAtIsNull(challenge, user)) {
-                //==FRIEND_ONLY 추가예정==//
-                /**
-                 * FRINED_ONLY && 참여자 친구 목록중에 해당하지 않으면 throw
-                 * PRIVATE throw
-                 */
-                //아닐 경우에 예외처리
-                throw(new BusinessException(ErrorCode.CHALLENGE_ACCESS_DENIED, ErrorCode.CHALLENGE_ACCESS_DENIED.getMessage()));
+                User organizer = challengeUserRepository.findUserIdsByChallengeIdAndRole(challenge,RoleType.ORGANIZER)
+                        .orElseThrow(()->new BusinessException(ErrorCode.CHALLENGE_NOT_EXIST, ErrorCode.CHALLENGE_NOT_EXIST.getMessage()));
+
+                //PRIVATE 혹은 챌린지장 친구 목록중에 해당하지 않으면 throw
+                if(challenge.getIsPublic() == IsPublicType.PRIVATE ||
+                    !friendRepository.existsFriendship(user.getUserId(),organizer.getUserId())) {
+                    throw(new BusinessException(ErrorCode.CHALLENGE_ACCESS_DENIED, ErrorCode.CHALLENGE_ACCESS_DENIED.getMessage()));
+                }
+
             }
         }
 

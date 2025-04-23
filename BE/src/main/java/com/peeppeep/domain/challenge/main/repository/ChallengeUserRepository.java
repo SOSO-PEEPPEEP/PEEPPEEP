@@ -41,4 +41,13 @@ public interface ChallengeUserRepository extends JpaRepository<ChallengeUser, In
     @Modifying
     @Query("UPDATE ChallengeUser cu SET cu.deletedAt = CURRENT_TIMESTAMP WHERE cu.challengeUserId = :challengeUserId")
     void softDelete(@Param("challengeUserId") Integer challengeUserId);
+
+    @Query("""
+      SELECT cu.user
+      FROM ChallengeUser cu
+      WHERE cu.challenge = :challenge
+        AND cu.role = :role
+        AND cu.deletedAt IS NULL
+    """)
+    Optional<User> findUserIdsByChallengeIdAndRole(@Param("challenge") Challenge challenge, @Param("role") RoleType role);
 }
