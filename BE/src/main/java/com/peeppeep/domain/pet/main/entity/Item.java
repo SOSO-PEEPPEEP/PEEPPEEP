@@ -22,6 +22,7 @@ public class Item {
     @Column(name = "name")
     private String name;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "contents")
     private ContentsType contents;
 
