@@ -76,14 +76,14 @@ public class ChallengeUser extends BaseBy {
         streakCount++;
         // 점수
         int basePoints = 10;
-        int bonusPoints = (streakCount - 1) * (streakCount - 1);
+        int bonusPoints = (streakCount - 1) * 10;
         resultScore += basePoints + bonusPoints;
     }
 
     public void updateStreakCountAndResultScoreMinus() {
         // 점수
         int basePoints = 10;
-        int bonusPoints = (streakCount - 1) * (streakCount - 1);
+        int bonusPoints = (streakCount - 1) * 10;
         resultScore -= basePoints + bonusPoints;
         // 연속일
         streakCount--;

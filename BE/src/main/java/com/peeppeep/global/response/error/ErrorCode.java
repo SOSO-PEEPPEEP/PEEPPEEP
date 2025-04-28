@@ -63,6 +63,7 @@ public enum ErrorCode {
     CATEGORY_NOT_EXIST(400,"카테고리가 존재하지 않습니다."),
     CHALLENGE_ACCESS_DENIED(403, "해당 챌린지에 접근할 수 없습니다."),
     CHALLENGE_USER_NOT_EXIST(400,"챌린지 유저가 존재하지 않습니다."),
+    CHALLENGE_NOT_COMPLETE(400, "챌린지 결산에 해당되지 않습니다."),
 
     // Daily
     DAY_FIELD_NOT_EXIST(400, "day 필드명이 존재하지 않습니다."),
@@ -77,6 +78,11 @@ public enum ErrorCode {
     PET_RANK_NOT_FOUND(400,"펫 도감에 해당 랭크의 펫을 찾을 수 없습니다."),
     PET_NOT_EXIST(400, "펫이 존재하지 않습니다"),
     PET_ACCESS_DENIED(403, "해당 펫에 접근할 수 없습니다."),
+
+    // Item
+    ITEM_NOT_FOUND(400, "아이템이 존재하지 않습니다."),
+    INVENTORY_NOT_FOUND(400, "인벤토리에 해당 아이템이 존재하지 않습니다."),
+
     ;
     /**
      * ******************************* Error Code Field ***************************************

@@ -16,5 +16,4 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 
     @Query("SELECT i.rate FROM Item i WHERE i.itemId = :itemId")
     int inventoryCountInfo(@Param("itemId") int itemId);
-
 }

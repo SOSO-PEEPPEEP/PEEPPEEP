@@ -15,4 +15,6 @@ public interface InventoryRepository extends JpaRepository<Inventory, Integer> {
 
     @Query("SELECT i FROM Inventory i WHERE i.user = :user AND i.item = :itemId")
     Optional<Inventory> inventoryCountInfo(@Param("user") User user, @Param("itemId") Item itemId);
+
+    Optional<Inventory> findByUserAndItemAndDeletedAtIsNull(User user, Item item);
 }

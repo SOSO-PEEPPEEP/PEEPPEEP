@@ -1,13 +1,19 @@
 package com.peeppeep.domain.challenge.main.service;
 
 import com.peeppeep.domain.challenge.main.dto.ChallengeDTO;
+import com.peeppeep.domain.challenge.main.dto.ChallengeResultItemDTO;
 import com.peeppeep.domain.challenge.main.dto.DailyDTO;
 import com.peeppeep.domain.challenge.main.dto.request.ChallengeRequestDTO;
 import com.peeppeep.domain.challenge.main.dto.request.DailyRequestDTO;
 import com.peeppeep.domain.challenge.main.dto.response.ChallengeListResponseDTO;
 import com.peeppeep.domain.challenge.main.dto.response.ChallengeResultResponseDTO;
 import com.peeppeep.domain.challenge.main.entity.*;
+import com.peeppeep.domain.challenge.main.entity.Calendar;
 import com.peeppeep.domain.challenge.main.repository.*;
+import com.peeppeep.domain.pet.main.entity.Inventory;
+import com.peeppeep.domain.pet.main.entity.Item;
+import com.peeppeep.domain.pet.main.repository.InventoryRepository;
+import com.peeppeep.domain.pet.main.repository.ItemRepository;
 import com.peeppeep.domain.user.friend.repository.FriendRepository;
 import com.peeppeep.domain.user.main.entity.User;
 import com.peeppeep.domain.user.main.repository.UserRepository;
@@ -20,10 +26,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -40,6 +45,8 @@ public class ChallengeService {
     private final DailyRepository dailyRepository;
     private final CalendarRepository calendarRepository;
     private final FriendRepository friendRepository;
+    private final ItemRepository itemRepository;
+    private final InventoryRepository inventoryRepository;
 
     /*챌린지 생성*/
     @Transactional
@@ -212,9 +219,8 @@ public class ChallengeService {
         return true;
     }
 
-    /*챌린지 결산*/
-    @Transactional
-    public ChallengeResultResponseDTO getChallengeResult(Integer challengeUserId) {
+    /*챌린지 결산 미리보기 조회*/
+    public ChallengeResultResponseDTO getPreviewChallengeResult(Integer challengeUserId) {
         // 임의로 userId 설정
         Integer userId = 1;
 
@@ -231,64 +237,112 @@ public class ChallengeService {
             throw(new BusinessException(ErrorCode.CHALLENGE_ACCESS_DENIED, ErrorCode.CHALLENGE_ACCESS_DENIED.getMessage()));
         }
 
-        // 완료 갱신
-        challengeUser.updateIsCompleted();
-        challengeUserRepository.save(challengeUser);
+        // 해당 챌린지가 기간이 만료되었는지 확인
+        LocalDate endAt = challengeUser.getChallenge().getEndAt();
+        LocalDate today = LocalDate.now();
+
+        if(!endAt.isBefore(today) || challengeUser.getIsCompleted()) {
+            throw(new BusinessException(ErrorCode.CHALLENGE_NOT_COMPLETE,ErrorCode.CHALLENGE_NOT_COMPLETE.getMessage()));
+        }
 
         // 챌린지 점수에 따른 결과물 계산
         /**
-         * 7일 연속: 약 161점
-         * 14일 연속: 약 959점
-         * 21일 연속: 약 3080점
-         * 30일 연속: 약 8855점
+         * 7일 연속: 280점
+         * 14일 연속: 1050점
+         * 21일 연속: 2310점
+         * 30일 연속: 4650점
          * ------------------------------
          * 점수 기준
-         * COMMON : 약 0 ~ 160점
-         * RARE : 약 161 ~ 960점
-         * UNIQUE : 약 961 ~ 3,080점
-         * EPIC : 약 3,081 ~ 7,210점
-         * LEGENDARY : 약 7,211 ~ 8,855점
+         * COMMON : 0 ~ 279점
+         * RARE : 280 ~ 1049점
+         * UNIQUE : 1050점 ~ 2309점
+         * EPIC : 2310 ~ 4649점
+         * LEGENDARY : 4650점
          */
-        int commonScore = 160;
-        int rareScore = 960;
-        int uniqueScore = 3080;
-        int epicScore = 7210;
-        int resultScore = challengeUser.getResultScore();
+        int rareScore = 280;
+        int uniqueScore = 1050;
+        int epicScore = 2310;
+        int legendaryScore = 4650;
+        Integer resultScore = challengeUser.getResultScore();
 
-        //==아이템 관련 로직은 추후 추가==//
+        if(resultScore==0)
+            return ChallengeResultResponseDTO.of(Collections.emptyList(), false);
+
+        // 기본 지급 아이템 개수
+        int baseItemNum = 1+resultScore/100;
+
+        // 보너스 지급 아이템 개수
+        int bonusItemNum;
+
         // Common
-        if (resultScore<=commonScore) {
-
+        if (resultScore < rareScore) {
+            bonusItemNum=0;
         }
         // Rare
-        else if(resultScore<=rareScore) {
-
+        else if(resultScore < uniqueScore) {
+            bonusItemNum=10;
         }
         // Unique
-        else if (resultScore<=uniqueScore) {
-
+        else if (resultScore < epicScore) {
+            bonusItemNum=20;
         }
         // epic
-        else if (resultScore<=epicScore) {
-
+        else if (resultScore < legendaryScore) {
+            bonusItemNum=30;
         }
         // legendary
         else {
-
+            bonusItemNum=50;
         }
 
+        // 아이템 지급
+        List<Item> allItems = itemRepository.findAll();
+        Category bonusCategory = challengeUser.getChallenge().getCategory();
+        List<ChallengeResultItemDTO> items = new ArrayList<>();
+        for (Item item : allItems) {
+            int addCount = baseItemNum;
+            if (item.getCategory().equals(bonusCategory)) {
+                addCount += bonusItemNum;
+            }
+            items.add(ChallengeResultItemDTO.of(item, addCount));
+        }
 
-        //==ItemDTOList를 담을 예정==//
-        // 임의의 아이템 return
+        return ChallengeResultResponseDTO.of(items, true);
+    }
 
-        List<String> items = new ArrayList<>();
-        items.add("당근");
-        items.add("샤워기");
-        items.add("덤벨");
-        items.add("휴지");
-        items.add("장난감");
+    /*챌린지 결산*/
+    @Transactional
+    public ChallengeResultResponseDTO updateChallengeResult(Integer challengeUserId) {
+        // preview 호출 후 추가될 item 조회
+        ChallengeResultResponseDTO previewDto = getPreviewChallengeResult(challengeUserId);
+        List<ChallengeResultItemDTO> items = previewDto.getItems();
 
-        return ChallengeResultResponseDTO.of(items);
+        // ChallengeUser 정보
+        ChallengeUser challengeUser = challengeUserRepository.findByChallengeUserIdAndDeletedAtIsNull(challengeUserId)
+                .orElseThrow(()->new BusinessException(ErrorCode.CHALLENGE_NOT_EXIST, ErrorCode.CHALLENGE_NOT_EXIST.getMessage()));
+        // 챌린지 완료 갱신
+        challengeUser.updateIsCompleted();
+        challengeUserRepository.save(challengeUser);
+
+        if(!previewDto.getSuccess())
+            return previewDto;
+
+        // Id 기반 아이템 전체 조회
+        Map<Integer, Item> itemMap = itemRepository.findAll().stream()
+                .collect(Collectors.toMap(Item::getItemId, Function.identity()));
+
+        // 인벤토리 갱신 및 DTO 반환
+        for (ChallengeResultItemDTO dto : items) {
+            Item item = itemMap.get(dto.getItemId());
+            Inventory inv = inventoryRepository
+                    .findByUserAndItemAndDeletedAtIsNull(challengeUser.getUser(), item)
+                    .orElseGet(() -> Inventory.of(challengeUser.getUser(), item, 0));
+
+            inv.setCount(inv.getCount() + dto.getNumber());
+            inventoryRepository.save(inv);
+        }
+
+        return previewDto;
     }
 
     /*챌린지 데일리 생성*/
