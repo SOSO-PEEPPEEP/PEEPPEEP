@@ -3,11 +3,35 @@ import GlobalText from '@/constants/GlobalText';
 import { Modal, View, Pressable, Image } from 'react-native';
 import Margin from '@/components/ui/Margin';
 import { useRouter } from 'expo-router';
+import { API_BASE_URL } from '@/constants/env';
 
-export default ({ visible, onClose }: { visible: boolean; onClose: () => void;}) => {
+type Props = {
+  visible: boolean;
+  items: { itemId: number; name: string; number: number }[];
+  success: boolean;
+  challengeUserId: number;
+  onClose: () => void;
+};
+
+export default ({ visible, items, success, challengeUserId, onClose }: Props) => {
   const logo = require('@/assets/images/main/logo_x2.png');
-    const router = useRouter();
-    return (
+  const router = useRouter();
+
+  const handleOk = async () => {
+    try {
+      await fetch(
+        `${API_BASE_URL}/api/challenges/${challengeUserId}/result`,
+        { method: 'POST', headers: { 'Content-Type': 'application/json' } }
+      );
+    } catch (e) {
+      console.error('결산 API 호출 실패', e);
+    } finally {
+      onClose();
+      router.push('/main/challenge');
+    }
+  };
+
+  return (
     <Modal
       visible={visible}
       transparent={true}
@@ -26,42 +50,40 @@ export default ({ visible, onClose }: { visible: boolean; onClose: () => void;})
         }}>
           <GlobalText style={{ fontSize: 20, fontWeight: 'bold', textAlign:'center', lineHeight:24}}>🎉 챌린지 결과 🎉</GlobalText>
           <Margin height={16}/>
-          <GlobalText style={{textAlign:'center', lineHeight:20}}> 챌린지가 끝났습니다! 👏👏</GlobalText>
-          <GlobalText style={{textAlign:'center'}}> 아래는 수행하신 데일리에 따른 보상입니다.</GlobalText>
-          <Margin height={16}/>
-          <View>
-            <View style={{flexDirection:'row', justifyContent:"center", alignItems:"center"}}>
-                <Image source={require("@/assets/images/main/logo_x2.png")}/>
-                <Margin width={4}/>
-                <GlobalText>{`칫솔 X 1개`}</GlobalText>
-            </View>
-            <View style={{flexDirection:'row', justifyContent:"center", alignItems:"center"}}>
-                <Image source={require("@/assets/images/main/logo_x2.png")}/>
-                <Margin width={4}/>
-                <GlobalText>{`휴지 X 1개`}</GlobalText>
-            </View>
-            <View style={{flexDirection:'row', justifyContent:"center", alignItems:"center"}}>
-                <Image source={require("@/assets/images/main/logo_x2.png")}/>
-                <Margin width={4}/>
-                <GlobalText>{`샤워볼 X 1개`}</GlobalText>
-            </View>
-            <View style={{flexDirection:'row', justifyContent:"center", alignItems:"center"}}>
-            <Image source={require("@/assets/images/main/logo_x2.png")}/>
-                <Margin width={4}/>
-                <GlobalText>{`장난감 X 1개`}</GlobalText>
-            </View>
-            <View style={{flexDirection:'row', justifyContent:"center", alignItems:"center"}}>
-            <Image source={require("@/assets/images/main/logo_x2.png")}/>
-                <Margin width={4}/>
-                <GlobalText>{`빗 X 1개`}</GlobalText>
-            </View>
-          </View>
+          { !success
+            ? ( // 실패했을 때
+              <GlobalText style={{ textAlign:'center', lineHeight:20 }}>
+                도전도 못하고 끝나버렸어요...{'\n'}다음에 더 열심히 해보세요!
+              </GlobalText>
+            )
+            : ( // 성공했을 때
+              <>
+                <GlobalText style={{ textAlign:'center', lineHeight:20 }}>
+                  챌린지가 끝났습니다! 👏👏
+                </GlobalText>
+                <GlobalText style={{ textAlign:'center' }}>
+                  아래는 수행하신 데일리에 따른 보상입니다.
+                </GlobalText>
+                <Margin height={16}/>
+                <View>
+                  {items.map(item => (
+                    <View key={item.itemId} style={{flexDirection:'row', justifyContent:"center", alignItems:"center"}}>
+                      <Image
+                        source={logo}
+                      />
+                      <Margin width={4}/>
+                      <GlobalText>
+                        {`${item.name} X ${item.number}`}
+                      </GlobalText>
+                    </View>
+                  ))}
+                </View>
+              </>
+            )
+          }
           <Margin height={16}/>
           <Pressable
-            onPress={() => {
-              onClose();
-              router.push('/main/challenge');
-            }}
+            onPress={handleOk}
             style={{
               flexDirection:'row',
               backgroundColor: COLORS.blue,
