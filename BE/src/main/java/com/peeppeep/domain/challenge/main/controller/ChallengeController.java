@@ -50,8 +50,13 @@ public class ChallengeController {
     }
 
     @GetMapping("/{challenge-user-id}/result")
-    public ApiResponse<ChallengeResultResponseDTO> getChallengeResult(@PathVariable("challenge-user-id") Integer challengeUserId) {
-        return ApiResponse.of(SuccessCode.CHALLENGE_RESULT_SUCCESS, challengeService.getChallengeResult(challengeUserId));
+    public ApiResponse<ChallengeResultResponseDTO> getChallengeResultPreview(@PathVariable(value = "challenge-user-id") Integer challengeUserId) {
+        return ApiResponse.of(SuccessCode.CHALLENGE_RESULT_SUCCESS,challengeService.getPreviewChallengeResult(challengeUserId));
+    }
+
+    @PostMapping("/{challenge-user-id}/result")
+    public ApiResponse<ChallengeResultResponseDTO> updateChallengeResult(@PathVariable("challenge-user-id") Integer challengeUserId) {
+        return ApiResponse.of(SuccessCode.CHALLENGE_RESULT_SUCCESS, challengeService.updateChallengeResult(challengeUserId));
     }
 
     @PostMapping("/{challenge-user-id}/daily")

@@ -3,10 +3,7 @@ package com.peeppeep.domain.pet.main.entity;
 import com.peeppeep.domain.user.main.entity.User;
 import com.peeppeep.global.entity.BaseBy;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 
 @Setter
@@ -20,7 +17,7 @@ public class Inventory extends BaseBy {
     @Column(name = "inventory_id")
     private Integer inventoryId;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -30,4 +27,19 @@ public class Inventory extends BaseBy {
 
     @Column(name = "count")
     private Integer count;
+
+    @Builder
+    private Inventory(User user, Item item, Integer count) {
+        this.user = user;
+        this.item = item;
+        this.count = count;
+    }
+
+    public static Inventory of(User user, Item item, Integer count) {
+        return builder()
+                .user(user)
+                .item(item)
+                .count(count)
+                .build();
+    }
 }

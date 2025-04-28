@@ -1,5 +1,6 @@
 package com.peeppeep.domain.challenge.main.dto.response;
 
+import com.peeppeep.domain.challenge.main.dto.ChallengeResultItemDTO;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,18 +12,19 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class ChallengeResultResponseDTO {
-    //==ItemDTO List 호출 예정==//
-    // 임의의 아이템 List
-    private List<String> items;
+    private List<ChallengeResultItemDTO> items;
+    private Boolean success;
 
     @Builder
-    private ChallengeResultResponseDTO(List<String> items) {
+    private ChallengeResultResponseDTO(List<ChallengeResultItemDTO> items, Boolean success) {
         this.items = items;
+        this.success = success;
     }
 
-    public static ChallengeResultResponseDTO of(List<String> items) {
+    public static ChallengeResultResponseDTO of(List<ChallengeResultItemDTO> items, Boolean success) {
         return builder()
                 .items(items)
+                .success(success)
                 .build();
     }
 }
