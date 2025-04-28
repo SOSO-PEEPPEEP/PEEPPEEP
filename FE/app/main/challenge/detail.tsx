@@ -50,6 +50,12 @@ export default () => {
     const [isBookmark, setIsBookmark] = useState(false);
     const [playEffect, setPlayEffect] = useState(false);
     const [expanded, setExpanded] = useState(false);
+    const [previewItems, setPreviewItems] = useState<{
+        itemId: number;
+        name: string;
+        number: number;
+    }[]>([]);
+    const [previewSuccess, setPreviewSuccess] = useState(true);
 
     useEffect(() => {
         const fetchChallengeDetail = async () => {
@@ -72,6 +78,28 @@ export default () => {
       
         if (id) fetchChallengeDetail();
     }, [id]);
+
+    useEffect(() => {
+        if (showResultModal && detail) {
+          const fetchPreview = async () => {
+            try {
+              const res  = await fetch(
+                `${API_BASE_URL}/api/challenges/${id}/result`
+              );
+              const json = await res.json();
+              const { items, success } = json.data as {
+                items: { itemId: number; name: string; number: number }[];
+                success: boolean;
+              };
+              setPreviewItems(items);
+              setPreviewSuccess(success);
+            } catch (e) {
+              console.error('미리보기 조회 실패', e);
+            }
+          };
+          fetchPreview();
+        }
+    }, [showResultModal, detail]);
 
     if (!detail) {
         return (
@@ -243,10 +271,15 @@ export default () => {
             <Margin height={36}/>
 
             {/* 챌린지 결산 모달 */}
-            <ChallengeResult
-                visible={showResultModal}
-                onClose={() => setShowResultModal(false)}
-            />
+            {detail && (
+                <ChallengeResult
+                    visible={showResultModal}
+                    items={previewItems}
+                    success={previewSuccess}
+                    challengeUserId={Number(id)}
+                    onClose={() => setShowResultModal(false)}
+                />
+            )}
         {playEffect && ( <EffectSound onPlaybackEnd={() => setPlayEffect(false)} />)}
         </Frame>
     );
