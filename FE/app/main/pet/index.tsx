@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Image, Dimensions, TouchableOpacity, ImageBackground } from "react-native";
 import { useFonts } from 'expo-font';
 import GlobalText from '@/constants/GlobalText';
-import { petstyles } from "@/styles/pet.styles";
+import { petStyles } from "@/styles/pet.styles";
 import GaugeBar from "@/components/ui/Gaugebar";
 import { useRouter } from 'expo-router'; 
 import Frame from '@/components/ui/Frame';
@@ -20,14 +20,6 @@ import Animated, { useSharedValue, useAnimatedStyle, withSequence, withTiming, }
 
 
 export default function Index() {
-  //font loading  
-  const [fontsLoaded] = useFonts({
-      'PF-Stardust': require('@/assets/fonts/PFstardust3.0.ttf'),
-      'PF-Stardust-Bold': require('@/assets/fonts/PFstardust3.0Bold.ttf'),
-      'PF-Stardust-ExtraBold': require('@/assets/fonts/PFstardust3.0ExtraBold.ttf'),
-  });
-  if (!fontsLoaded) return null;
-
   //peep Info
   const pets = [
     {
@@ -223,26 +215,26 @@ export default function Index() {
       <Frame>
         <View style={[{width: '100%', height: AddMargin}]}></View>
         {/* PEEP 정보창 */}
-        <View style={[petstyles.PEEPInfoBox, {marginBottom: 8}]}>
+        <View style={[petStyles.PEEPInfoBox, {marginBottom: 8}]}>
           <View style={{ flex: 1, padding: 10, justifyContent: 'flex-end'}}>            
             <View style={{justifyContent: 'flex-end', marginBottom: 4}}>
               <View>
-                <GlobalText style={petstyles.peepName_01}>{currentPet.petName}</GlobalText>
-                <GlobalText style={petstyles.peepName_02}>{currentPet.petName}</GlobalText>
-                <GlobalText style={petstyles.peepName_03}>{currentPet.petName}</GlobalText>
-                <GlobalText style={petstyles.peepName_04}>{currentPet.petName}</GlobalText>
-                <GlobalText style={petstyles.peepName_05}>{currentPet.petName}</GlobalText>
-                <GlobalText style={petstyles.peepName_06}>{currentPet.petName}</GlobalText>
-                <GlobalText style={petstyles.peepName_07}>{currentPet.petName}</GlobalText>
-                <GlobalText style={petstyles.peepName_08}>{currentPet.petName}</GlobalText>
+                <GlobalText style={petStyles.peepName_01}>{currentPet.petName}</GlobalText>
+                <GlobalText style={petStyles.peepName_02}>{currentPet.petName}</GlobalText>
+                <GlobalText style={petStyles.peepName_03}>{currentPet.petName}</GlobalText>
+                <GlobalText style={petStyles.peepName_04}>{currentPet.petName}</GlobalText>
+                <GlobalText style={petStyles.peepName_05}>{currentPet.petName}</GlobalText>
+                <GlobalText style={petStyles.peepName_06}>{currentPet.petName}</GlobalText>
+                <GlobalText style={petStyles.peepName_07}>{currentPet.petName}</GlobalText>
+                <GlobalText style={petStyles.peepName_08}>{currentPet.petName}</GlobalText>
               </View>
             </View>
             <View style={[{ flexDirection: "row", marginRight: 8, marginBottom: 4}]}>
-              <GlobalText style={[petstyles.optionListText, {marginRight: 8}]}>성장도</GlobalText>
-              <GlobalText style={[petstyles.optionListText, {backgroundColor: '#C7CFFF', padding: 1}]}>{currentPet.petGrowth}</GlobalText>
+              <GlobalText style={[petStyles.optionListText, {marginRight: 8}]}>성장도</GlobalText>
+              <GlobalText style={[petStyles.optionListText, {backgroundColor: '#C7CFFF', padding: 1}]}>{currentPet.petGrowth}</GlobalText>
             </View>
             <View style={{flexDirection: "row", alignItems: "center", paddingRight: '10%'}}>
-              <View style={[{marginRight: 8}]}><GlobalText style={petstyles.optionListText}>애정도</GlobalText></View>
+              <View style={[{marginRight: 8}]}><GlobalText style={petStyles.optionListText}>애정도</GlobalText></View>
               <View style={[{flex: 1,}]}><GaugeBar percentage={currentPet.affection} /></View>
             </View>
             <View style={{flexDirection: "row", alignItems: "center", paddingRight: '10%'}}>
@@ -274,9 +266,9 @@ export default function Index() {
           {/* <View style={petstyles.PEEPInfoMessage}>
             <Text style={[{fontFamily:'PF stardust ExtraBold', color: '#D9D9D9', textAlign: 'center'}]}>PEEP은 지금... 너 생각 중...</Text>
           </View>         */}
-            <ImageBackground source={petRoomList[petRoom]} style={[petstyles.PEEPRoom, { height: PEEPInfoBoxHeight }]} imageStyle={petstyles.PEEPRoomImg}>
+            <ImageBackground source={petRoomList[petRoom]} style={[petStyles.PEEPRoom, { height: PEEPInfoBoxHeight }]} imageStyle={petStyles.PEEPRoomImg}>
             <TouchableOpacity onPress={handlePress} activeOpacity={1}>
-              <AnimatedImage style={[petstyles.PEEPImg, animatedStyle]} source={currentPet.petImage} />
+              <AnimatedImage style={[petStyles.PEEPImg, animatedStyle]} source={currentPet.petImage} />
             </TouchableOpacity>
 
 
