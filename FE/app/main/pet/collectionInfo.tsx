@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useRef  } from 'react';
 import { View, Image, TouchableOpacity } from "react-native";
-import { useFonts } from 'expo-font';
 import Frame from '@/components/ui/Frame';
 import EffectSound from '@/components/common/effectSound';
 import VoiceSound from '@/components/common/voiceSound';
 import GlobalText from '@/constants/GlobalText';
 import { petstyles } from "@/styles/pet.styles";
-import { useRouter } from 'expo-router'; 
-import { Audio } from 'expo-av';
+import { useRouter } from 'expo-router';
 import Svg, { Polygon } from "react-native-svg";
 import back from "@/assets/images/icon/icon_back.png";
 import petImageEgg from "@/assets/images/pet/egg/01.rabbit_egg.png";
@@ -16,13 +14,6 @@ import petImageYouth from "@/assets/images/pet/youth/03.rabbit_youth.png";
 import petImageAdult from "@/assets/images/pet/adult/04.rabbit_adult.png";
 
 export default function Index() {
-  //font loading  
-  const [fontsLoaded] = useFonts({
-      'PF-Stardust': require('@/assets/fonts/PFstardust3.0.ttf'),
-      'PF-Stardust-Bold': require('@/assets/fonts/PFstardust3.0Bold.ttf'),
-      'PF-Stardust-ExtraBold': require('@/assets/fonts/PFstardust3.0ExtraBold.ttf'),
-  });
-  if (!fontsLoaded) return null;
   
   //peep Info
   const petType = '강아지';

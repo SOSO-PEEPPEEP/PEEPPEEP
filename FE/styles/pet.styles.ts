@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-export const petstyles = StyleSheet.create({  
+export const petStyles = StyleSheet.create({  
     PEEPInfoBox: {
         width: '100%',
         flexDirection: 'row', 

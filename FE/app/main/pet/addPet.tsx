@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef  } from 'react';
 import { View, Image, TouchableOpacity } from "react-native";
-import { useFonts } from 'expo-font';
 import Frame from '@/components/ui/Frame';
 import GlobalText from '@/constants/GlobalText';
 import { petstyles } from "@/styles/pet.styles";
@@ -12,14 +11,6 @@ import back from "@/assets/images/icon/icon_back.png";
 import addPetImage from "@/assets/images/main/img_randomDraw.png";
 
 export default function Index() {
-  //font loading  
-  const [fontsLoaded] = useFonts({
-      'PF-Stardust': require('@/assets/fonts/PFstardust3.0.ttf'),
-      'PF-Stardust-Bold': require('@/assets/fonts/PFstardust3.0Bold.ttf'),
-      'PF-Stardust-ExtraBold': require('@/assets/fonts/PFstardust3.0ExtraBold.ttf'),
-  });
-  if (!fontsLoaded) return null;
-
   //peep Info
   const PEEPNAME = 'PEEPNAME';
 

@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Image, TouchableOpacity, Animated } from "react-native";
-import { useFonts } from 'expo-font';
 import GlobalText from '@/constants/GlobalText';
 import Frame from '@/components/ui/Frame';
 import { petstyles } from "@/styles/pet.styles";
@@ -8,14 +7,6 @@ import { useRouter } from 'expo-router';
 import petImage from "@/assets/images/pet/adult/04.rabbit_adult.png";
 
 export default function Index() {
-  //font loading  
-  const [fontsLoaded] = useFonts({
-      'PF-Stardust': require('@/assets/fonts/PFstardust3.0.ttf'),
-      'PF-Stardust-Bold': require('@/assets/fonts/PFstardust3.0Bold.ttf'),
-      'PF-Stardust-ExtraBold': require('@/assets/fonts/PFstardust3.0ExtraBold.ttf'),
-  });
-  if (!fontsLoaded) return null;
-  
   //peep Info
   const petType = '강아지';
   const [petGrade, setPetGrade] = useState<"COMMON" | "RARE" | "UNIQUE" | "EPIC" | "LEGENDARY">("EPIC");
