@@ -22,11 +22,15 @@ public class Pet extends BaseBy {
     @Column(name = "nickname")
     private String nickname;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "growth")
     private GrowthType growth;
 
     @Column(name = "affection")
     private Integer affection;
+
+    @Column(name = "is_favorite")
+    private Boolean isFavorite;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -41,6 +45,7 @@ public class Pet extends BaseBy {
         this.nickname = petCollection.getName();
         this.growth = GrowthType.EGG;
         this.affection = 0;
+        this.isFavorite = false;
         this.user = user;
         this.petCollection = petCollection;
     }
