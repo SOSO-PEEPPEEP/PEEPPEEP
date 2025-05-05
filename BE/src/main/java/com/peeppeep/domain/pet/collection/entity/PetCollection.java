@@ -1,5 +1,6 @@
 package com.peeppeep.domain.pet.collection.entity;
 
+import com.peeppeep.domain.pet.main.entity.GrowthType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -17,6 +18,7 @@ public class PetCollection {
     @Column(name = "name")
     private String name;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "pet_rank")
     private PetRankType petRank;
 
@@ -38,4 +40,13 @@ public class PetCollection {
     @ManyToOne
     @JoinColumn(name = "pet_type_id")
     private PetType petType;
+
+    public String getImageByGrowth(GrowthType growth) {
+        return switch (growth) {
+            case EGG   -> getEggImage();
+            case BABY  -> getBabyImage();
+            case YOUTH -> getYouthImage();
+            case ADULT -> getAdultImage();
+        };
+    }
 }
