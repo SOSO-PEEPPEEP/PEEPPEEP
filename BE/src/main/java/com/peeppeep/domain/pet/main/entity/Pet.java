@@ -60,4 +60,8 @@ public class Pet extends BaseBy {
     public void updatePet(PetRequestDTO petRequestDTO) {
         if (petRequestDTO.getNickname() != null) this.nickname = petRequestDTO.getNickname();
     }
+
+    public void updateFavorite(Boolean isFavorite) {
+        this.isFavorite = !isFavorite;
+    }
 }

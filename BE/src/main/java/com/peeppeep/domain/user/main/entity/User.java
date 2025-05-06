@@ -69,4 +69,13 @@ public class User extends BaseBy {
             mainChallengeId=challengeUserId;
         }
     }
+
+    public void updateFavorite(Integer petId) {
+        if(Objects.equals(mainPetId,petId)) {
+            mainPetId=null;
+        }
+        else {
+            mainPetId=petId;
+        }
+    }
 }

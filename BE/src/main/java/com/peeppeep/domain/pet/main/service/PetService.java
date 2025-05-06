@@ -262,9 +262,7 @@ public class PetService {
                 .orElseThrow(()->new BusinessException(ErrorCode.PET_NOT_EXIST, ErrorCode.PET_NOT_EXIST.getMessage()));
 
         // 요청자와 펫 주인이 동일한지 확인
-        User petOwner = userRepository.findByUserIdAndDeletedAtIsNull(pet.getUser().getUserId())
-                .orElseThrow(()->new BusinessException(ErrorCode.USER_ID_NOT_EXIST, ErrorCode.USER_ID_NOT_EXIST.getMessage()));
-        if(!petOwner.equals(user)) {
+        if(!pet.getUser().getUserId().equals(user.getUserId())) {
             throw new BusinessException(ErrorCode.PET_ACCESS_DENIED, ErrorCode.PET_ACCESS_DENIED.getMessage());
         }
 
@@ -289,14 +287,49 @@ public class PetService {
                 .orElseThrow(()->new BusinessException(ErrorCode.PET_NOT_EXIST, ErrorCode.PET_NOT_EXIST.getMessage()));
 
         // 요청자와 펫 주인이 동일한지 확인
-        User petOwner = userRepository.findByUserIdAndDeletedAtIsNull(pet.getUser().getUserId())
-                .orElseThrow(()->new BusinessException(ErrorCode.USER_ID_NOT_EXIST, ErrorCode.USER_ID_NOT_EXIST.getMessage()));
-        if(!petOwner.equals(user)) {
+        if(!pet.getUser().getUserId().equals(user.getUserId())) {
             throw new BusinessException(ErrorCode.PET_ACCESS_DENIED, ErrorCode.PET_ACCESS_DENIED.getMessage());
         }
 
         petRepository.delete(pet);
 
         return true;
+    }
+
+    public Integer updateFavorite(Integer petId) {
+        // 임의로 userId 설정
+        Integer userId = 1;
+
+        // User 정보
+        User user = userRepository.findByUserIdAndDeletedAtIsNull(userId)
+                .orElseThrow(()->new BusinessException(ErrorCode.USER_ID_NOT_EXIST, ErrorCode.USER_ID_NOT_EXIST.getMessage()));
+
+        // Pet 정보
+        Pet pet = petRepository.findByPetIdAndDeletedAtIsNull(petId)
+                .orElseThrow(()->new BusinessException(ErrorCode.PET_NOT_EXIST, ErrorCode.PET_NOT_EXIST.getMessage()));
+
+        // 요청자와 펫 주인이 동일한지 확인
+        if(!pet.getUser().getUserId().equals(user.getUserId())) {
+            throw new BusinessException(ErrorCode.PET_ACCESS_DENIED, ErrorCode.PET_ACCESS_DENIED.getMessage());
+        }
+
+        // User 메인 펫 갱신
+
+        Integer preMainPetId = user.getMainPetId();
+        // 이전 메인 펫 삭제
+        if(preMainPetId!=null && !preMainPetId.equals(petId)) {
+            Pet preMainPet = petRepository.findByPetIdAndDeletedAtIsNull(preMainPetId)
+                    .orElseThrow(()->new BusinessException(ErrorCode.PET_NOT_EXIST, ErrorCode.PET_NOT_EXIST.getMessage()));
+            preMainPet.updateFavorite(preMainPet.getIsFavorite());
+            petRepository.save(preMainPet);
+        }
+
+        // 메인 펫 및 새 펫 즐겨찾기 갱신
+        user.updateFavorite(petId);
+        pet.updateFavorite(pet.getIsFavorite());
+        userRepository.save(user);
+        petRepository.save(pet);
+
+        return user.getMainPetId();
     }
 }

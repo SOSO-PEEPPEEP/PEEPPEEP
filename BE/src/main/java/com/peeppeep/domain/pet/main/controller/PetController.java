@@ -52,4 +52,9 @@ public class PetController {
     public ApiResponse<Boolean> deletePet(@PathVariable(value = "pet-id") Integer petId) {
         return ApiResponse.of(SuccessCode.PET_DELETE_SUCCESS, petService.deletePet(petId));
     }
+
+    @PutMapping("/{pet-id}/favorite")
+    public ApiResponse<Integer> updateFavorite(@PathVariable(value = "pet-id") Integer petId) {
+        return ApiResponse.of(SuccessCode.FAVORITE_UPDATE_SUCCESS, petService.updateFavorite(petId));
+    }
 }
