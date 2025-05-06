@@ -4,7 +4,7 @@ import Frame from '@/components/ui/Frame';
 import EffectSound from '@/components/common/effectSound';
 import VoiceSound from '@/components/common/voiceSound';
 import GlobalText from '@/constants/GlobalText';
-import { petstyles } from "@/styles/pet.styles";
+import { petStyles } from "@/styles/pet.styles";
 import { useRouter } from 'expo-router';
 import Svg, { Polygon } from "react-native-svg";
 import back from "@/assets/images/icon/icon_back.png";
@@ -47,74 +47,74 @@ export default function Index() {
 
   return (
     <Frame>
-        <View style={petstyles.pageTitle}>
+        <View style={petStyles.pageTitle}>
           <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', }}>
             <TouchableOpacity onPress={() => { setPlayEffect(true); backButton(); }} activeOpacity={1}> 
               <View style={{width: 30, height: 30, marginRight: 8, alignItems: 'center', justifyContent: 'center', }}>
                 <Image source={back} style={{width: 30, height: 30}}></Image>
               </View>
             </TouchableOpacity>
-            <GlobalText style={petstyles.pageTitleText}>PEEP 정보</GlobalText>
+            <GlobalText style={petStyles.pageTitleText}>PEEP 정보</GlobalText>
           </View>
         </View>
         <View style={{width: '100%', height: 8,}}></View>
-        <View style={petstyles.addPeepInfoContainer}>
+        <View style={petStyles.addPeepInfoContainer}>
             <View>
-                <View style={petstyles.addPeepInfoBoxShadow}></View>
-                <View style={[petstyles.addPeepInfoBox, { backgroundColor: petListBackgroundColor(petGrade) }]}>
-                    <View style={petstyles.entryNumber}><GlobalText style={petstyles.entryNumberText}>No.01</GlobalText></View>
-                    <View style={petstyles.addPeepList}>
+                <View style={petStyles.addPeepInfoBoxShadow}></View>
+                <View style={[petStyles.addPeepInfoBox, { backgroundColor: petListBackgroundColor(petGrade) }]}>
+                    <View style={petStyles.entryNumber}><GlobalText style={petStyles.entryNumberText}>No.01</GlobalText></View>
+                    <View style={petStyles.addPeepList}>
                       <TouchableOpacity onPress={() => { setVoiceEffect(true); }} activeOpacity={1}>
                         <Image style={{width: 150, height: 150}} source={petImageAdult}></Image>
                       </TouchableOpacity>
                     </View>
                     <View>
-                      <GlobalText style={petstyles.addPeepNameTextShadow01}>{petName}</GlobalText>
-                      <GlobalText style={petstyles.addPeepNameTextShadow02}>{petName}</GlobalText>
-                      <GlobalText style={petstyles.addPeepNameTextShadow03}>{petName}</GlobalText>
-                      <GlobalText style={petstyles.addPeepNameTextShadow04}>{petName}</GlobalText>
-                      <GlobalText style={petstyles.addPeepNameTextShadow05}>{petName}</GlobalText>
-                      <GlobalText style={petstyles.addPeepNameTextShadow06}>{petName}</GlobalText>
-                      <GlobalText style={petstyles.addPeepNameTextShadow07}>{petName}</GlobalText>
-                      <GlobalText style={petstyles.addPeepNameText}>{petName}</GlobalText>
+                      <GlobalText style={petStyles.addPeepNameTextShadow01}>{petName}</GlobalText>
+                      <GlobalText style={petStyles.addPeepNameTextShadow02}>{petName}</GlobalText>
+                      <GlobalText style={petStyles.addPeepNameTextShadow03}>{petName}</GlobalText>
+                      <GlobalText style={petStyles.addPeepNameTextShadow04}>{petName}</GlobalText>
+                      <GlobalText style={petStyles.addPeepNameTextShadow05}>{petName}</GlobalText>
+                      <GlobalText style={petStyles.addPeepNameTextShadow06}>{petName}</GlobalText>
+                      <GlobalText style={petStyles.addPeepNameTextShadow07}>{petName}</GlobalText>
+                      <GlobalText style={petStyles.addPeepNameText}>{petName}</GlobalText>
                     </View>
-                    <View style={petstyles.addPeepInfoListBox}>
-                        <View style={petstyles.addPeepInfoList}>
-                            <GlobalText style={petstyles.addPeepInfoText}>종류</GlobalText>
-                            <GlobalText style={petstyles.addPeepInfoText}>등급</GlobalText>
+                    <View style={petStyles.addPeepInfoListBox}>
+                        <View style={petStyles.addPeepInfoList}>
+                            <GlobalText style={petStyles.addPeepInfoText}>종류</GlobalText>
+                            <GlobalText style={petStyles.addPeepInfoText}>등급</GlobalText>
                         </View>
-                        <View style={petstyles.addPeepInfoList}>
-                            <GlobalText style={petstyles.addPeepInfoText}>{petType}</GlobalText>
-                            <GlobalText style={petstyles.addPeepInfoText}>{petGrade}</GlobalText>
+                        <View style={petStyles.addPeepInfoList}>
+                            <GlobalText style={petStyles.addPeepInfoText}>{petType}</GlobalText>
+                            <GlobalText style={petStyles.addPeepInfoText}>{petGrade}</GlobalText>
                         </View>
                     </View>
-                    <View style={petstyles.petInfoMessage}>
-                        <GlobalText style={[petstyles.addPeepInfoText, {fontSize: 14}]}>
+                    <View style={petStyles.petInfoMessage}>
+                        <GlobalText style={[petStyles.addPeepInfoText, {fontSize: 14}]}>
                             {petInfoMessage}
                         </GlobalText>
                     </View>
                 </View>
             </View>
-            <View style={petstyles.petGrowth}>
-                <View><Image style={petstyles.petimg} source={petImageEgg}></Image></View>
+            <View style={petStyles.petGrowth}>
+                <View><Image style={petStyles.petimg} source={petImageEgg}></Image></View>
                 <View>
                     <Svg width="24" height="24" viewBox="0 0 24 24">
                         <Polygon points="6,4 18,12 6,20" fill="#D3D3DD" />
                     </Svg>
                 </View>
-                <View><Image style={petstyles.petimg} source={petImageBaby}></Image></View>
+                <View><Image style={petStyles.petimg} source={petImageBaby}></Image></View>
                 <View>
                     <Svg width="24" height="24" viewBox="0 0 24 24">
                         <Polygon points="6,4 18,12 6,20" fill="#D3D3DD" />
                     </Svg>
                 </View>
-                <View><Image style={petstyles.petimg} source={petImageYouth}></Image></View>
+                <View><Image style={petStyles.petimg} source={petImageYouth}></Image></View>
                 <View>
                     <Svg width="24" height="24" viewBox="0 0 24 24">
                         <Polygon points="6,4 18,12 6,20" fill="#D3D3DD" />
                     </Svg>
                 </View>
-                <View><Image style={petstyles.petimg} source={petImageAdult}></Image></View>
+                <View><Image style={petStyles.petimg} source={petImageAdult}></Image></View>
             </View>
         </View>
         <View style={{width: '100%', height: '10%'}}></View>

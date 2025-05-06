@@ -4,7 +4,7 @@ import Frame from '@/components/ui/Frame';
 import EffectSound from '@/components/common/effectSound';
 import VoiceSound from '@/components/common/voiceSound';
 import GlobalText from '@/constants/GlobalText';
-import { petstyles } from "@/styles/pet.styles";
+import { petStyles } from "@/styles/pet.styles";
 import { useRouter } from 'expo-router'; 
 import petImage from "@/assets/images/pet/adult/04.rabbit_adult.png";
 import back from "@/assets/images/icon/icon_back.png";
@@ -99,49 +99,49 @@ export default function Index() {
 
   return (
     <Frame>
-        <View style={petstyles.pageTitle}>
+        <View style={petStyles.pageTitle}>
           <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', }}>
             <TouchableOpacity onPress={() => { setPlayEffect(true); backButton(); }} activeOpacity={1}> 
               <View style={{width: 30, height: 30, marginRight: 8, alignItems: 'center', justifyContent: 'center', }}>
                 <Image source={back} style={{width: 30, height: 30}}></Image>
               </View>
             </TouchableOpacity>
-            <GlobalText style={petstyles.pageTitleText}>PEEP 도감</GlobalText>
+            <GlobalText style={petStyles.pageTitleText}>PEEP 도감</GlobalText>
           </View>
         </View>
         <ScrollView style={{width: '100%', paddingRight: 4, flex: 1,}} contentContainerStyle={{ paddingBottom: 0 }} showsVerticalScrollIndicator={false}  showsHorizontalScrollIndicator={false}>
-            <View style={petstyles.collectionlist}>
+            <View style={petStyles.collectionlist}>
             {pets.map((pets, index) => (
               <TouchableOpacity key={pets.id} onPress={() => { setVoiceEffect(true); collectionInfo(); }} activeOpacity={1}>
-                  <View style={petstyles.collectioncard}>
-                      <View style={petstyles.bookmark}></View>
-                      <View style={petstyles.collections}>
-                          <View style={[petstyles.collectionShadow]}> 
+                  <View style={petStyles.collectioncard}>
+                      <View style={petStyles.bookmark}></View>
+                      <View style={petStyles.collections}>
+                          <View style={[petStyles.collectionShadow]}> 
                           </View>
-                          <View style={[petstyles.collection, {backgroundColor: petListBackgroundColor(pets.petGrade)}]}> 
-                              <View style={petstyles.collectionPetImg}>
+                          <View style={[petStyles.collection, {backgroundColor: petListBackgroundColor(pets.petGrade)}]}> 
+                              <View style={petStyles.collectionPetImg}>
                                   <Image style={{ width: 72, height: 72, }} source={pets.image}></Image>
                               </View>
-                              <View style={petstyles.collectionInfoBox}>
-                                  <GlobalText style={[petstyles.collectionInfoText, {marginRight: 8}]}>{pets.petType} / {pets.petGrade === "COMMON" ? "C" : pets.petGrade === "RARE" ? "R" : pets.petGrade === "UNIQUE" ? "U" : pets.petGrade === "EPIC" ? "E" : pets.petGrade === "LEGENDARY" ? "L" : ""}</GlobalText>
+                              <View style={petStyles.collectionInfoBox}>
+                                  <GlobalText style={[petStyles.collectionInfoText, {marginRight: 8}]}>{pets.petType} / {pets.petGrade === "COMMON" ? "C" : pets.petGrade === "RARE" ? "R" : pets.petGrade === "UNIQUE" ? "U" : pets.petGrade === "EPIC" ? "E" : pets.petGrade === "LEGENDARY" ? "L" : ""}</GlobalText>
                               </View>
-                              <View style={petstyles.collectionNameBox}>
-                                  <GlobalText style={[petstyles.collectionNameTextShadow01, {marginRight: 8}]}>{pets.petName}</GlobalText>
-                                  <GlobalText style={[petstyles.collectionNameTextShadow02, {marginRight: 8}]}>{pets.petName}</GlobalText>
-                                  <GlobalText style={[petstyles.collectionNameTextShadow03, {marginRight: 8}]}>{pets.petName}</GlobalText>
-                                  <GlobalText style={[petstyles.collectionNameTextShadow04, {marginRight: 8}]}>{pets.petName}</GlobalText>
-                                  <GlobalText style={[petstyles.collectionNameTextShadow05, {marginRight: 8}]}>{pets.petName}</GlobalText>
-                                  <GlobalText style={[petstyles.collectionNameTextShadow06, {marginRight: 8}]}>{pets.petName}</GlobalText>
-                                  <GlobalText style={[petstyles.collectionNameTextShadow07, {marginRight: 8}]}>{pets.petName}</GlobalText>
-                                  <GlobalText style={[petstyles.collectionNameTextShadow08, {marginRight: 8}]}>{pets.petName}</GlobalText>
-                                  <GlobalText style={[petstyles.collectionNameTextShadow09, {marginRight: 8}]}>{pets.petName}</GlobalText>
-                                  <GlobalText style={[petstyles.collectionNameText, {marginRight: 8}]}>{pets.petName}</GlobalText>
+                              <View style={petStyles.collectionNameBox}>
+                                  <GlobalText style={[petStyles.collectionNameTextShadow01, {marginRight: 8}]}>{pets.petName}</GlobalText>
+                                  <GlobalText style={[petStyles.collectionNameTextShadow02, {marginRight: 8}]}>{pets.petName}</GlobalText>
+                                  <GlobalText style={[petStyles.collectionNameTextShadow03, {marginRight: 8}]}>{pets.petName}</GlobalText>
+                                  <GlobalText style={[petStyles.collectionNameTextShadow04, {marginRight: 8}]}>{pets.petName}</GlobalText>
+                                  <GlobalText style={[petStyles.collectionNameTextShadow05, {marginRight: 8}]}>{pets.petName}</GlobalText>
+                                  <GlobalText style={[petStyles.collectionNameTextShadow06, {marginRight: 8}]}>{pets.petName}</GlobalText>
+                                  <GlobalText style={[petStyles.collectionNameTextShadow07, {marginRight: 8}]}>{pets.petName}</GlobalText>
+                                  <GlobalText style={[petStyles.collectionNameTextShadow08, {marginRight: 8}]}>{pets.petName}</GlobalText>
+                                  <GlobalText style={[petStyles.collectionNameTextShadow09, {marginRight: 8}]}>{pets.petName}</GlobalText>
+                                  <GlobalText style={[petStyles.collectionNameText, {marginRight: 8}]}>{pets.petName}</GlobalText>
                               </View>
                           </View>
                       </View>
                       <View style={{alignItems: 'center',}}>
-                          <View style={petstyles.collectionentryNumber}>
-                              <GlobalText style={petstyles.collectionentryNumberText}>No.01</GlobalText>
+                          <View style={petStyles.collectionentryNumber}>
+                              <GlobalText style={petStyles.collectionentryNumberText}>No.01</GlobalText>
                           </View>
                       </View>
                   </View>  
@@ -150,20 +150,20 @@ export default function Index() {
 
             {/* pet list가 홀수면 빈 카드 추가 */}
             {pets[pets.length - 1].id % 2 === 1 && (
-                <View style={petstyles.collectioncard}>
-                    <View style={[petstyles.bookmark, {backgroundColor: 'none'}]}></View>
-                    <View style={petstyles.collections}>
-                        <View style={[petstyles.collectionShadow, {backgroundColor: 'none', borderWidth: 0,}]}> 
+                <View style={petStyles.collectioncard}>
+                    <View style={[petStyles.bookmark, {backgroundColor: 'none'}]}></View>
+                    <View style={petStyles.collections}>
+                        <View style={[petStyles.collectionShadow, {backgroundColor: 'none', borderWidth: 0,}]}> 
                         </View>
-                        <View style={[petstyles.collection, {backgroundColor: 'none', borderWidth: 0,}]}> 
-                            <View style={petstyles.collectionInfoBox}>
+                        <View style={[petStyles.collection, {backgroundColor: 'none', borderWidth: 0,}]}> 
+                            <View style={petStyles.collectionInfoBox}>
                             </View>
-                            <View style={petstyles.collectionNameBox}>
+                            <View style={petStyles.collectionNameBox}>
                             </View>
                         </View>
                     </View>
                     <View style={{alignItems: 'center',}}>
-                        <View style={[petstyles.collectionentryNumber, {backgroundColor: 'none',}]}>
+                        <View style={[petStyles.collectionentryNumber, {backgroundColor: 'none',}]}>
                         </View>
                     </View>
                 </View>  
