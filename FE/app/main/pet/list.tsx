@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, TouchableOpacity, Pressable, FlatList } from "react-native";
+import { View, Image, TouchableOpacity, FlatList } from "react-native";
 import Frame from '@/components/ui/Frame';
 import EffectSound from '@/components/common/effectSound';
 import GlobalText from '@/constants/GlobalText';

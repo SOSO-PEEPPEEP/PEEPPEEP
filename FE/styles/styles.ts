@@ -51,7 +51,7 @@ export const styles = StyleSheet.create({
         borderLeftWidth: 3,
     },
     buttonText: {
-        fontFamily: 'PF stardust ExtraBold',
+        fontWeight: 'bold',
         color: '#8787A3',
         fontSize: 14,
         textAlign: 'center',
@@ -83,20 +83,20 @@ export const styles = StyleSheet.create({
         marginRight: 8,
     },
     profileId: {
-        fontFamily: 'PF stardust ExtraBold',
+        fontWeight: 'bold',
         fontSize: 12,
         color: '#D3D3DD',
     },
     profileNickname: {
         color: '#9482CE',
-        fontFamily: 'PF stardust ExtraBold',
+        fontWeight: 'bold',
         fontSize: 24,
         position: 'absolute',
         transform: [{ translateX: 1 }, { translateY: 1 }],
     },
     profileNicknameshadow: {
         color: '#CED5FF',
-        fontFamily: 'PF stardust ExtraBold',
+        fontWeight: 'bold',
         fontSize: 24,
         transform: [{ translateX: 0 }, { translateY: 0 }],
     },

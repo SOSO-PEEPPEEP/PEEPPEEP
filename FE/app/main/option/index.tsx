@@ -6,7 +6,7 @@ import Frame from '@/components/ui/Frame';
 import { useFonts } from 'expo-font';
 import { styles } from "@/styles/styles";
 import GlobalText from '@/constants/GlobalText';
-import { petstyles } from "@/styles/pet.styles";
+import { petStyles } from "@/styles/pet.styles";
 import Margin from '@/components/ui/Margin';
 import EffectSound from '@/components/common/effectSound';
 
@@ -79,9 +79,9 @@ export default function Index() {
   return (
     <Frame>
       <View style={{width: '100%', height: 8}}></View>
-      <View style={[petstyles.pageTitle, {height: 30}]}>
+      <View style={[petStyles.pageTitle, {height: 30}]}>
         <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', }}>
-          <GlobalText style={petstyles.pageTitleText}>시스템 설정</GlobalText>
+          <GlobalText style={petStyles.pageTitleText}>시스템 설정</GlobalText>
         </View>
       </View>
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 0 }} showsVerticalScrollIndicator={false}  showsHorizontalScrollIndicator={false}>
