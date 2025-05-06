@@ -66,23 +66,47 @@ export default () => {
   
           setPetList(parsedList);
         } catch (err) {
-          console.error('챌린지 조회 실패:', err);
+          console.error('펫 조회 실패:', err);
         }
       };
   
       fetchPets();
   }, []);
 
+  const toggleFavoriteForPet = async (petId: number, currentState: boolean) => {
+    try {
+      await fetch(`${API_BASE_URL}/api/pets/${petId}/favorite`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      setPetList(prevList =>
+        prevList.map(item => {
+          if (item.id === petId) {
+            return { ...item, isFavorite: !currentState };
+          } else {
+            return !currentState ? { ...item, isFavorite: false } : item;
+          }
+        })
+      );
+      setPlayEffect(true);
+    } catch (error) {
+      console.error('Favorite API 호출 실패:', error);
+    }
+  };
+
   const renderItem = ({ item }: { item: PetListProps }) => (
       <TouchableOpacity
         activeOpacity={0.8}
         onPress={() => {
           setPlayEffect(true);
-          router.push(`/main/pet`); // 임시
+          router.push(`/main/pet`);
         }}
       >
         <PetListItem
           pet={item}
+          onFavoriteToggle={() => toggleFavoriteForPet(item.id, item.isFavorite)}
         />
       </TouchableOpacity>
   );

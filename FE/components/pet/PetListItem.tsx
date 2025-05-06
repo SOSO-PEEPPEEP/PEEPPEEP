@@ -24,7 +24,7 @@ interface Pet {
 
 interface Props {
   pet: Pet;
-//   onFavoriteToggle: () => void;
+  onFavoriteToggle: () => void;
 }
 
 const nameColor = (grade: PetRank) => {
@@ -44,8 +44,7 @@ const bgColor = (grade: PetRank) => {
   }
 };
 
-// export default ({ pet, onFavoriteToggle }: Props) => {
-export default ({ pet }: Props) => {
+export default ({ pet, onFavoriteToggle }: Props) => {
   const getFavorite = () => {
     if (pet.isFavorite) return <BookmarkYellow />;
         return (
@@ -57,14 +56,9 @@ export default ({ pet }: Props) => {
       <View style={petStyles.petListShadow} />
         <View style={[petStyles.petList, { backgroundColor: bgColor(pet.rank) }]}>
             <View style={petStyles.favorites}>
-                <View>
-                    {pet.isFavorite 
-                    ? <BookmarkYellow /> 
-                    : <BookmarkDark />}
-                </View>
-                {/* <Pressable onPress={() => onFavoriteToggle()}>
-                    {getFavorite}
-                </Pressable> */}
+                <Pressable onPress={onFavoriteToggle}>
+                    {getFavorite()}
+                </Pressable>
             </View>
             <View style={petStyles.petImg}>
                 <Image source={{ uri: pet.image }} style={{ width: 72, height: 72 }} />
