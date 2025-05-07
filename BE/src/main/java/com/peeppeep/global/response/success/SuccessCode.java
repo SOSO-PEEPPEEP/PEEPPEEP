@@ -67,6 +67,7 @@ public enum SuccessCode {
     PET_UPDATE_SUCCESS(204, "펫 정보 수정에 성공하였습니다."),
     PET_DELETE_SUCCESS(204, "펫 삭제에 성공하였습니다."),
     FAVORITE_UPDATE_SUCCESS(204, "펫 즐겨찾기에 성공하였습니다."),
+    PET_LUCKY_DRAW_GET_SUCCESS(200, "펫 뽑기에 성공하였습니다."),
 
     ;
 

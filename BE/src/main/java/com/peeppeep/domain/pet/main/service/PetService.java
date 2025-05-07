@@ -55,9 +55,44 @@ public class PetService {
             PetRankType.LEGENDARY, 3.0
     );
 
-    /*펫 생성*/
+    /*펫 랜덤 생성*/
     @Transactional
-    public Integer createPet(Integer petTypeId) {
+    public Integer createPet(){
+        // 임의로 userId 설정
+        Integer userId = 1;
+
+        // User 정보
+        User user = userRepository.findByUserIdAndDeletedAtIsNull(userId)
+                .orElseThrow(()->new BusinessException(ErrorCode.USER_ID_NOT_EXIST, ErrorCode.USER_ID_NOT_EXIST.getMessage()));
+
+        // 펫 목록 조회
+        List<PetCollection> availablePets = petCollectionRepository.findAll();
+        if (availablePets.isEmpty()) {
+            throw new BusinessException(ErrorCode.PET_COLLECTION_NOT_FOUND, ErrorCode.PET_COLLECTION_NOT_FOUND.getMessage());
+        }
+
+        // 랭크 랜덤 선정 후, 해당 랭크의 펫 목록 조회
+        PetRankType selectedRank = RandomRankSelection(availablePets);
+        List<PetCollection> filteredPets = availablePets.stream()
+                .filter(pet -> pet.getPetRank() == selectedRank)
+                .toList();
+        if (filteredPets.isEmpty()) {
+            throw new BusinessException(ErrorCode.PET_RANK_NOT_FOUND, ErrorCode.PET_RANK_NOT_FOUND.getMessage());
+        }
+
+        // 특정 랭크의 펫 랜덤 선정
+        PetCollection selectedPet = filteredPets.get(random.nextInt(filteredPets.size()));
+
+        // 펫 생성
+        Pet pet = Pet.of(user, selectedPet);
+        petRepository.save(pet);
+
+        return selectedPet.getPetCollectionId();
+    }
+
+    /*특정 타입의 펫 랜덤 생성*/
+    @Transactional
+    public Integer createPetByPetType(Integer petTypeId) {
         // 임의로 userId 설정
         Integer userId = 1;
 
@@ -89,7 +124,7 @@ public class PetService {
         Pet pet = Pet.of(user, selectedPet);
         petRepository.save(pet);
 
-        return pet.getPetId();
+        return selectedPet.getPetCollectionId();
     }
 
     /*랜덤 랭크 선정*/
