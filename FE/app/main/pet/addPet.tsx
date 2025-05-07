@@ -1,30 +1,47 @@
-import React, { useState, useEffect, useRef  } from 'react';
-import { View, Image, TouchableOpacity } from "react-native";
+import React, { useState } from 'react';
+import { View, Image, TouchableOpacity, Alert } from "react-native";
 import Frame from '@/components/ui/Frame';
 import GlobalText from '@/constants/GlobalText';
 import { petStyles } from "@/styles/pet.styles";
 import { useRouter } from 'expo-router'; 
 import EffectSound from '@/components/common/effectSound';
 import VoiceSound from '@/components/common/voiceSound';
-import TadaSound from '@/components/common/tadasound';
+import TadaSound from '@/components/common/tadaSound';
 import back from "@/assets/images/icon/icon_back.png";
 import addPetImage from "@/assets/images/main/img_randomDraw.png";
+import { COLORS } from '@/constants/COLORS';
+import { API_BASE_URL } from '@/constants/env';
 
-export default function Index() {
-  //peep Info
-  const PEEPNAME = 'PEEPNAME';
-
-  //버튼 페이지 이동
+export default () => {
+  const router = useRouter();
   const [playEffect, setPlayEffect] = useState(false);
   const [voiceEffect, setVoiceEffect] = useState(false);
-  const [tadaEffect, setVTadaEffect] = useState(false);
-  
-  const router = useRouter();
-  const backButton = () => {
-    router.push('/main/pet');
+  const [tadaEffect, setTadaEffect] = useState(false);
+
+  const createPet = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/pets`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const json = await res.json();
+
+      if (!res.ok) {
+        Alert.alert("펫 뽑기 실패", JSON.stringify(json));
+        return;
+      }
+
+      setTadaEffect(true);
+      const petId = json.data;
+      router.push(`/main/pet/addPetInfo?id=${petId}`);
+    } catch (err) {
+      Alert.alert("네트워크 에러", err instanceof Error ? err.message : '알 수 없는 에러');
+    }
   };
-  const addPetInfo = () => {
-    router.push('/main/pet/addPetInfo');
+  
+  const backButton = () => {
+    setPlayEffect(true);
+    router.push('/main/pet');
   };
 
   return (
@@ -43,9 +60,9 @@ export default function Index() {
             <View style={petStyles.addPeepList}><Image style={{width: 200, height: 200}} source={addPetImage}></Image></View>
             <View style={petStyles.addPeepList}><GlobalText style={petStyles.addPeepText}>어떤 PEEP이 나올까?</GlobalText></View>
             <View style={petStyles.addPeepList}>
-              <TouchableOpacity onPress={() => { setVTadaEffect(true); addPetInfo(); }} activeOpacity={1}> 
+              <TouchableOpacity onPress={ createPet } activeOpacity={1}> 
                   <GlobalText style={petStyles.addPeepTextShadow}>Click</GlobalText>
-                  <GlobalText style={[petStyles.addPeepText, {color: '#C7CFFF'}]}>Click</GlobalText>
+                  <GlobalText style={[petStyles.addPeepText, {color: COLORS.blue}]}>Click</GlobalText>
               </TouchableOpacity>
             </View>
         </View>
@@ -53,7 +70,7 @@ export default function Index() {
 
     {playEffect && ( <EffectSound onPlaybackEnd={() => setPlayEffect(false)} />)}
     {voiceEffect && ( <VoiceSound onPlaybackEnd={() => setVoiceEffect(false)} />)}
-    {tadaEffect && ( <TadaSound onPlaybackEnd={() => setVTadaEffect(false)} />)}
+    {tadaEffect && ( <TadaSound onPlaybackEnd={() => setTadaEffect(false)} />)}
     </Frame>
   );
 };

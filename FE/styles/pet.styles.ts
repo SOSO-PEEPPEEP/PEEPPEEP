@@ -286,7 +286,7 @@ export const petStyles = StyleSheet.create({
         borderBottomRightRadius: 10,
     },
     entryNumber: {
-        width: 92,
+        width: 120,
         height: 24,
         justifyContent: 'center',
         alignSelf: 'flex-start',

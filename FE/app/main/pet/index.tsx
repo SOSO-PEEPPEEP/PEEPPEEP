@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { View, Image, Dimensions, TouchableOpacity, ImageBackground } from "react-native";
-import { useFonts } from 'expo-font';
 import GlobalText from '@/constants/GlobalText';
 import { petStyles } from "@/styles/pet.styles";
 import GaugeBar from "@/components/ui/Gaugebar";
@@ -17,6 +16,8 @@ import iconPlay from "@/assets/images/icon/pet/icon_play.png";
 import iconShower from "@/assets/images/icon/pet/icon_shower.png";
 import iconToiolet from "@/assets/images/icon/pet/icon_toilet.png";
 import Animated, { useSharedValue, useAnimatedStyle, withSequence, withTiming, } from 'react-native-reanimated';
+import OutlinedShadowText from '@/constants/OutlinedShadowText';
+import { COLORS } from '@/constants/COLORS';
 
 
 export default function Index() {
@@ -218,20 +219,11 @@ export default function Index() {
         <View style={[petStyles.PEEPInfoBox, {marginBottom: 8}]}>
           <View style={{ flex: 1, padding: 10, justifyContent: 'flex-end'}}>            
             <View style={{justifyContent: 'flex-end', marginBottom: 4}}>
-              <View>
-                <GlobalText style={petStyles.peepName_01}>{currentPet.petName}</GlobalText>
-                <GlobalText style={petStyles.peepName_02}>{currentPet.petName}</GlobalText>
-                <GlobalText style={petStyles.peepName_03}>{currentPet.petName}</GlobalText>
-                <GlobalText style={petStyles.peepName_04}>{currentPet.petName}</GlobalText>
-                <GlobalText style={petStyles.peepName_05}>{currentPet.petName}</GlobalText>
-                <GlobalText style={petStyles.peepName_06}>{currentPet.petName}</GlobalText>
-                <GlobalText style={petStyles.peepName_07}>{currentPet.petName}</GlobalText>
-                <GlobalText style={petStyles.peepName_08}>{currentPet.petName}</GlobalText>
-              </View>
+              <OutlinedShadowText style={{fontSize:24}}>{currentPet.petName}</OutlinedShadowText>
             </View>
             <View style={[{ flexDirection: "row", marginRight: 8, marginBottom: 4}]}>
               <GlobalText style={[petStyles.optionListText, {marginRight: 8}]}>성장도</GlobalText>
-              <GlobalText style={[petStyles.optionListText, {backgroundColor: '#C7CFFF', padding: 1}]}>{currentPet.petGrowth}</GlobalText>
+              <GlobalText style={[petStyles.optionListText, {backgroundColor: COLORS.blue, padding: 1}]}>{currentPet.petGrowth}</GlobalText>
             </View>
             <View style={{flexDirection: "row", alignItems: "center", paddingRight: '10%'}}>
               <View style={[{marginRight: 8}]}><GlobalText style={petStyles.optionListText}>애정도</GlobalText></View>
@@ -263,23 +255,15 @@ export default function Index() {
         </View>
         <View style={[{height: Separator}]}></View>
         <View style={{ position: 'relative', width: '100%'}}>
-          {/* <View style={petstyles.PEEPInfoMessage}>
-            <Text style={[{fontFamily:'PF stardust ExtraBold', color: '#D9D9D9', textAlign: 'center'}]}>PEEP은 지금... 너 생각 중...</Text>
-          </View>         */}
             <ImageBackground source={petRoomList[petRoom]} style={[petStyles.PEEPRoom, { height: PEEPInfoBoxHeight }]} imageStyle={petStyles.PEEPRoomImg}>
             <TouchableOpacity onPress={handlePress} activeOpacity={1}>
               <AnimatedImage style={[petStyles.PEEPImg, animatedStyle]} source={currentPet.petImage} />
             </TouchableOpacity>
-
-
-              {/* <TouchableOpacity onPress={() => { setVoiceEffect(true); }} activeOpacity={1}>
-                <Image style={petstyles.PEEPImg} source={petImage}></Image>
-              </TouchableOpacity> */}
             </ImageBackground>
         </View>
         <View style={{width:'100%', height: 20, paddingRight: 8, marginTop: 4, marginBottom: 12, }}>
           <TouchableOpacity onPress={() => { setPlayEffect(true); changRoom(); }} activeOpacity={1}>
-            <GlobalText style={{color: '#D9D9D9', textAlign: 'right'}}>ROOM 변경</GlobalText>
+            <GlobalText style={{color: COLORS.gray, textAlign: 'right'}}>ROOM 변경</GlobalText>
           </TouchableOpacity>
         </View>
 

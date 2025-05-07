@@ -3,127 +3,146 @@ import { View, Image, TouchableOpacity, Animated } from "react-native";
 import GlobalText from '@/constants/GlobalText';
 import Frame from '@/components/ui/Frame';
 import { petStyles } from "@/styles/pet.styles";
-import { useRouter } from 'expo-router'; 
-import petImage from "@/assets/images/pet/adult/04.rabbit_adult.png";
+import { useRouter, useLocalSearchParams } from 'expo-router'; 
+import OutlinedShadowText from '@/constants/OutlinedShadowText';
+import { COLORS } from '@/constants/COLORS';
+import { API_BASE_URL } from '@/constants/env';
 
-export default function Index() {
-  //peep Info
-  const petType = '강아지';
-  const [petGrade, setPetGrade] = useState<"COMMON" | "RARE" | "UNIQUE" | "EPIC" | "LEGENDARY">("EPIC");
-  const petName = 'PEEPNAME';
-  const petInfoMessage = '강아지는 우주를 좋아해요. 그래서 많은 우주에 대해서 알고 있어요. 당신이 우주라고 말을 꺼내면 강아지는 신나서 여기저기를 뛰어다닐지도 몰라요.';
+type PetInfo = {
+  petCollectionId: number;
+  name: string;
+  petRank: PetRank;
+  content: string;
+  eggImage: string;
+  petType: string;
+};
 
-  const petListBackgroundColor = (grade: "COMMON" | "RARE" | "UNIQUE" | "EPIC" | "LEGENDARY") => {
-    switch (grade) {
-      case "LEGENDARY":
-        return "#FFCDD9"; // 분홍색
-      case "EPIC":
-        return "#FFDBB7"; // 노랑색
-      case "UNIQUE":
-        return "#C7CFFF"; // 보라색
-      case "RARE":
-        return "#BFE1E0"; // 초록색
-      default:
-        return "#FFFFFF"; // 기본값 (흰색)
-    }
-  };
+type PetRank = 'COMMON' | 'RARE' | 'UNIQUE' | 'EPIC' | 'LEGENDARY';
 
-  //버튼 페이지 이동
+const bgColor = (grade: PetRank) => {
+  switch (grade) {
+    case 'LEGENDARY': return COLORS.pink;
+    case 'EPIC':      return COLORS.yellow;
+    case 'UNIQUE':    return COLORS.blue;
+    case 'RARE':      return COLORS.green;
+    default:          return COLORS.white;
+  }
+};
+
+export default () => {
   const router = useRouter();
+  const { id } = useLocalSearchParams();
+  const [petInfo, setPetInfo] = useState<PetInfo | null>(null);
+  const [loading, setLoading] = useState(true);
+  const petCollectionId = Number(id);
+  
+  useEffect(() => {
+    if (!petCollectionId) return;
+    fetch(`${API_BASE_URL}/api/pets/lucky-draw/${petCollectionId}`)
+      .then(res => res.json())
+      .then(json => {
+        setPetInfo(json.data);
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, [petCollectionId]);
 
-  const backButton = () => {
-    router.push('/main/pet/addPet');
-  };
-
-  // Animated.Value로 크기 애니메이션 초기화
   const sizeAnim = useRef(new Animated.Value(0)).current;
-  // 애니메이션 범위 설정
-  const maxWidth = 310; // 최대 width 300
-  const maxHeight = 380; // 최대 height 400
-  const minWidth = 290; // 최대 width 300
-  const minHeight = 370; // 최대 height 400
+  const maxWidth = 310;
+  const maxHeight = 380;
+  const minWidth = 290;
+  const minHeight = 370;
 
   useEffect(() => {
-    // 애니메이션 실행
     Animated.timing(sizeAnim, {
-      toValue: 1, // 최종 크기
-      duration: 300, // 애니메이션 시간
-      useNativeDriver: false, // 기본적으로 변화를 직접 처리할 때는 false
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: false,
     }).start();
   }, []);
 
+  if (loading) {
+    return (
+      <Frame>
+        {/* <ActivityIndicator size="large" color={COLORS.blue} style={{ marginTop: 50 }} /> */}
+        <GlobalText>로딩중...</GlobalText>
+      </Frame>
+    );
+  }
+
+  if (!petInfo) {
+    return (
+      <Frame>
+        <GlobalText>펫 정보를 불러올 수 없습니다.</GlobalText>
+      </Frame>
+    );
+  }
+
+  const backButton = () => {
+    router.back();
+  };
+
   return (
     <Frame>
-        <View style={{width: '100%', height: '10%'}}></View>
-        <View style={petStyles.addPeepInfoContainer}>     
-            <TouchableOpacity onPress={backButton} activeOpacity={1} style={{width: maxWidth, height: maxHeight, alignItems: 'center', justifyContent: 'center',}}>
-              <View>
-              <Animated.View
-                  style={[petStyles.addPeepInfoBoxShadow, {
-                    width: sizeAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [minWidth, maxWidth], // 크기 변화
-                    }),
-                    height: sizeAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [minHeight, maxHeight], // 크기 변화
-                    }),
-                  }]}
-              ></Animated.View>
-              <Animated.View
-                style={[petStyles.addPeepInfoBox, {
-                  width: sizeAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [minWidth, maxWidth], // 크기 변화
-                  }),
-                  height: sizeAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [minHeight, maxHeight], // 크기 변화
-                  }),
-                  backgroundColor: petListBackgroundColor(petGrade),
-                }]}
-              >
-              {/* <View style={petstyles.addPeepInfoBoxShadow}></View> */}
-              {/* <View style={[petstyles.addPeepInfoBox, { backgroundColor: petListBackgroundColor(petGrade) }]}> */}
-                <View style={petStyles.entryNumber}><GlobalText style={petStyles.entryNumberText}>No.01</GlobalText></View>
-                <View style={petStyles.addPeepList}><Image style={{width: 150, height: 150}} source={petImage}></Image></View>
-                <View>
-                  <GlobalText style={petStyles.addPeepNameTextShadow01}>{petName}</GlobalText>
-                  <GlobalText style={petStyles.addPeepNameTextShadow02}>{petName}</GlobalText>
-                  <GlobalText style={petStyles.addPeepNameTextShadow03}>{petName}</GlobalText>
-                  <GlobalText style={petStyles.addPeepNameTextShadow04}>{petName}</GlobalText>
-                  <GlobalText style={petStyles.addPeepNameTextShadow05}>{petName}</GlobalText>
-                  <GlobalText style={petStyles.addPeepNameTextShadow06}>{petName}</GlobalText>
-                  <GlobalText style={petStyles.addPeepNameTextShadow07}>{petName}</GlobalText>
-                  <GlobalText style={petStyles.addPeepNameText}>{petName}</GlobalText>
+      <View style={{width: '100%', height: '10%'}}></View>
+      <View style={petStyles.addPeepInfoContainer}>     
+        <TouchableOpacity onPress={backButton} activeOpacity={1} style={{width: maxWidth, height: maxHeight, alignItems: 'center', justifyContent: 'center',}}>
+          <View>
+            <Animated.View
+              style={[petStyles.addPeepInfoBoxShadow, {
+                width: sizeAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [minWidth, maxWidth],
+                }),
+                height: sizeAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [minHeight, maxHeight],
+                }),
+              }]}
+            ></Animated.View>
+            <Animated.View
+              style={[petStyles.addPeepInfoBox, {
+                width: sizeAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [minWidth, maxWidth],
+                }),
+                height: sizeAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [minHeight, maxHeight],
+                }),
+                backgroundColor: bgColor(petInfo.petRank),
+              }]}
+            >
+              <View style={petStyles.entryNumber}><GlobalText style={petStyles.entryNumberText}>NO.{petInfo.petCollectionId}</GlobalText></View>
+              <View style={petStyles.addPeepList}><Image style={{width: 150, height: 150}} source={{uri:petInfo.eggImage}}></Image></View>
+              <OutlinedShadowText style={{fontSize: 20}}>{petInfo.name}</OutlinedShadowText>
+              <View style={petStyles.addPeepInfoListBox}>
+                <View style={petStyles.addPeepInfoList}>
+                  <GlobalText style={petStyles.addPeepInfoText}>종류</GlobalText>
+                  <GlobalText style={petStyles.addPeepInfoText}>등급</GlobalText>
                 </View>
-                <View style={petStyles.addPeepInfoListBox}>
-                    <View style={petStyles.addPeepInfoList}>
-                        <GlobalText style={petStyles.addPeepInfoText}>종류</GlobalText>
-                        <GlobalText style={petStyles.addPeepInfoText}>등급</GlobalText>
-                    </View>
-                    <View style={petStyles.addPeepInfoList}>
-                        <GlobalText style={petStyles.addPeepInfoText}>{petType}</GlobalText>
-                        <GlobalText style={petStyles.addPeepInfoText}>{petGrade}</GlobalText>
-                    </View>
+                <View style={petStyles.addPeepInfoList}>
+                  <GlobalText style={petStyles.addPeepInfoText}>{petInfo.petType}</GlobalText>
+                  <GlobalText style={petStyles.addPeepInfoText}>{petInfo.petRank}</GlobalText>
                 </View>
-                <View style={petStyles.petInfoMessage}>
-                    <GlobalText style={[petStyles.addPeepInfoText, {fontSize: 14}]}>
-                        {petInfoMessage}
-                    </GlobalText>
-                </View>
-              </Animated.View>
               </View>
-            </TouchableOpacity>
-            <View style={petStyles.addPeepMessage}>
-            <View style={petStyles.addPeepList}><GlobalText style={[petStyles.addPeepText, {fontSize: 20}]}>새로운 PEEP과의 인연이 생겼어요!</GlobalText></View>
-            <View style={petStyles.addPeepList}>
-                <View style={{width: '100%'}}><GlobalText style={[petStyles.addPeepTextShadow, {fontSize: 36,}]}> PEEP 등장 </GlobalText></View>
-                <View style={{width: '100%'}}><GlobalText style={[petStyles.addPeepText, {fontSize: 36, color: '#C7CFFF'}]}> PEEP 등장 </GlobalText></View>
-            </View>
+              <View style={petStyles.petInfoMessage}>
+                <GlobalText style={[petStyles.addPeepInfoText, {fontSize: 14}]}>
+                    {petInfo.content}
+                </GlobalText>
+              </View>
+            </Animated.View>
+          </View>
+        </TouchableOpacity>
+        <View style={petStyles.addPeepMessage}>
+          <View style={petStyles.addPeepList}><GlobalText style={[petStyles.addPeepText, {fontSize: 20}]}>새로운 PEEP과의 인연이 생겼어요!</GlobalText></View>
+          <View style={petStyles.addPeepList}>
+            <View style={{width: '100%'}}><GlobalText style={[petStyles.addPeepTextShadow, {fontSize: 36,}]}> PEEP 등장 </GlobalText></View>
+            <View style={{width: '100%'}}><GlobalText style={[petStyles.addPeepText, {fontSize: 36, color: COLORS.blue}]}> PEEP 등장 </GlobalText></View>
+          </View>
         </View>
-        </View>
-        <View style={{width: '100%', height: '10%'}}></View>
+      </View>
+      <View style={{width: '100%', height: '10%'}}></View>
     </Frame>
   );
 };
