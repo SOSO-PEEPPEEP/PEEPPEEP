@@ -22,9 +22,14 @@ public class PetController {
 
     private final PetService petService;
 
+    @PostMapping("")
+    public ApiResponse<Integer> createPet() {
+        return ApiResponse.of(SuccessCode.PET_CREATE_SUCCESS, petService.createPet());
+    }
+
     @PostMapping("/{pet-type-id}")
-    public ApiResponse<Integer> createPet(@PathVariable(value = "pet-type-id") Integer petTypeId) {
-        return ApiResponse.of(SuccessCode.PET_CREATE_SUCCESS, petService.createPet(petTypeId));
+    public ApiResponse<Integer> createPetByPetType(@PathVariable(value = "pet-type-id") Integer petTypeId) {
+        return ApiResponse.of(SuccessCode.PET_CREATE_SUCCESS, petService.createPetByPetType(petTypeId));
     }
 
     @RequestMapping(value = "/{pet-id}", method = RequestMethod.PUT)
