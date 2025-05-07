@@ -38,7 +38,7 @@ const bgColor = (grade: PetRank) => {
   switch (grade) {
     case 'LEGENDARY': return COLORS.pink;
     case 'EPIC':      return COLORS.yellow;
-    case 'UNIQUE':    return COLORS.purple;
+    case 'UNIQUE':    return COLORS.blue;
     case 'RARE':      return COLORS.green;
     default:          return COLORS.white;
   }
