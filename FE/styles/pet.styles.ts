@@ -391,13 +391,13 @@ export const petStyles = StyleSheet.create({
     },
 
     //collection
-    collectionlist: {
+    collectionList: {
         flex: 1,
         justifyContent: 'center',
         flexDirection: 'row',
         flexWrap: 'wrap', 
     },
-    collectioncard: {
+    collectionCard: {
         justifyContent: 'center',
         marginRight: 4,
         marginLeft: 4,
@@ -515,14 +515,14 @@ export const petStyles = StyleSheet.create({
         top: 1,
         left: 2,
     },
-    collectionentryNumber: {
+    collectionEntryNumber: {
         justifyContent: 'center',
         backgroundColor: '#C7CFFF',
-        width : 60,
+        width : 80,
         height: 16,
         marginBottom: 8,
     },
-    collectionentryNumberText: {
+    collectionEntryNumberText: {
         color: '#fff',
         fontSize: 12,
         textAlign: 'center',
@@ -536,7 +536,7 @@ export const petStyles = StyleSheet.create({
         height: 60,
         width: '100%',
     },
-    petimg:{
+    petCollectionImg:{
         width: 52,
         height: 52,
     },
