@@ -30,7 +30,7 @@ public class Item {
 
     @ManyToOne
     @JoinColumn(name = "pet_type_id")
-    private PetType petTypeId;
+    private PetType petType;
 
     @ManyToOne
     @JoinColumn(name = "category_id")

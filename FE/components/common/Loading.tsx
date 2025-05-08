@@ -1,19 +1,22 @@
 import React from 'react';
-import { Text, View, Image, Animated} from "react-native";
+import { View, Dimensions , Animated} from "react-native";
 import { useFonts } from 'expo-font';
 import { styles } from '@/styles/login.styles'
-import peepicon from '@/assets/images/PEEP_LOGO_X2.png';
+import GlobalText from '@/constants/GlobalText';
+import VoiceSound from '@/components/common/voiceSound';
+import logo from '@/assets/images/main/logo_x4.png';
 
-const TEXT = "/n·/n·/n·";
-const ARR = TEXT.split("/n");
+const TEXT = "\n·\n·\n·";
+const ARR = TEXT.split("\n");
 
 
 export default function Index() {
-
+  //font loading  
   const [fontsLoaded] = useFonts({
-    'PF stardust ExtraBold': require('@/assets/fonts/PFstardust3.0ExtraBold.ttf'),
+      'PF-Stardust': require('@/assets/fonts/PFstardust3.0.ttf'),
+      'PF-Stardust-Bold': require('@/assets/fonts/PFstardust3.0Bold.ttf'),
+      'PF-Stardust-ExtraBold': require('@/assets/fonts/PFstardust3.0ExtraBold.ttf'),
   });
-  // if(!fontsLoaded){return <AppLoading />}
 
   const ref_arr = React.useRef(Array.from({length: ARR.length}, () => new Animated.Value(0))).current;
 
@@ -44,16 +47,49 @@ export default function Index() {
     }
   }, []);
 
+  //애니메이팅
+  const jumpAnim = React.useRef(new Animated.Value(0)).current;
+  const screenHeight = Dimensions.get('window').height;
+  const offsetY = screenHeight * 0.65;
+
+  React.useEffect(() => {
+    const jump = Animated.loop(
+      Animated.sequence([
+        Animated.delay(600),
+        Animated.timing(jumpAnim, {
+          toValue: -8, // 위로 점프
+          duration: 800,
+          useNativeDriver: true,
+        }),
+        Animated.timing(jumpAnim, {
+          toValue: 0, // 다시 제자리
+          duration: 800,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    jump.start();
+  
+    return () => jump.stop(); // 컴포넌트 언마운트 시 정지
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.title}></View>
       <View style={styles.topMargin}></View>
       <View style={[styles.contents, { height: 100 }]}>
-        <Image style={styles.peepicon} source={peepicon} /> 
+        <Animated.Image
+          style={[
+            styles.peepicon,
+            { transform: [ { translateX: -45 } , { translateY: Animated.subtract(jumpAnim, 60) },] }
+          ]}
+          source={logo}
+        />
+        {/* <Image style={styles.peepicon} source={logo} />  */}
         <View style={styles.textbox}>
-          <Text style={styles.text1}>peeppeep</Text>
-          <Text style={styles.text2}>peeppeep</Text>
-          <Text style={styles.text3}>peeppeep</Text>
+          <GlobalText style={styles.text1}>peeppeep</GlobalText>
+          <GlobalText style={styles.text2}>peeppeep</GlobalText>
+          <GlobalText style={styles.text3}>peeppeep</GlobalText>
         </View>
       </View>
       <View style={styles.bottomMargin}></View>
@@ -61,13 +97,14 @@ export default function Index() {
       <View>
         <View style={[{alignItems: 'center'}, styles.bottomContents]}>
         <View style={{flexDirection:"row", flexWrap:"wrap"}}>
-        <Text style={styles.bottomContentsText}>로딩 중</Text>
+        <GlobalText style={styles.bottomContentsText}>로딩 중</GlobalText>
           {ARR.map((item, index) => (
             <Animated.Text key={index} style={[{opacity:ref_arr[index]}, styles.bottomContentsText]}>{item} {index<ARR.length?" " : ""}</Animated.Text>
             ))}
         </View>
         </View>
       </View>
+    {/* <VoiceSound /> */}
     </View>
   );
 };

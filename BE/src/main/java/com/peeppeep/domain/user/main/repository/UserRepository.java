@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -29,4 +30,9 @@ public interface UserRepository extends JpaRepository<User, String> {
     /*계정 존재 여부 확인*/
     @Query("SELECT u FROM User u WHERE u.userId = :userId AND u.deletedAt IS NULL")
     Optional<User> isIdPresent(@Param("userId") int userId);
+
+    Optional<User> findByUserIdAndDeletedAtIsNull(Integer userId);
+
+    @Query("SELECT u FROM User u WHERE u.userId IN :user_ids AND u.deletedAt IS NULL")
+    List<User> findAllByIdAndDeletedAtIsNull(@Param("user_ids") List<Integer> userIds);
 }
