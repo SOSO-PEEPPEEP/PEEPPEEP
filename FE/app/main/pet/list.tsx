@@ -9,10 +9,8 @@ import back from "@/assets/images/icon/icon_back.png";
 import { API_BASE_URL } from '@/constants/env';
 import PetListItem from '@/components/pet/PetListItem';
 import Margin from '@/components/ui/Margin';
+import { Growth, PetRank } from '@/components/pet/util';
 
-type Growth = 'EGG' | 'BABY' | 'YOUTH' | 'ADULT';
-
-type PetRank = 'COMMON' | 'RARE' | 'UNIQUE' | 'EPIC' | 'LEGENDARY';
 interface PetFromServer {
   petId: number;
   nickname: string;
@@ -34,7 +32,6 @@ interface PetListProps {
   image : string;
   isFavorite: boolean;
 }
-
 
 export default () => {
   const [playEffect, setPlayEffect] = useState(false);

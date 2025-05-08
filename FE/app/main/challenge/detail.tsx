@@ -103,9 +103,9 @@ export default () => {
 
     if (!detail) {
         return (
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Frame>
             <GlobalText>로딩 중...</GlobalText>
-          </View>
+          </Frame>
         );
     }
 

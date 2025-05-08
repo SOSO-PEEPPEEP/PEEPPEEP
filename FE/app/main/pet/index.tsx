@@ -20,7 +20,7 @@ import OutlinedShadowText from '@/constants/OutlinedShadowText';
 import { COLORS } from '@/constants/COLORS';
 
 
-export default function Index() {
+export default () => {
   //peep Info
   const pets = [
     {
@@ -144,7 +144,7 @@ export default function Index() {
     router.push('/main/pet/collection');
   };
   const addPet = () => {
-    router.push('/main/pet/addPet');
+    router.push('/main/pet/lucky-draw');
   };
 
   //room 바꾸기
