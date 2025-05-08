@@ -109,9 +109,9 @@ export default () => {
         );
     }
 
-    const start = dayjs(detail.startAt);
-    const today = dayjs();
-    const diff = today.diff(start, 'day') + 1;
+    const startDay = dayjs(detail.startAt).startOf('day');
+    const todayDay = dayjs().startOf('day');
+    const diff = todayDay.diff(startDay, 'day') + 1;
     const todayIndex = diff >= 1 && diff <= detail.period ? diff : null;
     const hasDoneToday = todayIndex !== null && detail.calendar[`day${todayIndex}`] != null;
 
