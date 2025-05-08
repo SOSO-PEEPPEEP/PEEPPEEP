@@ -29,14 +29,25 @@ useEffect(() => {
       // 새로고침 → 기존값 복구
       const savedIdx = await AsyncStorage.getItem("selectedTabIdx");
       if (savedIdx !== null) {
-        setSelectedTabIdxState(Number(savedIdx));
-        const tabRoutes = ["/main","/main/challenge", "/main", "/main", "/main/challenge"] as const;
-        router.push(tabRoutes[Number(savedIdx)]);
+        const idx = Number(savedIdx);
+        if (selectedTabIdx !== idx) {
+          setSelectedTabIdxState(idx);
+          const tabRoutes = [
+            "/main/pet", 
+            "/main/challenge", 
+            "/main", 
+            "/main/profile", 
+            "/main/option"
+          ] as const;
+          if (idx >= 0 && idx < tabRoutes.length) {
+            router.replace(tabRoutes[idx]);
+          }
+        }
       }
     }
   };
   loadTabIdx();
-}, []);
+}, [selectedTabIdx]);
 
   return (
     <TabBarContext.Provider value={{ selectedTabIdx, setSelectedTabIdx }}>

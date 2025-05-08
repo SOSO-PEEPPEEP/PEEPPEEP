@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { View, TouchableOpacity, Animated } from "react-native";
-import { Router, useRouter } from "expo-router";
+import { Router } from "expo-router";
 import { styles } from "@/styles/profile.styles";
 import GlobalText from '@/constants/GlobalText';
 import EffectSound from '@/components/common/effectSound';
-import FriendList from "@/app/main/profile/friend/friendList";
-import FriendRequests from "@/app/main/profile/friend/friendRequests";
-import FriendSent from "@/app/main/profile/friend/friendSent";
+import FriendList from "@/app/main/profile/friend/friendList";  // 추가
+import FriendRequests from "@/app/main/profile/friend/friendRequests";  // 추가
+import FriendSent from "@/app/main/profile/friend/friendSent";  // 추가
 
 type ValidRoutes = Parameters<Router["push"]>[0];
 
@@ -22,7 +22,7 @@ interface TabBarProps {
   setSelectedTabIdx: (index: number) => void;
 }
 
-export default function friend({ selectedTabIdx, setSelectedTabIdx }: TabBarProps) {
+export default function riend({ selectedTabIdx, setSelectedTabIdx }: TabBarProps) {
   
 const imageMap: { [key: string]: any } = {
   FriendList: (
@@ -55,14 +55,11 @@ const imageMap: { [key: string]: any } = {
 };
 
 const TabButton = ({ routePath, isSelected, onPress, iconName }: TabButtonProps) => {
-  const router = useRouter();
-
   return (
     <TouchableOpacity
       activeOpacity={1}
       onPress={() => {
         onPress();
-        // router.push(routePath);
       }}
       style={styles.friendListButtons}
     >

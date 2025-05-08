@@ -7,10 +7,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface PetRepository extends JpaRepository<Pet, Integer> {
+    List<Pet> findByUserAndDeletedAtIsNull(User user);
+
+    Optional<Pet> findByPetIdAndDeletedAtIsNull(Integer petId);
 
     @Query("SELECT p FROM Pet p WHERE p.user = :userId AND p.petId = :petId")
     Optional<Pet> petInfo(@Param("userId") User userId, @Param("petId") int petId);
