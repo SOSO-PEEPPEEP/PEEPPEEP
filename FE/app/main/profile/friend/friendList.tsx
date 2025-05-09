@@ -5,7 +5,7 @@ import GlobalText from '@/constants/GlobalText';
 import VoiceSound from '@/components/common/voiceSound';
 import Margin from '@/components/ui/Margin';
 
-export default function Index() {  
+export default () => {  
 
     //친구 Info
     const friends = [

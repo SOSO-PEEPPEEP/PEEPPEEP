@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, Image, TextInput, TouchableOpacity, ScrollView } from "react-native";
 import { useRouter } from 'expo-router'; 
 import Frame from '@/components/ui/Frame';
-import { useFonts } from 'expo-font';
 import { FONT } from '@/constants/FONT';
 import { styles } from "@/styles/styles";
 import GlobalText from '@/constants/GlobalText';
@@ -11,15 +10,7 @@ import Margin from '@/components/ui/Margin';
 import * as ImagePicker from 'expo-image-picker';
 import EffectSound from '@/components/common/effectSound';
 
-export default function Index() {
-  //font loading  
-  const [fontsLoaded] = useFonts({
-      'PF-Stardust': require('@/assets/fonts/PFstardust3.0.ttf'),
-      'PF-Stardust-Bold': require('@/assets/fonts/PFstardust3.0Bold.ttf'),
-      'PF-Stardust-ExtraBold': require('@/assets/fonts/PFstardust3.0ExtraBold.ttf'),
-  });
-  if (!fontsLoaded) return null;
-
+export default () => {
   //소리 재생
   const [playEffect, setPlayEffect] = useState(false);
 

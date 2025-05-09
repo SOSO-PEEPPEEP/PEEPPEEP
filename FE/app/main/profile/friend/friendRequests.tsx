@@ -13,7 +13,7 @@ const friendRequests = [
     { id: 6, profileImg: require('@/assets/images/main/profile/img_proifile_04.png'), username: "@moonLight", nickname: "친구F입니다" },
 ];
 
-export default function Index() {
+export default () => {
     //소리 재생
     const [playEffect, setPlayEffect] = useState(false);
 

@@ -10,15 +10,7 @@ import { petStyles } from "@/styles/pet.styles";
 import Margin from '@/components/ui/Margin';
 import EffectSound from '@/components/common/effectSound';
 
-export default function Index() {
-  //font loading  
-  const [fontsLoaded] = useFonts({
-      'PF-Stardust': require('@/assets/fonts/PFstardust3.0.ttf'),
-      'PF-Stardust-Bold': require('@/assets/fonts/PFstardust3.0Bold.ttf'),
-      'PF-Stardust-ExtraBold': require('@/assets/fonts/PFstardust3.0ExtraBold.ttf'),
-  });
-  if (!fontsLoaded) return null;
-
+export default () => {
   //소리 재생
   const [playEffect, setPlayEffect] = useState(false);
 

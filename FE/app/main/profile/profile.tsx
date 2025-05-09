@@ -1,19 +1,10 @@
 import React from 'react';
 import { View, Image } from "react-native";
-import { useFonts } from 'expo-font';
 import { styles } from "@/styles/profile.styles";
 import GlobalText from '@/constants/GlobalText';
 import Margin from '@/components/ui/Margin';
 
-export default function Index() {
-  //font loading  
-  const [fontsLoaded] = useFonts({
-      'PF-Stardust': require('@/assets/fonts/PFstardust3.0.ttf'),
-      'PF-Stardust-Bold': require('@/assets/fonts/PFstardust3.0Bold.ttf'),
-      'PF-Stardust-ExtraBold': require('@/assets/fonts/PFstardust3.0ExtraBold.ttf'),
-  });
-  if (!fontsLoaded) return null;
-
+export default () => {
   //profile_Info
   const profileImg = require('@/assets/images/main/profile/img_proifile_01.png');
   const userId = '@loveChu';

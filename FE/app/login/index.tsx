@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, TextInput, Animated } from "react-native";
-import { useFonts } from 'expo-font';
 import { useRouter } from 'expo-router'; 
 import { styles } from "@/styles/login.styles";
 import GlobalText from '@/constants/GlobalText';
@@ -9,15 +8,7 @@ import { FONT } from '@/constants/FONT';
 import logo_disconnect from '@/assets/images/main/logo_sleep_x4.png';
 import logo_connect from '@/assets/images/main/logo_x4.png';
 
-export default function Index() {
-  //font loading  
-  const [fontsLoaded] = useFonts({
-      'PF-Stardust': require('@/assets/fonts/PFstardust3.0.ttf'),
-      'PF-Stardust-Bold': require('@/assets/fonts/PFstardust3.0Bold.ttf'),
-      'PF-Stardust-ExtraBold': require('@/assets/fonts/PFstardust3.0ExtraBold.ttf'),
-  });
-  if (!fontsLoaded) return null;
-
+export default () => {
   //로그인 시 main 페이지 이동 또는 에러메세지 출력
   const [loginId, setLoginId] = useState('');
   const [password, setPassword] = useState('');

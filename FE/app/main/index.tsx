@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { View, ScrollView, Dimensions } from 'react-native';
-import { Audio } from 'expo-av';
 import Frame from '@/components/ui/Frame';
 import Profile from '@/app/main/profile/profile';
 import Calendar from '@/components/challenge/ChallengeCalendar';
@@ -9,8 +8,7 @@ import Margin from '@/components/ui/Margin';
 import BookmarkYellow from '@/assets/svgs/Bookmark_yellow.svg';
 import { styles } from '@/components/challenge/ChallengeList.styles';
 
-export default function Index() {
-
+export default () => {
   const ChallengeDetailData = {
     title: "양치질하기 챌린지",
     content: "올해는 치과의사쌤한테 혼나지 말아봐요~🪥🫧\n모두 아자아자 파이팅!!👀",

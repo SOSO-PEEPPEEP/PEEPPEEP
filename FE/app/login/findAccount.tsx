@@ -1,20 +1,11 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, TextInput } from "react-native";
-import { useFonts } from 'expo-font';
 import GlobalText from '@/constants/GlobalText';
 import { FONT } from '@/constants/FONT';
 import { useRouter } from 'expo-router'; 
 import { styles } from "@/styles/login.styles";
 
-export default function Index() {
-  //font loading  
-  const [fontsLoaded] = useFonts({
-      'PF-Stardust': require('@/assets/fonts/PFstardust3.0.ttf'),
-      'PF-Stardust-Bold': require('@/assets/fonts/PFstardust3.0Bold.ttf'),
-      'PF-Stardust-ExtraBold': require('@/assets/fonts/PFstardust3.0ExtraBold.ttf'),
-  });
-  if (!fontsLoaded) return null;
-
+export default () => {
   //계정 및 비밀번호 찾기 시 다음 페이지 이동 또는 에러메세지 출력
   const [accountuserName, setAccountuserName] = useState('');
   const [accountEmail, setAcountEmail] = useState('');

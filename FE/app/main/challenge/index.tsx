@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 import { API_BASE_URL } from '@/constants/env';
 import EffectSound from '@/components/common/effectSound';
 
-export default function ChallengeList() {
+export default () => {
   const router = useRouter();
 
   interface ChallengeFromServer {

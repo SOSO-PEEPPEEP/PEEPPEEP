@@ -1,23 +1,14 @@
 import React from 'react';
 import { View, Dimensions , Animated} from "react-native";
-import { useFonts } from 'expo-font';
 import { styles } from '@/styles/login.styles'
 import GlobalText from '@/constants/GlobalText';
-import VoiceSound from '@/components/common/voiceSound';
 import logo from '@/assets/images/main/logo_x4.png';
 
 const TEXT = "\n·\n·\n·";
 const ARR = TEXT.split("\n");
 
 
-export default function Index() {
-  //font loading  
-  const [fontsLoaded] = useFonts({
-      'PF-Stardust': require('@/assets/fonts/PFstardust3.0.ttf'),
-      'PF-Stardust-Bold': require('@/assets/fonts/PFstardust3.0Bold.ttf'),
-      'PF-Stardust-ExtraBold': require('@/assets/fonts/PFstardust3.0ExtraBold.ttf'),
-  });
-
+export default () => {
   const ref_arr = React.useRef(Array.from({length: ARR.length}, () => new Animated.Value(0))).current;
 
   React.useEffect(() => {

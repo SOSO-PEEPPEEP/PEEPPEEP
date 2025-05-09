@@ -22,7 +22,7 @@ interface TabBarProps {
   setSelectedTabIdx: (index: number) => void;
 }
 
-export default function riend({ selectedTabIdx, setSelectedTabIdx }: TabBarProps) {
+export default ({ selectedTabIdx, setSelectedTabIdx }: TabBarProps) => {
   
 const imageMap: { [key: string]: any } = {
   FriendList: (

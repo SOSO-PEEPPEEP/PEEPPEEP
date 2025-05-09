@@ -6,7 +6,7 @@ import Margin from '@/components/ui/Margin';
 import errImg from '@/assets/images/main/img_error.png'
 
 
-export default function Index() {
+export default () => {
   return (
     <View style={styles.container}>
       <Image source={errImg}></Image>
