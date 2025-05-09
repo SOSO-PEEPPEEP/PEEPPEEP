@@ -14,59 +14,42 @@ import iconFeed from "@/assets/images/icon/pet/icon_feed.png";
 import iconPat from "@/assets/images/icon/pet/icon_pat.png";
 import iconPlay from "@/assets/images/icon/pet/icon_play.png";
 import iconShower from "@/assets/images/icon/pet/icon_shower.png";
-import iconToiolet from "@/assets/images/icon/pet/icon_toilet.png";
+import iconToilet from "@/assets/images/icon/pet/icon_toilet.png";
 import Animated, { useSharedValue, useAnimatedStyle, withSequence, withTiming, } from 'react-native-reanimated';
 import OutlinedShadowText from '@/constants/OutlinedShadowText';
 import { COLORS } from '@/constants/COLORS';
+import { Growth } from '@/components/pet/util';
+import { API_BASE_URL } from '@/constants/env';
 
+type PetDetailProps = {
+  nickname: string;
+  growth: Growth;
+  affection: number;
+  image : string;
+};
 
 export default () => {
-  //peep Info
-  const pets = [
-    {
-      id: 1,
-      petType: "강아지",
-      petGrade: "COMMON" as "COMMON" | "RARE" | "UNIQUE" | "EPIC" | "LEGENDARY",
-      petName: "강아지",
-      petGrowth: '아직 알인 상태',
-      affection: 60,
-      petImage: require('@/assets/images/pet/egg/01.rabbit_egg.png'), // 필요 시 각각 다르게
-    },
-    {
-      id: 2,
-      petType: "고양이",
-      petGrade: "RARE" as "COMMON" | "RARE" | "UNIQUE" | "EPIC" | "LEGENDARY",
-      petName: "고양이",
-      petGrowth: '갓 태어난 PEEP',
-      affection: 30,
-      petImage: require('@/assets/images/pet/baby/02.rabbit_baby.png'), // 필요 시 각각 다르게
-    },
-    {
-      id: 3,
-      petType: "고양이",
-      petGrade: "RARE" as "COMMON" | "RARE" | "UNIQUE" | "EPIC" | "LEGENDARY",
-      petName: "고양이",
-      petGrowth: 'PEEP은 성장 중',
-      affection: 98,
-      petImage: require('@/assets/images/pet/youth/03.rabbit_youth.png'), // 필요 시 각각 다르게
-    },
-    {
-      id: 4,
-      petType: "고양이",
-      petGrade: "RARE" as "COMMON" | "RARE" | "UNIQUE" | "EPIC" | "LEGENDARY",
-      petName: "고양이",
-      petGrowth: '다 자란 PEEP',
-      affection: 1,
-      petImage: require('@/assets/images/pet/adult/04.rabbit_adult.png'), // 필요 시 각각 다르게
-    },
-  ]
-  const [currentPetIndex, setCurrentPetIndex] = useState(3);
-  const currentPet = pets[currentPetIndex];
-
-  
   // 화면 크기 변경에 따라 특정 ICON 크기 동적으로 업데이트
   const [ICONHeight, setICONHeight] = useState(0);
   const [ICONWidth, setICONWidth] = useState(0);
+
+  const [mainPetInfo, setMainPetInfo] = useState<PetDetailProps | null>(null);
+
+  useEffect(() => {
+    const fetchMainPet = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/pets/main`);
+        const json = await response.json();
+        const data = json.data;
+  
+        setMainPetInfo(data);
+      } catch (error) {
+        console.error('챌린지 상세 조회 실패:', error);
+      }
+    };
+  
+    fetchMainPet();
+  }, []);
   
   useEffect(() => {
       const { height } = Dimensions.get('window');
@@ -180,9 +163,18 @@ export default () => {
       ],
     };
   });
+
+  if (!mainPetInfo) {
+    return (
+      <Frame>
+        <GlobalText>로딩 중...</GlobalText>
+      </Frame>
+    );
+  }
+
   const handlePress = () => {
     setVoiceEffect(true);
-    if (currentPet.petGrowth === '아직 알인 상태') {
+    if (mainPetInfo.growth === 'EGG') {
       rotation.value = withSequence(
         withTiming(-14, { duration: 100 }),
         withTiming(12, { duration: 100 }),
@@ -211,7 +203,6 @@ export default () => {
     }
   };
 
-
   return (
       <Frame>
         <View style={[{width: '100%', height: AddMargin}]}></View>
@@ -219,15 +210,15 @@ export default () => {
         <View style={[petStyles.PEEPInfoBox, {marginBottom: 8}]}>
           <View style={{ flex: 1, padding: 10, justifyContent: 'flex-end'}}>            
             <View style={{justifyContent: 'flex-end', marginBottom: 4}}>
-              <OutlinedShadowText style={{fontSize:24}}>{currentPet.petName}</OutlinedShadowText>
+              <OutlinedShadowText style={{fontSize:24}}>{mainPetInfo.nickname}</OutlinedShadowText>
             </View>
             <View style={[{ flexDirection: "row", marginRight: 8, marginBottom: 4}]}>
               <GlobalText style={[petStyles.optionListText, {marginRight: 8}]}>성장도</GlobalText>
-              <GlobalText style={[petStyles.optionListText, {backgroundColor: COLORS.blue, padding: 1}]}>{currentPet.petGrowth}</GlobalText>
+              <GlobalText style={[petStyles.optionListText, {backgroundColor: COLORS.blue, padding: 1}]}>{mainPetInfo.growth}</GlobalText>
             </View>
             <View style={{flexDirection: "row", alignItems: "center", paddingRight: '10%'}}>
               <View style={[{marginRight: 8}]}><GlobalText style={petStyles.optionListText}>애정도</GlobalText></View>
-              <View style={[{flex: 1,}]}><GaugeBar percentage={currentPet.affection} /></View>
+              <View style={[{flex: 1,}]}><GaugeBar percentage={mainPetInfo.affection} /></View>
             </View>
             <View style={{flexDirection: "row", alignItems: "center", paddingRight: '10%'}}>
             </View>
@@ -257,7 +248,7 @@ export default () => {
         <View style={{ position: 'relative', width: '100%'}}>
             <ImageBackground source={petRoomList[petRoom]} style={[petStyles.PEEPRoom, { height: PEEPInfoBoxHeight }]} imageStyle={petStyles.PEEPRoomImg}>
             <TouchableOpacity onPress={handlePress} activeOpacity={1}>
-              <AnimatedImage style={[petStyles.PEEPImg, animatedStyle]} source={currentPet.petImage} />
+              <AnimatedImage style={[petStyles.PEEPImg, animatedStyle]} source={{uri:mainPetInfo.image}} />
             </TouchableOpacity>
             </ImageBackground>
         </View>
@@ -273,7 +264,7 @@ export default () => {
           <TouchableOpacity activeOpacity={1}><Image source={iconPat} style={{ width: ICONWidth, height: ICONHeight,}}></Image></TouchableOpacity>
           <TouchableOpacity activeOpacity={1}><Image source={iconPlay} style={{width: ICONWidth, height: ICONHeight,}}></Image></TouchableOpacity>
           <TouchableOpacity activeOpacity={1}><Image source={iconShower} style={{ width: ICONWidth, height: ICONHeight,}}></Image></TouchableOpacity>
-          <TouchableOpacity activeOpacity={1}><Image source={iconToiolet} style={{ width: ICONWidth, height: ICONHeight,}}></Image></TouchableOpacity>
+          <TouchableOpacity activeOpacity={1}><Image source={iconToilet} style={{ width: ICONWidth, height: ICONHeight,}}></Image></TouchableOpacity>
         </View>
 
       {playEffect && ( <EffectSound onPlaybackEnd={() => setPlayEffect(false)} />)}
