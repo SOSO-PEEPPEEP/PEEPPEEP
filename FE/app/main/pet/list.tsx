@@ -98,7 +98,7 @@ export default () => {
         activeOpacity={0.8}
         onPress={() => {
           setPlayEffect(true);
-          router.push(`/main/pet`);
+          router.push(`/main/pet/detail`);
         }}
       >
         <PetListItem

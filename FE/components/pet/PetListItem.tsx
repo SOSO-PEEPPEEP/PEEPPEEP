@@ -4,13 +4,8 @@ import GlobalText from '@/constants/GlobalText';
 import { petStyles } from '@/styles/pet.styles';
 import BookmarkYellow from '@/assets/svgs/Bookmark_yellow.svg';
 import BookmarkDark from '@/assets/svgs/Bookmark_dark.svg';
-import { COLORS } from '@/constants/COLORS';
 import Margin from '../ui/Margin';
-
-type Growth = 'EGG' | 'BABY' | 'YOUTH' | 'ADULT';
-
-type PetRank = 'COMMON' | 'RARE' | 'UNIQUE' | 'EPIC' | 'LEGENDARY';
-
+import { Growth, PetRank, nameColor, bgColor } from './util';
 interface Pet {
   id: number;
   nickname: string;
@@ -26,23 +21,6 @@ interface Props {
   pet: Pet;
   onFavoriteToggle: () => void;
 }
-
-const nameColor = (grade: PetRank) => {
-  switch (grade) {
-    case 'LEGENDARY': return COLORS.purple;
-    case 'EPIC':      return COLORS.white;
-    default:          return COLORS.dark;
-  }
-};
-const bgColor = (grade: PetRank) => {
-  switch (grade) {
-    case 'LEGENDARY': return COLORS.pink;
-    case 'EPIC':      return COLORS.yellow;
-    case 'UNIQUE':    return COLORS.blue;
-    case 'RARE':      return COLORS.green;
-    default:          return COLORS.white;
-  }
-};
 
 export default ({ pet, onFavoriteToggle }: Props) => {
   const getFavorite = () => {

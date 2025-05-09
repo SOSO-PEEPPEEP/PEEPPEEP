@@ -7,7 +7,7 @@ import GlobalText from '@/constants/GlobalText';
 import { petStyles } from "@/styles/pet.styles";
 import { useRouter } from 'expo-router';
 import back from "@/assets/images/icon/icon_back.png";
-import { PetRank, getPetBgColor } from '@/components/pet/util';
+import { PetRank, bgColor } from '@/components/pet/util';
 import { API_BASE_URL } from '@/constants/env';
 import OutlinedShadowText from '@/constants/OutlinedShadowText';
 
@@ -82,7 +82,7 @@ export default () => {
                       <View style={petStyles.collections}>
                           <View style={[petStyles.collectionShadow]}> 
                           </View>
-                          <View style={[petStyles.collection, {backgroundColor: getPetBgColor(collections.rank)}]}> 
+                          <View style={[petStyles.collection, {backgroundColor: bgColor(collections.rank)}]}> 
                               <View style={petStyles.collectionPetImg}>
                                   <Image style={{ width: 72, height: 72, }} source={{uri:collections.image}}></Image>
                               </View>

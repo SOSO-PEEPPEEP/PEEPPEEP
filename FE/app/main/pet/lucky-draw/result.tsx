@@ -6,7 +6,7 @@ import { petStyles } from "@/styles/pet.styles";
 import { useRouter, useLocalSearchParams } from 'expo-router'; 
 import OutlinedShadowText from '@/constants/OutlinedShadowText';
 import { COLORS } from '@/constants/COLORS';
-import { PetRank, getPetBgColor } from '@/components/pet/util';
+import { PetRank, bgColor } from '@/components/pet/util';
 import { API_BASE_URL } from '@/constants/env';
 
 type PetInfo = {
@@ -99,7 +99,7 @@ export default () => {
                   inputRange: [0, 1],
                   outputRange: [minHeight, maxHeight],
                 }),
-                backgroundColor: getPetBgColor(petInfo.petRank),
+                backgroundColor: bgColor(petInfo.petRank),
               }]}
             >
               <View style={petStyles.entryNumber}><GlobalText style={petStyles.entryNumberText}>NO.{petInfo.petCollectionId}</GlobalText></View>

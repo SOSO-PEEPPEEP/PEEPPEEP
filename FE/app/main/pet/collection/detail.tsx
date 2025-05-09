@@ -8,7 +8,7 @@ import { petStyles } from "@/styles/pet.styles";
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import Svg, { Polygon } from "react-native-svg";
 import back from "@/assets/images/icon/icon_back.png";
-import { PetRank, getPetBgColor } from '@/components/pet/util';
+import { PetRank, bgColor } from '@/components/pet/util';
 import { API_BASE_URL } from '@/constants/env';
 import OutlinedShadowText from '@/constants/OutlinedShadowText';
 import { COLORS } from '@/constants/COLORS';
@@ -78,7 +78,7 @@ export default () => {
         <View style={petStyles.addPeepInfoContainer}>
             <View>
                 <View style={petStyles.addPeepInfoBoxShadow}></View>
-                <View style={[petStyles.addPeepInfoBox, { backgroundColor: getPetBgColor(collectionInfo.petRank) }]}>
+                <View style={[petStyles.addPeepInfoBox, { backgroundColor: bgColor(collectionInfo.petRank) }]}>
                     <View style={petStyles.entryNumber}><GlobalText style={petStyles.entryNumberText}>No.{collectionInfo.petCollectionId}</GlobalText></View>
                     <View style={petStyles.addPeepList}>
                       <TouchableOpacity onPress={() => { setVoiceEffect(true); }} activeOpacity={1}>
