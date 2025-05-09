@@ -1,8 +1,8 @@
 package com.peeppeep.domain.pet.main.controller;
 
-import com.peeppeep.domain.pet.main.dto.PetDTO;
 import com.peeppeep.domain.pet.main.dto.request.PetRequestDTO;
 import com.peeppeep.domain.pet.main.dto.response.PetListResponseDTO;
+import com.peeppeep.domain.pet.main.dto.response.PetResponseDTO;
 import com.peeppeep.domain.pet.main.service.PetService;
 import com.peeppeep.global.response.success.ApiResponse;
 import com.peeppeep.global.response.success.SuccessCode;
@@ -43,8 +43,13 @@ public class PetController {
         return ApiResponse.of(SuccessCode.PET_GET_SUCCESS, petService.getMyPets());
     }
 
+    @GetMapping("/main")
+    public ApiResponse<PetResponseDTO> getMainPet() {
+        return ApiResponse.of(SuccessCode.PET_GET_SUCCESS, petService.getMainPet());
+    }
+
     @GetMapping("/{pet-id}")
-    public ApiResponse<PetDTO> getPetDetail(@PathVariable(value = "pet-id") Integer petId) {
+    public ApiResponse<PetResponseDTO> getPetDetail(@PathVariable(value = "pet-id") Integer petId) {
         return ApiResponse.of(SuccessCode.PET_GET_SUCCESS, petService.getPetDetail(petId));
     }
 

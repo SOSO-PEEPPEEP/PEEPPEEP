@@ -5,9 +5,9 @@ import com.peeppeep.domain.pet.collection.entity.PetRankType;
 import com.peeppeep.domain.pet.collection.entity.PetType;
 import com.peeppeep.domain.pet.collection.repository.PetCollectionRepository;
 import com.peeppeep.domain.pet.collection.repository.PetTypeRepository;
-import com.peeppeep.domain.pet.main.dto.PetDTO;
 import com.peeppeep.domain.pet.main.dto.request.PetRequestDTO;
 import com.peeppeep.domain.pet.main.dto.response.PetListResponseDTO;
+import com.peeppeep.domain.pet.main.dto.response.PetResponseDTO;
 import com.peeppeep.domain.pet.main.entity.GrowthType;
 import com.peeppeep.domain.pet.main.entity.Inventory;
 import com.peeppeep.domain.pet.main.entity.Item;
@@ -273,13 +273,29 @@ public class PetService {
                 .collect(Collectors.toList());
     }
 
+    /*메인 펫 조회*/
+    public PetResponseDTO getMainPet() {
+        // 임의로 userId 설정
+        Integer userId = 1;
+
+        // User 정보
+        User user = userRepository.findByUserIdAndDeletedAtIsNull(userId)
+                .orElseThrow(()->new BusinessException(ErrorCode.USER_ID_NOT_EXIST, ErrorCode.USER_ID_NOT_EXIST.getMessage()));
+
+        // 펫 정보
+        Pet pet = petRepository.findById(user.getMainPetId())
+                .orElseThrow(()->new BusinessException(ErrorCode.PET_NOT_EXIST,ErrorCode.PET_NOT_EXIST.getMessage()));
+
+        return PetResponseDTO.of(pet);
+    }
+
     /*펫 상세 조회*/
-    public PetDTO getPetDetail(Integer petId) {
+    public PetResponseDTO getPetDetail(Integer petId) {
         // 펫 정보
         Pet pet = petRepository.findById(petId)
                 .orElseThrow(()->new BusinessException(ErrorCode.PET_NOT_EXIST,ErrorCode.PET_NOT_EXIST.getMessage()));
 
-        return PetDTO.of(pet);
+        return PetResponseDTO.of(pet);
     }
 
     /*펫 정보 수정*/
