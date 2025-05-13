@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 
-@Setter
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -41,5 +40,13 @@ public class Inventory extends BaseBy {
                 .item(item)
                 .count(count)
                 .build();
+    }
+
+    public void updateCountMinus(int count) {
+        this.count -= count;
+    }
+
+    public void updateCountPlus(int count) {
+        this.count += count;
     }
 }

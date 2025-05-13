@@ -8,7 +8,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 
-@Setter
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -63,5 +62,13 @@ public class Pet extends BaseBy {
 
     public void updateFavorite(Boolean isFavorite) {
         this.isFavorite = !isFavorite;
+    }
+
+    public void updateGrowth(GrowthType growthType) {
+        this.growth=growthType;
+    }
+
+    public void updateAffection(int increasedAffection) {
+        this.affection = increasedAffection;
     }
 }

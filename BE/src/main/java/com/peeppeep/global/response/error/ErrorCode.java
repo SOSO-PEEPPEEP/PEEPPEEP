@@ -45,7 +45,7 @@ public enum ErrorCode {
     // S3
     S3_SAVE_ERROR(400, "S3에 파일 저장에 실패하였습니다."),
     S3_DELETE_ERROR(400, "S3에 파일 삭제에 실패하였습니다."),
-    FILE_FORMAT_NOT_EXIST(400, "존재하지 않은 형식의 파일입니다"),
+    FILE_FORMAT_NOT_EXIST(404, "존재하지 않은 형식의 파일입니다"),
 
     // User
     FAIL_TO_LOGIN_EMPTY(400, "입력된 정보가 없습니다."),
@@ -59,30 +59,30 @@ public enum ErrorCode {
     NICKNAME_ALREADY_EXIST(400, "닉네임이 이미 존재합니다."),
 
     // Challenge
-    CHALLENGE_NOT_EXIST(400,"챌린지가 존재하지 않습니다."),
-    CATEGORY_NOT_EXIST(400,"카테고리가 존재하지 않습니다."),
+    CHALLENGE_NOT_EXIST(404,"챌린지가 존재하지 않습니다."),
+    CATEGORY_NOT_EXIST(404,"카테고리가 존재하지 않습니다."),
     CHALLENGE_ACCESS_DENIED(403, "해당 챌린지에 접근할 수 없습니다."),
-    CHALLENGE_USER_NOT_EXIST(400,"챌린지 유저가 존재하지 않습니다."),
+    CHALLENGE_USER_NOT_EXIST(404,"챌린지 유저가 존재하지 않습니다."),
     CHALLENGE_NOT_COMPLETE(400, "챌린지 결산에 해당되지 않습니다."),
 
     // Daily
-    DAY_FIELD_NOT_EXIST(400, "day 필드명이 존재하지 않습니다."),
-    DAILY_NOT_EXIST(400, "챌린지 데일리가 존재하지 않습니다."),
+    DAY_FIELD_NOT_EXIST(404, "day 필드명이 존재하지 않습니다."),
+    DAILY_NOT_EXIST(404, "챌린지 데일리가 존재하지 않습니다."),
 
     // Calendar
-    CALENDAR_NOT_FOUND(400, "챌린지 캘린더가 존재하지 않습니다."),
+    CALENDAR_NOT_EXIST(404, "챌린지 캘린더가 존재하지 않습니다."),
 
     // Pet
-    PET_TYPE_NOT_EXIST(400, "펫 타입이 존재하지 않습니다."),
-    PET_COLLECTION_NOT_FOUND(404,"펫 도감에 해당 펫을 찾을 수 없습니다."),
-    PET_RANK_NOT_FOUND(400,"펫 도감에 해당 랭크의 펫을 찾을 수 없습니다."),
-    PET_NOT_EXIST(400, "펫이 존재하지 않습니다"),
+    PET_TYPE_NOT_EXIST(404, "펫 타입이 존재하지 않습니다."),
+    PET_COLLECTION_NOT_EXIST(404,"펫 도감에 해당 펫을 찾을 수 없습니다."),
+    PET_RANK_NOT_EXIST(404,"펫 도감에 해당 랭크의 펫을 찾을 수 없습니다."),
+    PET_NOT_EXIST(404, "펫이 존재하지 않습니다"),
     PET_ACCESS_DENIED(403, "해당 펫에 접근할 수 없습니다."),
 
     // Item
-    ITEM_NOT_FOUND(400, "아이템이 존재하지 않습니다."),
-    INVENTORY_NOT_FOUND(400, "인벤토리에 해당 아이템이 존재하지 않습니다."),
-
+    ITEM_NOT_EXIST(404, "아이템이 존재하지 않습니다."),
+    INVENTORY_NOT_EXIST(404, "인벤토리에 해당 아이템이 존재하지 않습니다."),
+    ITEM_COUNT_LOW(400, "해당 아이템의 개수가 부족합니다."),
     ;
     /**
      * ******************************* Error Code Field ***************************************
