@@ -324,6 +324,7 @@ public class ChallengeService {
         challengeUser.updateIsCompleted();
         challengeUserRepository.save(challengeUser);
 
+        // 챌린지 성공 여부
         if(!previewDto.getSuccess())
             return previewDto;
 
@@ -334,12 +335,12 @@ public class ChallengeService {
         // 인벤토리 갱신 및 DTO 반환
         for (ChallengeResultItemDTO dto : items) {
             Item item = itemMap.get(dto.getItemId());
-            Inventory inv = inventoryRepository
+            Inventory inventory = inventoryRepository
                     .findByUserAndItemAndDeletedAtIsNull(challengeUser.getUser(), item)
                     .orElseGet(() -> Inventory.of(challengeUser.getUser(), item, 0));
 
-            inv.setCount(inv.getCount() + dto.getNumber());
-            inventoryRepository.save(inv);
+            inventory.updateCountPlus(dto.getCount());
+            inventoryRepository.save(inventory);
         }
 
         return previewDto;
@@ -378,7 +379,7 @@ public class ChallengeService {
 
         // Calendar 갱신
         Calendar calendar = calendarRepository.findByChallengeUserAndDeletedAtIsNull(challengeUser)
-                .orElseThrow(()->new BusinessException(ErrorCode.CALENDAR_NOT_FOUND,ErrorCode.CALENDAR_NOT_FOUND.getMessage()));
+                .orElseThrow(()->new BusinessException(ErrorCode.CALENDAR_NOT_EXIST,ErrorCode.CALENDAR_NOT_EXIST.getMessage()));
         calendar.updateDayStatus(dailyRequestDTO.getDay(),daily.getDailyId());
         calendarRepository.save(calendar);
 
@@ -446,7 +447,7 @@ public class ChallengeService {
 
         // Calendar 갱신
         Calendar calendar = calendarRepository.findByChallengeUserAndDeletedAtIsNull(challengeUser)
-                .orElseThrow(()->new BusinessException(ErrorCode.CALENDAR_NOT_FOUND,ErrorCode.CALENDAR_NOT_FOUND.getMessage()));
+                .orElseThrow(()->new BusinessException(ErrorCode.CALENDAR_NOT_EXIST,ErrorCode.CALENDAR_NOT_EXIST.getMessage()));
         calendar.updateDayStatus(daily.getDay(),null);
         calendarRepository.save(calendar);
 

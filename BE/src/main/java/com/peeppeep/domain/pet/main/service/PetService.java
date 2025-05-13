@@ -68,7 +68,7 @@ public class PetService {
         // 펫 목록 조회
         List<PetCollection> availablePets = petCollectionRepository.findAll();
         if (availablePets.isEmpty()) {
-            throw new BusinessException(ErrorCode.PET_COLLECTION_NOT_FOUND, ErrorCode.PET_COLLECTION_NOT_FOUND.getMessage());
+            throw new BusinessException(ErrorCode.PET_COLLECTION_NOT_EXIST, ErrorCode.PET_COLLECTION_NOT_EXIST.getMessage());
         }
 
         // 랭크 랜덤 선정 후, 해당 랭크의 펫 목록 조회
@@ -77,7 +77,7 @@ public class PetService {
                 .filter(pet -> pet.getPetRank() == selectedRank)
                 .toList();
         if (filteredPets.isEmpty()) {
-            throw new BusinessException(ErrorCode.PET_RANK_NOT_FOUND, ErrorCode.PET_RANK_NOT_FOUND.getMessage());
+            throw new BusinessException(ErrorCode.PET_RANK_NOT_EXIST, ErrorCode.PET_RANK_NOT_EXIST.getMessage());
         }
 
         // 특정 랭크의 펫 랜덤 선정
@@ -105,7 +105,7 @@ public class PetService {
                 .orElseThrow(()->new BusinessException(ErrorCode.PET_TYPE_NOT_EXIST, ErrorCode.PET_TYPE_NOT_EXIST.getMessage()));
         List<PetCollection> availablePets = petCollectionRepository.findByPetType(petType);
         if (availablePets.isEmpty()) {
-            throw new BusinessException(ErrorCode.PET_COLLECTION_NOT_FOUND, ErrorCode.PET_COLLECTION_NOT_FOUND.getMessage());
+            throw new BusinessException(ErrorCode.PET_COLLECTION_NOT_EXIST, ErrorCode.PET_COLLECTION_NOT_EXIST.getMessage());
         }
 
         // 랭크 랜덤 선정 후, 해당 랭크의 펫 목록 조회
@@ -114,7 +114,7 @@ public class PetService {
                 .filter(pet -> pet.getPetRank() == selectedRank)
                 .toList();
         if (filteredPets.isEmpty()) {
-            throw new BusinessException(ErrorCode.PET_RANK_NOT_FOUND, ErrorCode.PET_RANK_NOT_FOUND.getMessage());
+            throw new BusinessException(ErrorCode.PET_RANK_NOT_EXIST, ErrorCode.PET_RANK_NOT_EXIST.getMessage());
         }
 
         // 특정 랭크의 펫 랜덤 선정
@@ -157,103 +157,77 @@ public class PetService {
     }
 
     /*펫 상호작용*/
-    public Map<String, Object> Interaction(int userId, int petId, int itemId, int colId) {
-        Map<String, Object> response = new HashMap<>();
+    public PetResponseDTO interactPetByItem(Integer petId, Integer itemId, Integer itemCount) {
+        // 임의로 userId 설정
+        Integer userId = 1;
 
-        Optional<User> userInfo = userRepository.isIdPresent(userId);
-        User user = userInfo.get();
+        // User 정보
+        User user = userRepository.findByUserIdAndDeletedAtIsNull(userId)
+                .orElseThrow(()->new BusinessException(ErrorCode.USER_ID_NOT_EXIST, ErrorCode.USER_ID_NOT_EXIST.getMessage()));
 
-        Optional<Item> iteminfo = itemRepository.iteminfo(itemId);
-        Item item = iteminfo.get();
-
-        Optional<Pet> petInfo = petRepository.petInfo(user, petId);
-        Pet pet = petInfo.get();
-
-        Optional<PetCollection> petColLectionInfo = petCollectionRepository.petTypeId(colId);
-        PetCollection petCollection = petColLectionInfo.get();
+        // 펫 정보
+        Pet pet = petRepository.findById(petId)
+                .orElseThrow(()->new BusinessException(ErrorCode.PET_NOT_EXIST,ErrorCode.PET_NOT_EXIST.getMessage()));
+        // 펫 도감
+        PetCollection petCollection = pet.getPetCollection();
+        // 펫 타입
         PetType petType = petCollection.getPetType();
 
-        if(user != null) {
+        // 아이템 정보
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(()->new BusinessException(ErrorCode.ITEM_NOT_EXIST, ErrorCode.ITEM_NOT_EXIST.getMessage()));
 
-            //Item 사용으로 인한 INVENTORY count -1
-            Optional<Inventory> invenItemCnt = inventoryRepository.inventoryCountInfo(user, item);
+        //Item 사용으로 인한 INVENTORY count -1
+        Inventory inventory = inventoryRepository.findByUserAndItemAndDeletedAtIsNull(user, item)
+                .orElseThrow(()->new BusinessException(ErrorCode.INVENTORY_NOT_EXIST, ErrorCode.INVENTORY_NOT_EXIST.getMessage()));
+        if(inventory.getCount()<itemCount){
+            throw new BusinessException(ErrorCode.ITEM_COUNT_LOW, ErrorCode.ITEM_COUNT_LOW.getMessage());
+        }
+        inventory.updateCountMinus(itemCount);
+        inventoryRepository.save(inventory);
 
-            Inventory inven = invenItemCnt.get();
-            if(inven.getCount() > 0){
-                int usedItemCount = inven.getCount() - 1;
-                inven.setCount(usedItemCount);
-            }else{
-                response.put("success", false);
-                response.put("message", ErrorCode.UPDATE_ERROR);
-                return response;
-            }
+        //성장도에 따른 애정도 최대치
+        int affectionMax = 0;
+        GrowthType growthType = pet.getGrowth();
+        affectionMax = switch (growthType) {
+            case EGG -> 100;
+            case BABY -> 120;
+            case YOUTH -> 200;
+            default -> 0;
+        };
 
-            try{
-                inventoryRepository.save(inven);
-                response.put("success", true);
-                response.put("message", SuccessCode.UPDATE_SUCCESS);
-            }catch(Exception e) {
-                response.put("success", false);
-                response.put("message", ErrorCode.UPDATE_ERROR);
-                e.printStackTrace();
-            }
-
-            //성장도에 따른 애정도 최대치
-            int affectionMax = 0;
-            GrowthType growthType = pet.getGrowth();
-            if(growthType.equals(GrowthType.EGG)) {
-                affectionMax = 100;
-            }else if(growthType.equals(GrowthType.BABY)) {
-                affectionMax = 120;
-            }else if(growthType.equals(GrowthType.YOUTH)) {
-                affectionMax = 200;
-            }else {
-                affectionMax = 0;
-            }
-
-            //보너스 상승률 적용 펫에 대한 애정도 증가량 추가
-            int addrate = 0;
-            if(petType.getPetTypeId() == item.getPetType().getPetTypeId()) {
-                addrate = 2;
-            }
-
-            int rate = itemRepository.inventoryCountInfo(itemId);
-
-            //애정도 최대치 달성 시 성장도 증가
-            int increasedAffinity = 0;
-            if(pet.getAffection() + rate + addrate > affectionMax){
-                switch (growthType) {
-                    case EGG:
-                        growthType = GrowthType.BABY;
-                        increasedAffinity= pet.getAffection() + rate + addrate - affectionMax;
-                        break;
-                    case BABY:
-                        growthType = GrowthType.YOUTH;
-                        increasedAffinity= pet.getAffection() + rate + addrate - affectionMax;
-                        break;
-                    default:
-                        growthType = GrowthType.ADULT;
-                        increasedAffinity= 0;
-                        break;
-                }
-            }else {
-                increasedAffinity= pet.getAffection() + rate + addrate;
-            }
-
-            try{
-                pet.setGrowth(growthType);
-                pet.setAffection(increasedAffinity);
-                petRepository.save(pet);
-                response.put("success", true);
-                response.put("message", SuccessCode.UPDATE_SUCCESS);
-            }catch(Exception e) {
-                response.put("success", false);
-                response.put("message", ErrorCode.UPDATE_ERROR);
-                e.printStackTrace();
-            }
+        //보너스 상승률 적용 펫에 대한 애정도 증가량 추가
+        int addrate = 0;
+        if(petType.getPetTypeId().equals(item.getPetType().getPetTypeId())) {
+            addrate = 2;
         }
 
-        return response;
+        int rate = itemRepository.inventoryCountInfo(itemId);
+
+        //애정도 최대치 달성 시 성장도 증가
+        int increasedAffection = pet.getAffection() + rate + addrate;
+        if(increasedAffection > affectionMax){
+            increasedAffection = switch (growthType) {
+                case EGG -> {
+                    growthType = GrowthType.BABY;
+                    yield increasedAffection - affectionMax;
+                }
+                case BABY -> {
+                    growthType = GrowthType.YOUTH;
+                    yield increasedAffection - affectionMax;
+                }
+                default -> {
+                    growthType = GrowthType.ADULT;
+                    yield 200;
+                }
+            };
+        }
+
+        pet.updateGrowth(growthType);
+        pet.updateAffection(increasedAffection);
+        petRepository.save(pet);
+
+        return PetResponseDTO.of(pet);
     }
 
     /*나의 펫 목록 조회*/

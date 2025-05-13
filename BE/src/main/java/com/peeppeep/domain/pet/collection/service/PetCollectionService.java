@@ -35,7 +35,7 @@ public class PetCollectionService {
     public PetCollectionDTO getPetCollectionDetail(Integer petCollectionId) {
         // 펫 도감 정보
         PetCollection petCollection = petCollectionRepository.findById(petCollectionId)
-                .orElseThrow(()->new BusinessException(ErrorCode.PET_COLLECTION_NOT_FOUND, ErrorCode.PET_COLLECTION_NOT_FOUND.getMessage()));
+                .orElseThrow(()->new BusinessException(ErrorCode.PET_COLLECTION_NOT_EXIST, ErrorCode.PET_COLLECTION_NOT_EXIST.getMessage()));
 
         return PetCollectionDTO.of(petCollection);
     }

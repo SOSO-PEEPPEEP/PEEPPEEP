@@ -12,20 +12,20 @@ import lombok.Setter;
 public class ChallengeResultItemDTO {
     Integer itemId;
     String name;
-    Integer number;
+    Integer count;
 
     @Builder
-    private ChallengeResultItemDTO(Integer itemId, String name, Integer number) {
+    private ChallengeResultItemDTO(Integer itemId, String name, Integer count) {
         this.itemId = itemId;
         this.name = name;
-        this.number = number;
+        this.count = count;
     }
 
-    public static ChallengeResultItemDTO of (Item item, Integer number) {
+    public static ChallengeResultItemDTO of (Item item, Integer count) {
         return builder()
                 .itemId(item.getItemId())
                 .name(item.getName())
-                .number(number)
+                .count(count)
                 .build();
     }
 }
