@@ -47,7 +47,7 @@ export default () => {
   
         setCollectionInfo(data);
       } catch (error) {
-        console.error('챌린지 상세 조회 실패:', error);
+        console.error('도감 상세 조회 실패:', error);
       }
     };
   

@@ -54,7 +54,7 @@ export default () => {
   useEffect(() => {
       const { height } = Dimensions.get('window');
       const { width } = Dimensions.get('window');
-      const calculatedHeight = width <= 400 ? 36 : 48;
+      const calculatedHeight = height <= 400 ? 36 : 48;
       const calculatedWidth = width <= 400 ? 36 : 48;
       setICONHeight(calculatedHeight);
       setICONWidth(calculatedWidth);
@@ -62,7 +62,7 @@ export default () => {
       const handleResize = () => {
           const { height } = Dimensions.get('window');
           const { width } = Dimensions.get('window');
-          const updatedHeight = width <= 400 ? 36 : 48;
+          const updatedHeight = height <= 400 ? 36 : 48;
           const calculatedWidth = width <= 400 ? 36 : 48;
           setICONHeight(updatedHeight);
           setICONWidth(calculatedWidth);
