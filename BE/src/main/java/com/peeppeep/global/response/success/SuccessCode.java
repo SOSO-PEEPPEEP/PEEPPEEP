@@ -69,6 +69,7 @@ public enum SuccessCode {
     FAVORITE_UPDATE_SUCCESS(204, "펫 즐겨찾기에 성공하였습니다."),
     PET_LUCKY_DRAW_GET_SUCCESS(200, "펫 뽑기에 성공하였습니다."),
     PET_INTERACT_SUCCESS(204, "펫 상호작용에 성공하였습니다."),
+    INVENTORY_GET_SUCCESS(200, "인벤토리에 있는 아이템 조회에 성공하였습니다."),
 
     ;
 

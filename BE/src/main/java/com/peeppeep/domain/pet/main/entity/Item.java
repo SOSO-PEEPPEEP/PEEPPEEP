@@ -1,13 +1,12 @@
 package com.peeppeep.domain.pet.main.entity;
 
 import com.peeppeep.domain.challenge.main.entity.Category;
-import com.peeppeep.domain.pet.collection.entity.ContentsType;
+import com.peeppeep.domain.pet.collection.entity.ContentType;
 import com.peeppeep.domain.pet.collection.entity.PetType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @Entity
@@ -21,8 +20,8 @@ public class Item {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "contents")
-    private ContentsType contents;
+    @Column(name = "content")
+    private ContentType content;
 
     @Column(name = "rate")
     private Integer rate;

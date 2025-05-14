@@ -1,6 +1,8 @@
 package com.peeppeep.domain.pet.main.controller;
 
+import com.peeppeep.domain.pet.main.dto.request.PetInteractionRequestDTO;
 import com.peeppeep.domain.pet.main.dto.request.PetRequestDTO;
+import com.peeppeep.domain.pet.main.dto.response.InventoryResponseDTO;
 import com.peeppeep.domain.pet.main.dto.response.PetListResponseDTO;
 import com.peeppeep.domain.pet.main.dto.response.PetResponseDTO;
 import com.peeppeep.domain.pet.main.service.PetService;
@@ -31,8 +33,8 @@ public class PetController {
     }
 
     @PutMapping("/{pet-id}/interaction")
-    public ApiResponse<PetResponseDTO> interactPetByItem(@PathVariable("pet-id") Integer petId, @RequestParam("itemId") Integer itemId, @RequestParam("itemCount") Integer itemCount) {
-        return ApiResponse.of(SuccessCode.PET_INTERACT_SUCCESS, petService.interactPetByItem(petId, itemId, itemCount));
+    public ApiResponse<PetResponseDTO> interactPetByItem(@PathVariable("pet-id") Integer petId, @RequestBody PetInteractionRequestDTO PetInteractionRequestDTO) {
+        return ApiResponse.of(SuccessCode.PET_INTERACT_SUCCESS, petService.interactPetByItem(petId, PetInteractionRequestDTO));
     }
 
     @GetMapping("/my")
@@ -63,5 +65,10 @@ public class PetController {
     @PutMapping("/{pet-id}/favorite")
     public ApiResponse<Integer> updateFavorite(@PathVariable(value = "pet-id") Integer petId) {
         return ApiResponse.of(SuccessCode.FAVORITE_UPDATE_SUCCESS, petService.updateFavorite(petId));
+    }
+
+    @GetMapping("/inventories")
+    public ApiResponse<List<InventoryResponseDTO>> getInventories() {
+        return ApiResponse.of(SuccessCode.INVENTORY_GET_SUCCESS, petService.getInventories());
     }
 }

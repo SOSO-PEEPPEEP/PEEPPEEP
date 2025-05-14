@@ -5,7 +5,9 @@ import com.peeppeep.domain.pet.collection.entity.PetRankType;
 import com.peeppeep.domain.pet.collection.entity.PetType;
 import com.peeppeep.domain.pet.collection.repository.PetCollectionRepository;
 import com.peeppeep.domain.pet.collection.repository.PetTypeRepository;
+import com.peeppeep.domain.pet.main.dto.request.PetInteractionRequestDTO;
 import com.peeppeep.domain.pet.main.dto.request.PetRequestDTO;
+import com.peeppeep.domain.pet.main.dto.response.InventoryResponseDTO;
 import com.peeppeep.domain.pet.main.dto.response.PetListResponseDTO;
 import com.peeppeep.domain.pet.main.dto.response.PetResponseDTO;
 import com.peeppeep.domain.pet.main.entity.GrowthType;
@@ -13,7 +15,6 @@ import com.peeppeep.domain.pet.main.entity.Inventory;
 import com.peeppeep.domain.pet.main.entity.Item;
 import com.peeppeep.domain.pet.main.entity.Pet;
 import com.peeppeep.domain.pet.main.repository.InventoryRepository;
-import com.peeppeep.domain.pet.main.repository.ItemRepository;
 import com.peeppeep.domain.pet.main.repository.PetRepository;
 import com.peeppeep.domain.user.main.entity.User;
 import com.peeppeep.domain.user.main.repository.UserRepository;
@@ -21,16 +22,13 @@ import com.peeppeep.global.response.error.ErrorCode;
 import com.peeppeep.global.response.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import com.peeppeep.global.response.success.SuccessCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -40,7 +38,6 @@ public class PetService {
 
     private final InventoryRepository inventoryRepository;
     private final PetRepository petRepository;
-    private final ItemRepository itemRepository;
     private final UserRepository userRepository;
     private final PetCollectionRepository petCollectionRepository;
     private final PetTypeRepository petTypeRepository;
@@ -157,7 +154,7 @@ public class PetService {
     }
 
     /*펫 상호작용*/
-    public PetResponseDTO interactPetByItem(Integer petId, Integer itemId, Integer itemCount) {
+    public PetResponseDTO interactPetByItem(Integer petId, PetInteractionRequestDTO petInteractionRequestDTO) {
         // 임의로 userId 설정
         Integer userId = 1;
 
@@ -174,16 +171,17 @@ public class PetService {
         PetType petType = petCollection.getPetType();
 
         // 아이템 정보
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(()->new BusinessException(ErrorCode.ITEM_NOT_EXIST, ErrorCode.ITEM_NOT_EXIST.getMessage()));
+        Integer inventoryId = petInteractionRequestDTO.getInventoryId();
+        Integer count = petInteractionRequestDTO.getCount();
+        Inventory inventory = inventoryRepository.findById(inventoryId)
+                .orElseThrow(()->new BusinessException(ErrorCode.INVENTORY_NOT_EXIST, ErrorCode.INVENTORY_NOT_EXIST.getMessage()));
+        Item item = inventory.getItem();
 
         //Item 사용으로 인한 INVENTORY count -1
-        Inventory inventory = inventoryRepository.findByUserAndItemAndDeletedAtIsNull(user, item)
-                .orElseThrow(()->new BusinessException(ErrorCode.INVENTORY_NOT_EXIST, ErrorCode.INVENTORY_NOT_EXIST.getMessage()));
-        if(inventory.getCount()<itemCount){
+        if(inventory.getCount()<count){
             throw new BusinessException(ErrorCode.ITEM_COUNT_LOW, ErrorCode.ITEM_COUNT_LOW.getMessage());
         }
-        inventory.updateCountMinus(itemCount);
+        inventory.updateCountMinus(count);
         inventoryRepository.save(inventory);
 
         //성장도에 따른 애정도 최대치
@@ -202,7 +200,7 @@ public class PetService {
             addrate = 2;
         }
 
-        int rate = itemRepository.inventoryCountInfo(itemId);
+        int rate = item.getRate();
 
         //애정도 최대치 달성 시 성장도 증가
         int increasedAffection = pet.getAffection() + rate + addrate;
@@ -356,5 +354,21 @@ public class PetService {
         petRepository.save(pet);
 
         return user.getMainPetId();
+    }
+
+    /*인벤토리의 아이템 조회*/
+    public List<InventoryResponseDTO> getInventories() {
+        // 임의로 userId 설정
+        Integer userId = 1;
+
+        // User 정보
+        User user = userRepository.findByUserIdAndDeletedAtIsNull(userId)
+                .orElseThrow(()->new BusinessException(ErrorCode.USER_ID_NOT_EXIST, ErrorCode.USER_ID_NOT_EXIST.getMessage()));
+
+        List<Inventory> inventories = inventoryRepository.findByUserAndDeletedAtIsNull(user);
+
+        return inventories.stream()
+                .map(InventoryResponseDTO::of)
+                .collect(Collectors.toList());
     }
 }
