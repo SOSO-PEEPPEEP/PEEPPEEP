@@ -4,6 +4,7 @@ import GlobalText from '@/constants/GlobalText';
 import { petStyles } from "@/styles/pet.styles";
 import GaugeBar from "@/components/ui/Gaugebar";
 import { useRouter } from 'expo-router'; 
+import Tooltip from 'react-native-walkthrough-tooltip';
 import Frame from '@/components/ui/Frame';
 import EffectSound from '@/components/common/effectSound';
 import VoiceSound from '@/components/common/voiceSound';
@@ -21,34 +22,64 @@ import { COLORS } from '@/constants/COLORS';
 import { Growth } from '@/components/pet/util';
 import { API_BASE_URL } from '@/constants/env';
 
-type PetDetailProps = {
+type PetDetail = {
+  petId: number;
   nickname: string;
   growth: Growth;
   affection: number;
   image : string;
 };
 
+type InventoryContent = 'FEED' | 'BATH' | 'PLAY' | 'PAT' | 'TOILET';
+
+type Inventory = {
+  content: InventoryContent;
+  count: number;
+  inventoryId: number;
+  itemName: string;
+}
+
 export default () => {
   // 화면 크기 변경에 따라 특정 ICON 크기 동적으로 업데이트
   const [ICONHeight, setICONHeight] = useState(0);
   const [ICONWidth, setICONWidth] = useState(0);
 
-  const [mainPetInfo, setMainPetInfo] = useState<PetDetailProps | null>(null);
+  const [mainPetInfo, setMainPetInfo] = useState<PetDetail | null>(null);
+  const [inventoryInfo, setInventoryInfo] = useState<Inventory[]>([]);
+  const [tooltip, setTooltip] = useState<{
+    visible: boolean;
+    target?: InventoryContent;
+    x: number;
+    y: number;
+    msg: string;
+  }>({ visible: false, target: undefined, x: 0, y: 0, msg: '' });
 
+  // 메인 펫 조회
   useEffect(() => {
     const fetchMainPet = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/pets/main`);
-        const json = await response.json();
-        const data = json.data;
-  
-        setMainPetInfo(data);
+        const res = await fetch(`${API_BASE_URL}/api/pets/main`);
+        const json = await res.json();
+        setMainPetInfo(json.data);
       } catch (error) {
-        console.error('챌린지 상세 조회 실패:', error);
+        console.error('메인 펫 조회 실패:', error);
       }
     };
-  
     fetchMainPet();
+  }, []);
+
+  // 인벤토리 조회
+  useEffect(() => {
+    const fetchInventory = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/pets/inventories`);
+        const json = await res.json();
+        setInventoryInfo(json.data);
+      } catch (error) {
+        console.error('인벤토리 조회 실패:', error);
+      }
+    };
+    fetchInventory();
   }, []);
   
   useEffect(() => {
@@ -164,7 +195,7 @@ export default () => {
     };
   });
 
-  if (!mainPetInfo) {
+  if (!mainPetInfo || !inventoryInfo) {
     return (
       <Frame>
         <GlobalText>로딩 중...</GlobalText>
@@ -202,6 +233,70 @@ export default () => {
       );
     }
   };
+
+  const showNoItemTip = (content: InventoryContent, pageX: number, pageY: number) => {
+    setTooltip({
+      visible: true,
+      target: content,
+      x: pageX,
+      y: pageY - 40,
+      msg: '아이템이 없습니다!'
+    });
+    setTimeout(() => setTooltip(t => ({ ...t, visible: false, target: undefined })), 1500);
+  };
+
+  const useItem = async (
+    content: Inventory['content'],
+    inventoryId: number,
+    pageX: number,
+    pageY: number
+  ) => {
+    const item = inventoryInfo.find(i => i.content === content)!;
+    if (item.count < 1) {
+      return showNoItemTip(content, pageX, pageY);
+    }
+
+    // 옵티미스틱 업데이트
+    setInventoryInfo(cur =>
+      cur.map(i =>
+        i.inventoryId === inventoryId ? { ...i, count: i.count - 1 } : i
+      )
+    );
+
+    // 실제 API 호출
+    try {
+      const res = await fetch(
+        `${API_BASE_URL}/api/pets/${mainPetInfo.petId}/interaction`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            inventoryId: inventoryId,
+            count: 1,
+          }),
+        }
+      );
+      if (!res.ok) throw new Error(`상호작용 실패: ${res.status}`);
+      const json = await res.json() as { status: number; message: string; data: PetDetail };
+      setMainPetInfo(json.data);
+    } catch (e) {
+      // 롤백
+      setInventoryInfo(cur =>
+        cur.map(i =>
+          i.inventoryId === inventoryId ? { ...i, count: i.count + 1 } : i
+        )
+      );
+      console.error('아이템 사용 실패', e);
+    }
+  };
+
+  const ICONS: { content: Inventory['content']; icon: any }[] = [
+    { content: 'FEED',   icon: iconFeed },
+    { content: 'PAT',    icon: iconPat },
+    { content: 'PLAY',   icon: iconPlay },
+    { content: 'BATH',   icon: iconShower },
+    { content: 'TOILET', icon: iconToilet },
+  ];
 
   return (
       <Frame>
@@ -260,11 +355,46 @@ export default () => {
 
         <View style={[{height: Separator}]}></View>
         <View style={{ width: '100%', flexDirection: "row", alignItems: "center",  justifyContent: "space-evenly"}}>
-          <TouchableOpacity activeOpacity={1}><Image source={iconFeed} style={{ width: ICONWidth, height: ICONHeight,}}></Image></TouchableOpacity>
-          <TouchableOpacity activeOpacity={1}><Image source={iconPat} style={{ width: ICONWidth, height: ICONHeight,}}></Image></TouchableOpacity>
-          <TouchableOpacity activeOpacity={1}><Image source={iconPlay} style={{width: ICONWidth, height: ICONHeight,}}></Image></TouchableOpacity>
-          <TouchableOpacity activeOpacity={1}><Image source={iconShower} style={{ width: ICONWidth, height: ICONHeight,}}></Image></TouchableOpacity>
-          <TouchableOpacity activeOpacity={1}><Image source={iconToilet} style={{ width: ICONWidth, height: ICONHeight,}}></Image></TouchableOpacity>
+          {ICONS.map(({ content, icon }) => {
+            const item = inventoryInfo.find(i => i.content === content);
+            return (
+              <Tooltip
+                key={content}
+                isVisible={tooltip.visible && tooltip.target === content}
+                content={<GlobalText style={{ color: COLORS.dark }}>{tooltip.msg}</GlobalText>}
+                placement="top"
+                allowChildInteraction={false}
+                disableShadow
+                useReactNativeModal
+                backgroundStyle={{ backgroundColor: 'transparent' }}
+                // @ts-ignore
+                customStyles={{ tooltip: { position: 'absolute', left: tooltip.x, top: tooltip.y } }}
+              >
+                <TouchableOpacity
+                  activeOpacity={1}
+                  onPressIn={e => {
+                    const { pageX, pageY } = e.nativeEvent;
+                    if (!item) return;
+                    useItem(content, item.inventoryId, pageX, pageY);
+                  }}
+                >
+                  <Image
+                    source={icon}
+                    style={{ width: ICONWidth, height: ICONHeight }}
+                  />
+                  <GlobalText
+                    style={{
+                      color: COLORS.gray,
+                      textAlign: 'center',
+                      marginTop: 4,
+                    }}
+                  >
+                    {item?.count ?? 0}개
+                  </GlobalText>
+                </TouchableOpacity>
+              </Tooltip>
+            );
+          })}
         </View>
 
       {playEffect && ( <EffectSound onPlaybackEnd={() => setPlayEffect(false)} />)}
