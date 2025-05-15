@@ -11,6 +11,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class PetResponseDTO {
+    private Integer petId;
+
     private String nickname;
 
     private GrowthType growth;
@@ -20,7 +22,8 @@ public class PetResponseDTO {
     private String image;
 
     @Builder
-    private PetResponseDTO(String nickname, GrowthType growth, Integer affection, String image) {
+    private PetResponseDTO(Integer petId, String nickname, GrowthType growth, Integer affection, String image) {
+        this.petId = petId;
         this.nickname = nickname;
         this.growth = growth;
         this.affection = affection;
@@ -30,6 +33,7 @@ public class PetResponseDTO {
     public static PetResponseDTO of(Pet pet) {
         String image = pet.getGrowth().selectImage(pet.getPetCollection());
         return builder()
+                .petId(pet.getPetId())
                 .nickname(pet.getNickname())
                 .growth(pet.getGrowth())
                 .affection(pet.getAffection())
