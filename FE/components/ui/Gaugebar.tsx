@@ -1,3 +1,4 @@
+import { COLORS } from '@/constants/COLORS';
 import React from "react";
 import { View, StyleSheet } from "react-native";
 
@@ -7,7 +8,7 @@ interface GaugeBarProps {
   color?: string;
 }
 
-const GaugeBar: React.FC<GaugeBarProps> = ({ percentage, height = 10, color = "#FFD5FF" }) => {
+const GaugeBar: React.FC<GaugeBarProps> = ({ percentage, height = 10, color = COLORS.lilac }) => {
   return (
     <View style={[styles.container, { height }]}>
       <View style={[styles.bar, { width: `${percentage}%`, backgroundColor: color }]} />
@@ -25,14 +26,14 @@ const styles = StyleSheet.create({
   bar: {
     height: "100%",
     borderWidth: 2,
-    borderColor: '#FFD5FF',
+    borderColor: COLORS.lilac,
   },
   emptyBar : {
     height: "100%",
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderRightWidth: 1,
-    borderColor: '#8787A3',
+    borderColor: COLORS.dark,
   },
 });
 

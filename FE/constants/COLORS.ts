@@ -8,4 +8,5 @@ export const COLORS = {
     yellow: "#FFDBB7",
     green: "#BFE1E0",
     pink: "#FFCDD9",
+    lilac: "#FFD5FF",
 };
