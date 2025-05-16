@@ -52,6 +52,19 @@ public class PetService {
             PetRankType.LEGENDARY, 3.0
     );
 
+    /** 성장도에 따른 애정도 최대치 계산 */
+    public int getAffectionMax(Pet pet) {
+        int affectionMax = 0;
+        GrowthType growthType = pet.getGrowth();
+        affectionMax = switch (growthType) {
+            case EGG -> 100;
+            case BABY -> 150;
+            case YOUTH -> 200;
+            default -> 200;
+        };
+        return affectionMax;
+    }
+
     /*펫 랜덤 생성*/
     @Transactional
     public Integer createPet(){
@@ -165,6 +178,11 @@ public class PetService {
         // 펫 정보
         Pet pet = petRepository.findById(petId)
                 .orElseThrow(()->new BusinessException(ErrorCode.PET_NOT_EXIST,ErrorCode.PET_NOT_EXIST.getMessage()));
+        // 요청자와 펫 주인이 동일한지 확인
+        if(!pet.getUser().getUserId().equals(user.getUserId())) {
+            throw new BusinessException(ErrorCode.PET_ACCESS_DENIED, ErrorCode.PET_ACCESS_DENIED.getMessage());
+        }
+
         // 펫 도감
         PetCollection petCollection = pet.getPetCollection();
         // 펫 타입
@@ -185,14 +203,7 @@ public class PetService {
         inventoryRepository.save(inventory);
 
         //성장도에 따른 애정도 최대치
-        int affectionMax = 0;
-        GrowthType growthType = pet.getGrowth();
-        affectionMax = switch (growthType) {
-            case EGG -> 100;
-            case BABY -> 120;
-            case YOUTH -> 200;
-            default -> 0;
-        };
+        int affectionMax = getAffectionMax(pet);
 
         //보너스 상승률 적용 펫에 대한 애정도 증가량 추가
         int addrate = 0;
@@ -203,6 +214,7 @@ public class PetService {
         int rate = item.getRate();
 
         //애정도 최대치 달성 시 성장도 증가
+        GrowthType growthType = pet.getGrowth();
         int increasedAffection = pet.getAffection() + rate + addrate;
         if(increasedAffection > affectionMax){
             increasedAffection = switch (growthType) {
@@ -225,7 +237,7 @@ public class PetService {
         pet.updateAffection(increasedAffection);
         petRepository.save(pet);
 
-        return PetResponseDTO.of(pet);
+        return PetResponseDTO.of(pet, affectionMax);
     }
 
     /*나의 펫 목록 조회*/
@@ -241,7 +253,7 @@ public class PetService {
         List<Pet> pets = petRepository.findByUserAndDeletedAtIsNull(user);
 
         return pets.stream()
-                .map(PetListResponseDTO::of)
+                .map(pet -> PetListResponseDTO.of(pet, getAffectionMax(pet)))
                 .collect(Collectors.toList());
     }
 
@@ -258,7 +270,10 @@ public class PetService {
         Pet pet = petRepository.findById(user.getMainPetId())
                 .orElseThrow(()->new BusinessException(ErrorCode.PET_NOT_EXIST,ErrorCode.PET_NOT_EXIST.getMessage()));
 
-        return PetResponseDTO.of(pet);
+        //성장도에 따른 애정도 최대치
+        int affectionMax = getAffectionMax(pet);
+
+        return PetResponseDTO.of(pet, affectionMax);
     }
 
     /*펫 상세 조회*/
@@ -267,7 +282,10 @@ public class PetService {
         Pet pet = petRepository.findById(petId)
                 .orElseThrow(()->new BusinessException(ErrorCode.PET_NOT_EXIST,ErrorCode.PET_NOT_EXIST.getMessage()));
 
-        return PetResponseDTO.of(pet);
+        //성장도에 따른 애정도 최대치
+        int affectionMax = getAffectionMax(pet);
+
+        return PetResponseDTO.of(pet, affectionMax);
     }
 
     /*펫 정보 수정*/

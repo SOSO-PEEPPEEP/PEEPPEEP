@@ -30,13 +30,14 @@ public class PetResponseDTO {
         this.image = image;
     }
 
-    public static PetResponseDTO of(Pet pet) {
+    public static PetResponseDTO of(Pet pet, int affectionMax) {
         String image = pet.getGrowth().selectImage(pet.getPetCollection());
         return builder()
                 .petId(pet.getPetId())
                 .nickname(pet.getNickname())
                 .growth(pet.getGrowth())
-                .affection(pet.getAffection())
+                // % 형태로 반환
+                .affection(pet.getAffection()*100/affectionMax)
                 .image(image)
                 .build();
     }

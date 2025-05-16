@@ -42,13 +42,14 @@ public class PetListResponseDTO {
         this.isFavorite = isFavorite;
     }
 
-    public static PetListResponseDTO of(Pet pet) {
+    public static PetListResponseDTO of(Pet pet, int affectionMax) {
         PetCollection petCollection = pet.getPetCollection();
         return builder()
                 .petId(pet.getPetId())
                 .nickname(pet.getNickname())
                 .growth(pet.getGrowth())
-                .affection(pet.getAffection())
+                // % 형태로 반환
+                .affection(pet.getAffection()*100/affectionMax)
                 .petType(petCollection.getPetType().getName())
                 .petRank(petCollection.getPetRank())
                 .image(petCollection.getImageByGrowth(pet.getGrowth()))
