@@ -56,7 +56,7 @@ export default ({ pet, onFavoriteToggle }: Props) => {
             <View style={petStyles.petStats}>
                 <GlobalText style={petStyles.petStatsText}>애정도</GlobalText>
                 <Margin width={8}/>
-                <GlobalText style={petStyles.petStatsText}>{pet.affection}</GlobalText>
+                <GlobalText style={petStyles.petStatsText}>{pet.affection}%</GlobalText>
             </View>
         </View>
       </View>
