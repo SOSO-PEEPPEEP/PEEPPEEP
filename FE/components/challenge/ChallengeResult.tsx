@@ -7,7 +7,7 @@ import { API_BASE_URL } from '@/constants/env';
 
 type Props = {
   visible: boolean;
-  items: { itemId: number; name: string; number: number }[];
+  items: { itemId: number; name: string; count: number }[];
   success: boolean;
   challengeUserId: number;
   onClose: () => void;
@@ -73,7 +73,7 @@ export default ({ visible, items, success, challengeUserId, onClose }: Props) =>
                       />
                       <Margin width={4}/>
                       <GlobalText>
-                        {`${item.name} X ${item.number}`}
+                        {`${item.name} X ${item.count}`}
                       </GlobalText>
                     </View>
                   ))}
