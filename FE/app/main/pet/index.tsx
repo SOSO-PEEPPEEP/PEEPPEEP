@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { View, Image, Dimensions, TouchableOpacity, ImageBackground } from "react-native";
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Image, Dimensions, TouchableOpacity, ImageBackground, NativeMethods } from "react-native";
 import GlobalText from '@/constants/GlobalText';
 import { petStyles } from "@/styles/pet.styles";
-import GaugeBar from "@/components/ui/Gaugebar";
-import { useRouter } from 'expo-router'; 
-import Tooltip from 'react-native-walkthrough-tooltip';
+import GaugeBar from "@/components/ui/GaugeBar";
+import { useRouter } from 'expo-router';
 import Frame from '@/components/ui/Frame';
 import EffectSound from '@/components/common/effectSound';
 import VoiceSound from '@/components/common/voiceSound';
@@ -21,6 +20,8 @@ import OutlinedShadowText from '@/constants/OutlinedShadowText';
 import { COLORS } from '@/constants/COLORS';
 import { Growth } from '@/components/pet/util';
 import { API_BASE_URL } from '@/constants/env';
+import Toast from '@/components/common/Toast';
+import Margin from '@/components/ui/Margin';
 
 type PetDetail = {
   petId: number;
@@ -39,6 +40,12 @@ type Inventory = {
   itemName: string;
 }
 
+type MeasurableRef = NativeMethods & {
+  measureInWindow: (
+    callback: (x: number, y: number, width: number, height: number) => void
+  ) => void;
+};
+
 export default () => {
   // 화면 크기 변경에 따라 특정 ICON 크기 동적으로 업데이트
   const [ICONHeight, setICONHeight] = useState(0);
@@ -46,13 +53,10 @@ export default () => {
 
   const [mainPetInfo, setMainPetInfo] = useState<PetDetail | null>(null);
   const [inventoryInfo, setInventoryInfo] = useState<Inventory[]>([]);
-  const [tooltip, setTooltip] = useState<{
-    visible: boolean;
-    target?: InventoryContent;
-    x: number;
-    y: number;
-    msg: string;
-  }>({ visible: false, target: undefined, x: 0, y: 0, msg: '' });
+  const [toastMsg, setToastMsg] = useState('');
+  const [toastKey, setToastKey] = useState(0);
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const btnRefs = useRef<Record<string, MeasurableRef | null>>({});
 
   // 메인 펫 조회
   useEffect(() => {
@@ -234,17 +238,6 @@ export default () => {
     }
   };
 
-  const showNoItemTip = (content: InventoryContent, pageX: number, pageY: number) => {
-    setTooltip({
-      visible: true,
-      target: content,
-      x: pageX,
-      y: pageY - 40,
-      msg: '아이템이 없습니다!'
-    });
-    setTimeout(() => setTooltip(t => ({ ...t, visible: false, target: undefined })), 1500);
-  };
-
   const useItem = async (
     content: Inventory['content'],
     inventoryId: number,
@@ -253,10 +246,9 @@ export default () => {
   ) => {
     const item = inventoryInfo.find(i => i.content === content)!;
     if (item.count < 1) {
-      return showNoItemTip(content, pageX, pageY);
+      return showToast('아이템이 없습니다!', pageX, pageY);
     }
 
-    // 옵티미스틱 업데이트
     setInventoryInfo(cur =>
       cur.map(i =>
         i.inventoryId === inventoryId ? { ...i, count: i.count - 1 } : i
@@ -280,7 +272,6 @@ export default () => {
       const json = await res.json() as { status: number; message: string; data: PetDetail };
       setMainPetInfo(json.data);
     } catch (e) {
-      // 롤백
       setInventoryInfo(cur =>
         cur.map(i =>
           i.inventoryId === inventoryId ? { ...i, count: i.count + 1 } : i
@@ -288,6 +279,12 @@ export default () => {
       );
       console.error('아이템 사용 실패', e);
     }
+  };
+
+  const showToast = (msg: string, x:number, y:number) => {
+    setPos({x,y});
+    setToastMsg(msg);
+    setToastKey(prev => prev + 1);
   };
 
   const ICONS: { content: Inventory['content']; icon: any }[] = [
@@ -323,17 +320,17 @@ export default () => {
           <View style={{ flexDirection: "column"}}>
             <TouchableOpacity onPress={() => { setPlayEffect(true); list(); }} activeOpacity={1}> 
               <View style={[{justifyContent: 'center', alignItems: 'center', margin: 4}]}>
-                <Image source={iconPeepList} style={{width: ICONWidth, height: ICONHeight }}></Image>
+                <Image source={iconPeepList} style={{width: ICONWidth, height: ICONHeight }} resizeMode="contain"></Image>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => { setPlayEffect(true); collection(); }} activeOpacity={1}> 
               <View style={[{justifyContent: 'center', alignItems: 'center', margin: 4}]}>
-                <Image source={iconCollection} style={{width: ICONWidth, height: ICONHeight }}></Image>
+                <Image source={iconCollection} style={{width: ICONWidth, height: ICONHeight }} resizeMode="contain"></Image>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => { setPlayEffect(true); addPet(); }} activeOpacity={1}> 
               <View style={[{justifyContent: 'center', alignItems: 'center', margin: 4}]}>
-                <Image source={iconRandomDraw} style={{width: ICONWidth, height: ICONHeight }}></Image>
+                <Image source={iconRandomDraw} style={{width: ICONWidth, height: ICONHeight }} resizeMode="contain"></Image>
               </View>
             </TouchableOpacity>
           </View>
@@ -358,44 +355,49 @@ export default () => {
           {ICONS.map(({ content, icon }) => {
             const item = inventoryInfo.find(i => i.content === content);
             return (
-              <Tooltip
+              <TouchableOpacity
                 key={content}
-                isVisible={tooltip.visible && tooltip.target === content}
-                content={<GlobalText style={{ color: COLORS.dark }}>{tooltip.msg}</GlobalText>}
-                placement="top"
-                allowChildInteraction={false}
-                disableShadow
-                useReactNativeModal
-                backgroundStyle={{ backgroundColor: 'transparent' }}
-                // @ts-ignore
-                customStyles={{ tooltip: { position: 'absolute', left: tooltip.x, top: tooltip.y } }}
+                activeOpacity={1}
+                ref={ref => (btnRefs.current[content] = ref)}
+                onPress={() => {
+                  if (!item) return;
+                  btnRefs.current[content]?.measureInWindow(
+                    (x, y, width, height) => {
+                      const centerX = x + width / 2;
+                      const toastY = y - height * 1.5;
+                      useItem(content, item.inventoryId, centerX, toastY);
+                    }
+                  );
+                }}
               >
-                <TouchableOpacity
-                  activeOpacity={1}
-                  onPressIn={e => {
-                    const { pageX, pageY } = e.nativeEvent;
-                    if (!item) return;
-                    useItem(content, item.inventoryId, pageX, pageY);
+                <Image
+                  source={icon}
+                  style={{ width: ICONWidth, height: ICONHeight }}
+                  resizeMode="contain"
+                />
+                <Margin height={4}/>
+                <GlobalText
+                  style={{
+                    color: COLORS.gray,
+                    textAlign: 'center',
                   }}
                 >
-                  <Image
-                    source={icon}
-                    style={{ width: ICONWidth, height: ICONHeight }}
-                  />
-                  <GlobalText
-                    style={{
-                      color: COLORS.gray,
-                      textAlign: 'center',
-                      marginTop: 4,
-                    }}
-                  >
-                    {item?.count ?? 0}개
-                  </GlobalText>
-                </TouchableOpacity>
-              </Tooltip>
+                  {item?.count ?? 0}개
+                </GlobalText>
+              </TouchableOpacity>
             );
           })}
         </View>
+
+      {toastMsg !== '' && (
+        <Toast
+          key={toastKey}
+          message={toastMsg}
+          x={pos.x}
+          y={pos.y}
+          onHide={() => setToastMsg('')}
+        />
+      )}
 
       {playEffect && ( <EffectSound onPlaybackEnd={() => setPlayEffect(false)} />)}
       {voiceEffect && ( <VoiceSound onPlaybackEnd={() => setVoiceEffect(false)} />)}

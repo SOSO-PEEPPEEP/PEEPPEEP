@@ -1,4 +1,4 @@
-import { ReactNode, useState, useEffect } from 'react'
+import { ReactNode, useEffect } from 'react'
 import { View } from 'react-native'
 import { styles } from './Frame.style';
 import { Audio, InterruptionModeIOS, InterruptionModeAndroid } from 'expo-av'
