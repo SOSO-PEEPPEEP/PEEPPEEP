@@ -1,37 +1,45 @@
 import { COLORS } from '@/constants/COLORS';
 import GlobalText from '@/constants/GlobalText';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Animated, StyleSheet } from 'react-native';
+import { rgba } from 'polished';
 
 type ToastProps = {
   message: string;
   duration?: number;
   onHide: () => void;
-  x: number;
-  y: number;
+  height: number;
 };
 
-const Toast: React.FC<ToastProps> = ({ message, duration = 2000, onHide, x, y }) => {
-  const [toastWidth, setToastWidth] = useState(0);
+const Toast: React.FC<ToastProps> = ({ message, duration = 1000, onHide, height }) => {
   const opacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    Animated.sequence([
+    let isActive = true;
+    opacity.stopAnimation();
+    opacity.setValue(0);
+
+    const animation = Animated.sequence([
       Animated.timing(opacity, { toValue: 1, duration: 300, useNativeDriver: true }),
       Animated.delay(duration),
       Animated.timing(opacity, { toValue: 0, duration: 300, useNativeDriver: true }),
-    ]).start(() => onHide());
-  }, [message]);
+    ]);
+
+    animation.start(({ finished }) => {
+      if (finished && isActive) { onHide(); }
+    });
+
+    return () => {
+      isActive = false;
+      animation.stop();
+    };
+  }, [message, duration, onHide]);
 
   if (!message) return null;
 
   return (
     <Animated.View
-      onLayout={e => {
-        const { width } = e.nativeEvent.layout;
-        setToastWidth(width);
-      }}
-      style={[styles.toastContainer, { opacity, top: y, left: x-toastWidth/2 }]}
+      style={[styles.toastContainer, { opacity, bottom: height }]}
     >
       <GlobalText style={styles.toastText}>{message}</GlobalText>
     </Animated.View>
@@ -42,11 +50,13 @@ const styles = StyleSheet.create({
   toastContainer: {
     position: 'absolute',
     padding: 8,
-    backgroundColor: COLORS.white,
+    backgroundColor: rgba(COLORS.dark,0.7),
+    borderRadius: 10,
     alignItems: 'center',
+    alignSelf: 'center',
   },
   toastText: {
-    color: COLORS.pink,
+    color: COLORS.white,
     fontSize: 12,
   },
 });

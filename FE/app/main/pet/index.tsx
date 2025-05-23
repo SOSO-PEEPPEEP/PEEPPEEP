@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Image, Dimensions, TouchableOpacity, ImageBackground, NativeMethods } from "react-native";
+import { View, Image, TouchableOpacity, ImageBackground, NativeMethods, useWindowDimensions } from "react-native";
 import GlobalText from '@/constants/GlobalText';
 import { petStyles } from "@/styles/pet.styles";
 import GaugeBar from "@/components/ui/GaugeBar";
@@ -16,12 +16,14 @@ import iconPlay from "@/assets/images/icon/pet/icon_play.png";
 import iconShower from "@/assets/images/icon/pet/icon_shower.png";
 import iconToilet from "@/assets/images/icon/pet/icon_toilet.png";
 import Animated, { useSharedValue, useAnimatedStyle, withSequence, withTiming, } from 'react-native-reanimated';
+import type { SharedValue } from 'react-native-reanimated';
 import OutlinedShadowText from '@/constants/OutlinedShadowText';
 import { COLORS } from '@/constants/COLORS';
 import { Growth } from '@/components/pet/util';
 import { API_BASE_URL } from '@/constants/env';
 import Toast from '@/components/common/Toast';
 import Margin from '@/components/ui/Margin';
+import LabelText from '@/constants/LabelText';
 
 type PetDetail = {
   petId: number;
@@ -47,15 +49,18 @@ type MeasurableRef = NativeMethods & {
 };
 
 export default () => {
-  // 화면 크기 변경에 따라 특정 ICON 크기 동적으로 업데이트
-  const [ICONHeight, setICONHeight] = useState(0);
-  const [ICONWidth, setICONWidth] = useState(0);
+  // 화면 크기 변경에 따라 크기 동적으로 업데이트
+  const { width, height } = useWindowDimensions();
+  const ICONWidth  = width  <= 400 ? 36 : 48;
+  const ICONHeight = height <= 400 ? 36 : 48;
+  const PEEPInfoBoxHeight = height <= 850 ? height * 0.35 : 360;
+  const Separator = height <= 850 ? 0 : 16
+  const bottomPx = height * 0.1;
 
   const [mainPetInfo, setMainPetInfo] = useState<PetDetail | null>(null);
   const [inventoryInfo, setInventoryInfo] = useState<Inventory[]>([]);
   const [toastMsg, setToastMsg] = useState('');
   const [toastKey, setToastKey] = useState(0);
-  const [pos, setPos] = useState({ x: 0, y: 0 });
   const btnRefs = useRef<Record<string, MeasurableRef | null>>({});
 
   // 메인 펫 조회
@@ -84,69 +89,6 @@ export default () => {
       }
     };
     fetchInventory();
-  }, []);
-  
-  useEffect(() => {
-      const { height } = Dimensions.get('window');
-      const { width } = Dimensions.get('window');
-      const calculatedHeight = height <= 400 ? 36 : 48;
-      const calculatedWidth = width <= 400 ? 36 : 48;
-      setICONHeight(calculatedHeight);
-      setICONWidth(calculatedWidth);
-
-      const handleResize = () => {
-          const { height } = Dimensions.get('window');
-          const { width } = Dimensions.get('window');
-          const updatedHeight = height <= 400 ? 36 : 48;
-          const calculatedWidth = width <= 400 ? 36 : 48;
-          setICONHeight(updatedHeight);
-          setICONWidth(calculatedWidth);
-      };
-      Dimensions.addEventListener('change', handleResize);
-  }, []); 
-
-  // 화면 크기 변경에 따라 PEEPInfoBoxHeight 값을 동적으로 업데이트
-  const [PEEPInfoBoxHeight, setPEEPInfoBoxHeight] = useState(0);
-  useEffect(() => {
-      const { height } = Dimensions.get('window');
-      const calculatedHeight = height <= 850 ? height * 0.4 : 360;
-      setPEEPInfoBoxHeight(calculatedHeight);
-
-      const handleResize = () => {
-          const { height } = Dimensions.get('window');
-          const updatedHeight = height <= 850 ? height * 0.4 : 360;
-          setPEEPInfoBoxHeight(updatedHeight);
-      };
-      Dimensions.addEventListener('change', handleResize);
-  }, []);
-
-  // 화면 크기 변경에 따라 상단 MARGIN 값을 동적으로 업데이트(상단 margin 생성)
-  const [AddMargin, setAddMargin] = useState(0);
-  useEffect(() => {
-      const { height } = Dimensions.get('window');
-      const calculatedHeight = height <= 700 ? 12 : 0;
-      setAddMargin(calculatedHeight);
-
-      const handleResize = () => {
-          const { height } = Dimensions.get('window');
-          const updatedHeight = height <= 700 ? 12 : 0;
-          setAddMargin(updatedHeight);
-      };
-      Dimensions.addEventListener('change', handleResize);
-  }, []); 
-  // 화면 크기 변경에 따라 Separator 값을 동적으로 업데이트(구분선 생성)
-  const [Separator, setPEEPInfoBoxSeparator] = useState(0);
-  useEffect(() => {
-      const { height } = Dimensions.get('window');
-      const calculatedHeight = height <= 850 ? 0 : 16;
-      setPEEPInfoBoxSeparator(calculatedHeight);
-
-      const handleResize = () => {
-          const { height } = Dimensions.get('window');
-          const updatedHeight = height <= 850 ? 0 : 16;
-          setPEEPInfoBoxSeparator(updatedHeight);
-      };
-      Dimensions.addEventListener('change', handleResize);
   }, []);
 
   //소리 재생
@@ -207,46 +149,43 @@ export default () => {
     );
   }
 
+  function runSequence(
+    shared: SharedValue<number>,
+    frames: Array<[number, number]>
+  ) {
+    shared.value = withSequence(
+      ...frames.map(([toValue, duration]) => withTiming(toValue, { duration }))
+    );
+  }
+
   const handlePress = () => {
     setVoiceEffect(true);
+
     if (mainPetInfo.growth === 'EGG') {
-      rotation.value = withSequence(
-        withTiming(-14, { duration: 100 }),
-        withTiming(12, { duration: 100 }),
-        withTiming(-10, { duration: 80 }),
-        withTiming(8, { duration: 80 }),
-        withTiming(-6, { duration: 40 }),
-        withTiming(4, { duration: 40 }),
-        withTiming(-2, { duration: 40 }),
-        withTiming(0, { duration: 0 })
-      );
+      runSequence(rotation, [
+        [-14, 100],[12, 100],[-10,  80],[  8,  80],
+        [ -6,  40],[  4,  40],[ -2,  40],[  0,   0],
+      ]);
     } else {
-      scaleY.value = withSequence(
-        withTiming(1.2, { duration: 100 }),
-        withTiming(0.8, { duration: 100 }),
-        withTiming(1.1, { duration: 100 }),
-        withTiming(0.9, { duration: 100 }),
-        withTiming(1, { duration: 80 }) 
-      );
-      scaleX.value = withSequence(
-        withTiming(0.7, { duration: 100 }),
-        withTiming(1.1, { duration: 100 }),
-        withTiming(0.9, { duration: 100 }),
-        withTiming(1, { duration: 100 }),
-        withTiming(1, { duration: 80 }),
-      );
+      runSequence(scaleY, [
+        [1.2, 100],[0.8, 100],[1.1, 100],[0.9, 100],[1.0,  80],
+      ]);
+      runSequence(scaleX, [
+        [0.7, 100],[1.1, 100],[0.9, 100],[1.0, 100],[1.0,  80],
+      ]);
     }
   };
 
   const useItem = async (
     content: Inventory['content'],
-    inventoryId: number,
-    pageX: number,
-    pageY: number
+    inventoryId: number
   ) => {
     const item = inventoryInfo.find(i => i.content === content)!;
+    if (mainPetInfo.growth === 'ADULT') {
+      return showToast('어른 PEEP은 더 이상 돌봐주지 않아도 괜찮아요!');
+    }
     if (item.count < 1) {
-      return showToast('아이템이 없습니다!', pageX, pageY);
+      return showToast('아이템이 없습니다!');
     }
 
     setInventoryInfo(cur =>
@@ -281,8 +220,7 @@ export default () => {
     }
   };
 
-  const showToast = (msg: string, x:number, y:number) => {
-    setPos({x,y});
+  const showToast = (msg: string) => {
     setToastMsg(msg);
     setToastKey(prev => prev + 1);
   };
@@ -296,112 +234,114 @@ export default () => {
   ];
 
   return (
-      <Frame>
-        <View style={[{width: '100%', height: AddMargin}]}></View>
-        {/* PEEP 정보창 */}
-        <View style={[petStyles.PEEPInfoBox, {marginBottom: 8}]}>
-          <View style={{ flex: 1, padding: 10, justifyContent: 'flex-end'}}>            
-            <View style={{justifyContent: 'flex-end', marginBottom: 4}}>
-              <OutlinedShadowText style={{fontSize:24}}>{mainPetInfo.nickname}</OutlinedShadowText>
-            </View>
-            <View style={[{ flexDirection: "row", marginRight: 8, marginBottom: 4}]}>
-              <GlobalText style={[petStyles.optionListText, {marginRight: 8}]}>성장도</GlobalText>
-              <GlobalText style={[petStyles.optionListText, {backgroundColor: COLORS.blue, padding: 1}]}>{mainPetInfo.growth}</GlobalText>
-            </View>
-            <View style={{flexDirection: "row", alignItems: "center", paddingRight: '10%'}}>
-              <View style={[{marginRight: 8}]}><GlobalText style={petStyles.optionListText}>애정도</GlobalText></View>
-              <View style={[{flex: 1,}]}><GaugeBar percentage={mainPetInfo.affection} /></View>
-            </View>
-            <View style={{flexDirection: "row", alignItems: "center", paddingRight: '10%'}}>
-            </View>
-            <View style={{ position: 'relative', width: '100%', height: 20}}></View>
+    <Frame>
+      <View style={petStyles.PEEPInfoBox}>
+        <View style={{ flex: 1 }}>
+          {/* 타이틀 */}
+          <View style={{height: '50%'}}>
+            <GlobalText style={petStyles.titleShadow}>PEEP</GlobalText>
+            <GlobalText style={petStyles.title}>PEEP</GlobalText>
           </View>
-          <View style={{justifyContent: 'flex-end'}}>
-          <View style={{ flexDirection: "column"}}>
-            <TouchableOpacity onPress={() => { setPlayEffect(true); list(); }} activeOpacity={1}> 
-              <View style={[{justifyContent: 'center', alignItems: 'center', margin: 4}]}>
-                <Image source={iconPeepList} style={{width: ICONWidth, height: ICONHeight }} resizeMode="contain"></Image>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => { setPlayEffect(true); collection(); }} activeOpacity={1}> 
-              <View style={[{justifyContent: 'center', alignItems: 'center', margin: 4}]}>
-                <Image source={iconCollection} style={{width: ICONWidth, height: ICONHeight }} resizeMode="contain"></Image>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => { setPlayEffect(true); addPet(); }} activeOpacity={1}> 
-              <View style={[{justifyContent: 'center', alignItems: 'center', margin: 4}]}>
-                <Image source={iconRandomDraw} style={{width: ICONWidth, height: ICONHeight }} resizeMode="contain"></Image>
-              </View>
-            </TouchableOpacity>
+          {/* PEEP 정보창 */}
+          <OutlinedShadowText style={{fontSize:28}}>{mainPetInfo.nickname}</OutlinedShadowText>
+          <Margin height={4}/>
+          <View style={{ flexDirection: "row"}}>
+            <GlobalText style={petStyles.optionListText}>성장도</GlobalText>
+            <Margin width={8}/>
+            <LabelText style={{backgroundColor: COLORS.blue, fontSize: 14}}>{mainPetInfo.growth}</LabelText>
+            <Margin width={8}/>
           </View>
+          <Margin height={4}/>
+          <View style={{flexDirection: "row", alignItems: "center"}}>
+            <GlobalText style={petStyles.optionListText}>애정도</GlobalText>
+            <Margin width={8}/>
+            <View style={{flex: 1}}><GaugeBar percentage={mainPetInfo.affection}/></View>
           </View>
+          <Margin height={20}/>
         </View>
-        <View style={[{height: Separator}]}></View>
-        <View style={{ position: 'relative', width: '100%'}}>
-            <ImageBackground source={petRoomList[petRoom]} style={[petStyles.PEEPRoom, { height: PEEPInfoBoxHeight }]} imageStyle={petStyles.PEEPRoomImg}>
-            <TouchableOpacity onPress={handlePress} activeOpacity={1}>
-              <AnimatedImage style={[petStyles.PEEPImg, animatedStyle]} source={{uri:mainPetInfo.image}} />
-            </TouchableOpacity>
-            </ImageBackground>
-        </View>
-        <View style={{width:'100%', height: 20, paddingRight: 8, marginTop: 4, marginBottom: 12, }}>
-          <TouchableOpacity onPress={() => { setPlayEffect(true); changRoom(); }} activeOpacity={1}>
-            <GlobalText style={{color: COLORS.gray, textAlign: 'right'}}>ROOM 변경</GlobalText>
+        <Margin width={20}/>
+        {/* 메뉴바 */}
+        <View style={{justifyContent: 'space-between'}}>
+          <TouchableOpacity onPress={() => { setPlayEffect(true); list(); }} activeOpacity={1}> 
+            <Image source={iconPeepList} style={{width: ICONWidth, height: ICONHeight }} resizeMode="contain"></Image>
           </TouchableOpacity>
+          <Margin height={4}/>
+          <TouchableOpacity onPress={() => { setPlayEffect(true); collection(); }} activeOpacity={1}> 
+            <Image source={iconCollection} style={{width: ICONWidth, height: ICONHeight }} resizeMode="contain"></Image>
+          </TouchableOpacity>
+          <Margin height={4}/>
+          <TouchableOpacity onPress={() => { setPlayEffect(true); addPet(); }} activeOpacity={1}> 
+            <Image source={iconRandomDraw} style={{width: ICONWidth, height: ICONHeight }} resizeMode="contain"></Image>
+          </TouchableOpacity>
+          <Margin height={4}/>
         </View>
+        <Margin height={8}/>
+      </View>
 
-        <View style={[{height: Separator}]}></View>
-        <View style={{ width: '100%', flexDirection: "row", alignItems: "center",  justifyContent: "space-evenly"}}>
-          {ICONS.map(({ content, icon }) => {
-            const item = inventoryInfo.find(i => i.content === content);
-            return (
-              <TouchableOpacity
-                key={content}
-                activeOpacity={1}
-                ref={ref => (btnRefs.current[content] = ref)}
-                onPress={() => {
-                  if (!item) return;
-                  btnRefs.current[content]?.measureInWindow(
-                    (x, y, width, height) => {
-                      const centerX = x + width / 2;
-                      const toastY = y - height * 1.5;
-                      useItem(content, item.inventoryId, centerX, toastY);
-                    }
-                  );
+      <View style={[{height: Separator}]}></View>
+
+      {/* 메인 펫 */}
+      <View style={{ position: 'relative', width: '100%'}}>
+          <ImageBackground source={petRoomList[petRoom]} style={[petStyles.PEEPRoom, { height: PEEPInfoBoxHeight }]} imageStyle={petStyles.PEEPRoomImg}>
+          <TouchableOpacity onPress={handlePress} activeOpacity={1}>
+            <AnimatedImage style={[petStyles.PEEPImg, animatedStyle]} source={{uri:mainPetInfo.image}} />
+          </TouchableOpacity>
+          </ImageBackground>
+      </View>
+      <View style={{width:'100%', height: 20, paddingRight: 8, marginTop: 4, marginBottom: 12, }}>
+        <TouchableOpacity onPress={() => { setPlayEffect(true); changRoom(); }} activeOpacity={1}>
+          <GlobalText style={{color: COLORS.gray, textAlign: 'right'}}>ROOM 변경</GlobalText>
+        </TouchableOpacity>
+      </View>
+
+      <View style={[{height: Separator}]}></View>
+
+      {/* 아이템 목록 */}
+      <View style={{ width: '100%', flexDirection: "row", alignItems: "center",  justifyContent: "space-evenly"}}>
+        {ICONS.map(({ content, icon }) => {
+          const item = inventoryInfo.find(i => i.content === content);
+          return (
+            <TouchableOpacity
+              key={content}
+              activeOpacity={1}
+              ref={ref => (btnRefs.current[content] = ref)}
+              onPress={() => {
+                if (!item) return;
+                btnRefs.current[content]?.measureInWindow(()=>{useItem(content, item.inventoryId);});
+              }}
+            >
+              <Image
+                source={icon}
+                style={{ width: ICONWidth, height: ICONHeight }}
+                resizeMode="contain"
+              />
+              <Margin height={4}/>
+              <GlobalText
+                style={{
+                  color: COLORS.gray,
+                  textAlign: 'center',
                 }}
               >
-                <Image
-                  source={icon}
-                  style={{ width: ICONWidth, height: ICONHeight }}
-                  resizeMode="contain"
-                />
-                <Margin height={4}/>
-                <GlobalText
-                  style={{
-                    color: COLORS.gray,
-                    textAlign: 'center',
-                  }}
-                >
-                  {item?.count ?? 0}개
-                </GlobalText>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
+                {item?.count ?? 0}개
+              </GlobalText>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    
+    {/* 아이템 사용 불가능 시 띄우는 토스트 */}
+    {toastMsg !== '' && (
+      <Toast
+        key={toastKey}
+        message={toastMsg}
+        onHide={() => setToastMsg('')}
+        height={bottomPx}
+      />
+    )}
 
-      {toastMsg !== '' && (
-        <Toast
-          key={toastKey}
-          message={toastMsg}
-          x={pos.x}
-          y={pos.y}
-          onHide={() => setToastMsg('')}
-        />
-      )}
-
-      {playEffect && ( <EffectSound onPlaybackEnd={() => setPlayEffect(false)} />)}
-      {voiceEffect && ( <VoiceSound onPlaybackEnd={() => setVoiceEffect(false)} />)}
-      </Frame>
+    {playEffect && ( <EffectSound onPlaybackEnd={() => setPlayEffect(false)} />)}
+    {voiceEffect && ( <VoiceSound onPlaybackEnd={() => setVoiceEffect(false)} />)}
+    </Frame>
   );
 };
 
