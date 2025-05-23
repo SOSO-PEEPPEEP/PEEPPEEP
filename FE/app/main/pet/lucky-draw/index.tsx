@@ -53,7 +53,7 @@ export default () => {
                 <Image source={back} style={{width: 30, height: 30}}></Image>
               </View>
             </TouchableOpacity>
-            <GlobalText style={petStyles.pageTitleText}>PEEP 정보</GlobalText>
+            <GlobalText style={petStyles.pageTitleText}>PEEP BOX</GlobalText>
           </View>
         </View>
         <View style={petStyles.addPeepBox}>

@@ -12,7 +12,6 @@ export const styles = StyleSheet.create({
     },
     titleShadow:{
         position: "absolute",
-        color: COLORS.dark,
         fontWeight: "bold",
         fontSize: 32,
         left: 2,

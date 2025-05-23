@@ -1,93 +1,38 @@
+import { COLORS } from '@/constants/COLORS';
 import { StyleSheet } from 'react-native';
 
-export const petStyles = StyleSheet.create({  
+export const petStyles = StyleSheet.create({
+    title:{
+        color: COLORS.pink,
+        fontWeight: "bold",
+        fontSize: 32
+    },
+    titleShadow:{
+        position: "absolute",
+        fontWeight: "bold",
+        fontSize: 32,
+        left: 2,
+        top: 2,
+    }, 
     PEEPInfoBox: {
         width: '100%',
         flexDirection: 'row', 
         minHeight: 120, 
-        maxHeight: 200, 
-        height: '24%', 
-        justifyContent: 'flex-end' 
-    },
-    peepName_01: {
-        color: "#8787A3",
-        fontSize: 24,
-        position: 'absolute',
-        top: 1,                // 화면 상단에 배치
-        left: 1,
-    },
-    peepName_02: {
-        color: "#8787A3",
-        fontSize: 24,
-        position: 'absolute',
-        top: -1,                // 화면 상단에 배치
-        left: -1,
-    },
-    peepName_03: {
-        color: "#8787A3",
-        fontSize: 24,
-        position: 'absolute',
-        top: -1,                // 화면 상단에 배치
-        left: 1,
-    },
-    peepName_04: {
-        color: "#8787A3",
-        fontSize: 24,
-        position: 'absolute',
-        top: 1,                // 화면 상단에 배치
-        left: -1,
-    },
-    peepName_05: {
-        color: "#8787A3",
-        fontSize: 24,
-        position: 'absolute',
-        top: 2,                // 화면 상단에 배치
-        left: 2,
-    },
-    peepName_06: {
-        color: "#8787A3",
-        fontSize: 24,
-        position: 'absolute',
-        top: 2,                // 화면 상단에 배치
-        left: 0,
-    },
-    peepName_07: {
-        color: "#8787A3",
-        fontSize: 24,
-        position: 'absolute',
-        top: 0,                // 화면 상단에 배치
-        left: 2,
-    },    
-    peepName_08: {
-        color: "#fff",
-        fontSize: 24,
-    },
-    PEEPInfoMessage: {
-        width:  200,
-        height: 56,
-        backgroundColor: '#fff',
-        borderWidth: 3,
-        borderColor: '#B1ADCA',
-        position: 'absolute',
-        justifyContent: 'center',
-        zIndex: 1,
-        top: -20,
-        left: -8,
+        maxHeight: 200,
     },
     PEEPRoom: {
         width: '100%',
-        backgroundColor: '#D9D9D9',
+        backgroundColor: COLORS.blue,
         position: 'relative',
-        justifyContent: 'flex-end', // 이미지가 바닥에 위치하도록 함
-        alignItems: 'center', // 이미지가 수평으로 가운데 정렬되도록 설정 (선택사항)
+        justifyContent: 'flex-end',
+        alignItems: 'center',
         borderWidth: 4,
-        borderColor: '#C7CFFF',
+        borderColor: COLORS.blue,
         borderRadius: 10,
     },
     PEEPRoomImg: {
         width: '100%',
         height: '100%',
-        backgroundColor: '#D9D9D9',
         borderRadius: 10,
     },
     PEEPImg:{
@@ -96,7 +41,6 @@ export const petStyles = StyleSheet.create({
         marginBottom: 24,
     },
     optionListText: {
-        color: '#8787A3',
         textAlign: 'left',
     },
 
@@ -109,7 +53,7 @@ export const petStyles = StyleSheet.create({
         alignItems: 'center',
     },
     pageTitleText: {
-        color: '#8787A3',
+        color: COLORS.dark,
         textAlign: 'left',
         fontSize: 20,
     },
@@ -119,7 +63,6 @@ export const petStyles = StyleSheet.create({
     },
     petList:{
         height: 102,
-        backgroundColor: '#000',
         borderTopRightRadius: 10,
         borderBottomLeftRadius: 10,
         borderBottomRightRadius: 10,
@@ -131,7 +74,7 @@ export const petStyles = StyleSheet.create({
     petListShadow: {
         width: '100%',
         height: 102,
-        backgroundColor: '#8787A3',
+        backgroundColor: COLORS.dark,
         borderTopRightRadius: 10,
         borderBottomLeftRadius: 10,
         borderBottomRightRadius: 10,
@@ -148,10 +91,6 @@ export const petStyles = StyleSheet.create({
         alignItems: 'flex-start',
         height: '100%',
     },
-    favorites_non: {
-    },
-    favorites_check: {
-    },
     favorites_shadow: {
         position: 'absolute',
         top: -2,
@@ -167,50 +106,7 @@ export const petStyles = StyleSheet.create({
         width: '60%',
     },
     petInfo: {
-        color: '#8787A3',
         fontSize: 20,
-    },
-    petNameShadow00: {
-        color: '#8787A3',
-        fontSize: 20,
-        position: 'absolute',
-        top: 2,
-        left: 2,
-    },
-    petNameShadow01: {
-        color: '#8787A3',
-        fontSize: 20,
-        position: 'absolute',
-        top: 2,
-        left: 1,
-    },
-    petNameShadow02: {
-        color: '#8787A3',
-        fontSize: 20,
-        position: 'absolute',
-        top: -1,
-        left: 1,
-    },
-    petNameShadow03: {
-        color: '#8787A3',
-        fontSize: 20,
-        position: 'absolute',
-        top: -1,
-        left: -1,
-    },
-    petNameShadow04: {
-        color: '#8787A3',
-        fontSize: 20,
-        position: 'absolute',
-        top: 1,
-        left: 1,
-    },
-    petNameShadow05: {
-        color: '#8787A3',
-        fontSize: 20,
-        position: 'absolute',
-        top: 1,
-        left: -1,
     },
     petName: {
         fontSize: 20,
@@ -220,7 +116,7 @@ export const petStyles = StyleSheet.create({
         alignItems: 'center',
     },
     petStatsText: {
-        color: '#8787A3',
+        color: COLORS.dark,
         fontSize: 12,
     },
 
@@ -238,12 +134,10 @@ export const petStyles = StyleSheet.create({
     },
     addPeepText: {
         fontWeight: 'bold',
-        color: '#8787A3',
         fontSize: 24,
     },
     addPeepTextShadow: {
         fontWeight: 'bold',
-        color: '#8787A3',
         fontSize: 24,
         position: 'absolute',
         top: -1,
@@ -261,8 +155,8 @@ export const petStyles = StyleSheet.create({
     addPeepInfoBoxShadow:{
         width: 310,
         height: 380,
-        backgroundColor: '#8787A3',
-        borderColor: '#8787A3',
+        backgroundColor: COLORS.dark,
+        borderColor: COLORS.dark,
         borderWidth: 2,
         borderTopRightRadius: 10,
         borderBottomLeftRadius: 10,
@@ -278,8 +172,8 @@ export const petStyles = StyleSheet.create({
         justifyContent: 'center',
         paddingHorizontal: 12,
         paddingVertical: 24,
-        backgroundColor: '#fff',
-        borderColor: '#8787A3',
+        backgroundColor: COLORS.white,
+        borderColor: COLORS.dark,
         borderWidth: 2,
         borderTopRightRadius: 10,
         borderBottomLeftRadius: 10,
@@ -291,77 +185,19 @@ export const petStyles = StyleSheet.create({
         justifyContent: 'center',
         alignSelf: 'flex-start',
         marginTop: 12,
-        backgroundColor: '#fff',
+        backgroundColor: COLORS.white,
     },
     entryNumberText:{
-        color: '#8787A3',
         textAlign: 'center',
         fontSize: 20,
     },
     addPeepNameText:{
-        color: '#fff',
+        color: COLORS.white,
         fontSize: 20,
         textAlign: 'left',
         marginBottom: 4,
     },
-    addPeepNameTextShadow01: {
-        color: '#8787A3',
-        fontSize: 20,
-        textAlign: 'left',
-        position: 'absolute',
-        top: 1,
-        left: 1,
-    },
-    addPeepNameTextShadow02: {
-        color: '#8787A3',
-        fontSize: 20,
-        textAlign: 'left',
-        position: 'absolute',
-        top: 1,
-        left: -1,
-    },
-    addPeepNameTextShadow03: {
-        color: '#8787A3',
-        fontSize: 20,
-        textAlign: 'left',
-        position: 'absolute',
-        top: -1,
-        left: 1,
-    },
-    addPeepNameTextShadow04: {
-        color: '#8787A3',
-        fontSize: 20,
-        textAlign: 'left',
-        position: 'absolute',
-        top: -1,
-        left: -1,
-    },
-    addPeepNameTextShadow05: {
-        color: '#8787A3',
-        fontSize: 20,
-        textAlign: 'left',
-        position: 'absolute',
-        top: 2,
-        left: 2,
-    },
-    addPeepNameTextShadow06: {
-        color: '#8787A3',
-        fontSize: 20,
-        textAlign: 'left',
-        position: 'absolute',
-        top: 2,
-        left: 1,
-    },
-    addPeepNameTextShadow07: {
-        color: '#8787A3',
-        fontSize: 20,
-        textAlign: 'left',
-        position: 'absolute',
-        top: 0,
-        left: 2,
-    },
     addPeepInfoText: {
-        color: '#8787A3',
         fontSize: 16,
         textAlign: 'left',
     },
@@ -409,7 +245,7 @@ export const petStyles = StyleSheet.create({
     bookmark: {
         width: 44,
         height: 8,
-        backgroundColor: '#8787A3',
+        backgroundColor: COLORS.dark,
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
     },
@@ -419,7 +255,7 @@ export const petStyles = StyleSheet.create({
         width: 132,
         height: 160,
         borderWidth: 1,
-        borderColor: '#8787A3',
+        borderColor: COLORS.dark,
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
         borderBottomRightRadius: 10,
@@ -432,8 +268,8 @@ export const petStyles = StyleSheet.create({
         width: 136,
         height: 164,
         borderWidth: 1,
-        backgroundColor: '#8787A3',
-        borderColor: '#8787A3',
+        backgroundColor: COLORS.dark,
+        borderColor: COLORS.dark,
         borderTopRightRadius: 10,
         borderBottomLeftRadius: 10,
         borderBottomRightRadius: 10,
@@ -451,7 +287,6 @@ export const petStyles = StyleSheet.create({
         marginBottom: 2,
     },
     collectionInfoText: {
-        color: '#8787A3',
         fontSize: 10,
     },
     collectionNameBox:{
@@ -459,71 +294,17 @@ export const petStyles = StyleSheet.create({
         textAlign: 'left',
     },
     collectionNameText: {
-        color: '#fff',
-    },
-    collectionNameTextShadow01: {
-        color: '#8787A3',
-        position: 'absolute',
-        top: 1,
-        left: 1,
-    },
-    collectionNameTextShadow02: {
-        color: '#8787A3',
-        position: 'absolute',
-        top: 1,
-        left: -1,
-    },
-    collectionNameTextShadow03: {
-        color: '#8787A3',
-        position: 'absolute',
-        top: -1,
-        left: 1,
-    },
-    collectionNameTextShadow04: {
-        color: '#8787A3',
-        position: 'absolute',
-        top: -1,
-        left: -1,
-    },
-    collectionNameTextShadow05: {
-        color: '#8787A3',
-        position: 'absolute',
-        top: 2,
-        left: 2,
-    },
-    collectionNameTextShadow06: {
-        color: '#8787A3',
-        position: 'absolute',
-        top: 2,
-        left: 0,
-    },
-    collectionNameTextShadow07: {
-        color: '#8787A3',
-        position: 'absolute',
-        top: 0,
-        left: 2,
-    },
-    collectionNameTextShadow08: {
-        color: '#8787A3',
-        position: 'absolute',
-        top: 2,
-        left: 1,
-    },
-    collectionNameTextShadow09: {
-        color: '#8787A3',
-        position: 'absolute',
-        top: 1,
-        left: 2,
+        color: COLORS.white,
     },
     collectionEntryNumber: {
         justifyContent: 'center',
-        backgroundColor: '#C7CFFF',
+        backgroundColor: COLORS.blue,
         width : 80,
         height: 16,
         marginBottom: 8,
     },
     collectionEntryNumberText: {
-        color: '#fff',
+        color: COLORS.white,
         fontSize: 12,
         textAlign: 'center',
     },
