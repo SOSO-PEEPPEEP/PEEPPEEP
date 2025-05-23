@@ -11,8 +11,8 @@ interface GaugeBarProps {
 const GaugeBar: React.FC<GaugeBarProps> = ({ percentage, height = 10, color = COLORS.lilac }) => {
   return (
     <View style={[styles.container, { height }]}>
-      <View style={[styles.bar, { width: `${percentage}%`, backgroundColor: color }]} />
-      <View style={[styles.emptyBar, { width: `${100 - percentage}%`}]} />
+      {percentage > 0 && <View style={[styles.bar, { width: `${percentage}%`, backgroundColor: color }]} />}
+      {percentage < 100 && <View style={[styles.emptyBar, { width: `${100 - percentage}%` }, percentage <= 0 && { borderLeftWidth: 1 }]} />}
     </View>
   );
 };
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   },
   bar: {
     height: "100%",
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: COLORS.lilac,
   },
   emptyBar : {
